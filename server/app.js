@@ -1,5 +1,6 @@
 var createError = require("http-errors");
 var express = require("express");
+var mongoose = require("mongoose");
 var path = require("path");
 var cookieParser = require("cookie-parser");
 var logger = require("morgan");
@@ -14,6 +15,13 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
+
+// Connect to MongoDB
+const db = require("./config/keys").mongoURI;
+mongoose.connect(db, { useNewUrlParser: true, retryWrites: true, w: "majority" })
+  	.then(() => console.log("MongoDB successfully connected"))
+  	.catch(err => console.log(err));
+
 
 app.use("/", indexRouter);
 app.use("/ping", pingRouter);

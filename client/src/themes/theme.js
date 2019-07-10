@@ -1,11 +1,24 @@
 import { createMuiTheme } from "@material-ui/core";
+import grey from '@material-ui/core/colors/grey';
 
 export const theme = createMuiTheme({
-  typography: {
-    fontFamily: '"Roboto"'
+  
+  overrides: {
+    MuiAppBar: {
+      root: {
+        boxShadow: 'none'
+      },
+    },
   },
-  primary: "#f04040",
-  secondary: "#1f1f1f",
-  error: "#d8000c",
-  bgcolor: "#f6f6f6"
+  typography: {
+    "fontFamily": "Source Sans Pro"
+  },
+  palette: {
+    primary: {
+      main: grey[900],
+    },
+    secondary: {
+      main: grey[50],
+    }
+  },
 });

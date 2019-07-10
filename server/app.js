@@ -5,9 +5,7 @@ var path = require("path");
 var cookieParser = require("cookie-parser");
 var logger = require("morgan");
 
-// var indexRouter = require("./routes/index");
-// var pingRouter = require("./routes/ping");
-var registerRouter = require("./routes/register");
+const routes = require("./routes/index.js");
 
 var app = express();
 
@@ -23,10 +21,8 @@ mongoose.connect(db, { useNewUrlParser: true, retryWrites: true, w: "majority" }
   	.then(() => console.log("MongoDB successfully connected"))
   	.catch(err => console.log(err));
 
-
-// app.use("/", indexRouter);
-// app.use("/ping", pingRouter);
-app.use("/", registerRouter);
+// Connect all our API routes to our app
+app.use("/api", routes);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

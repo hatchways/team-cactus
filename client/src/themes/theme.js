@@ -3,6 +3,13 @@ import grey from '@material-ui/core/colors/grey';
 
 export const theme = createMuiTheme({
   
+  overrides: {
+    MuiAppBar: {
+      root: {
+        boxShadow: 'none'
+      },
+    },
+  },
   typography: {
     "fontFamily": "Source Sans Pro"
   },
@@ -14,5 +21,4 @@ export const theme = createMuiTheme({
       main: grey[50],
     }
   },
-  // shadows: Array(25).fill('none')
 });

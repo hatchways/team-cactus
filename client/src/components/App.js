@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Component } from "react";
 import { BrowserRouter, Route } from "react-router-dom";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import { MuiThemeProvider } from "@material-ui/core";
@@ -8,18 +8,28 @@ import LandingPage from "./Pages/Landing";
 import LoginPage from "./Pages/Login";
 import RegisterPage from "./Pages/Register";
 
-function App() {
-  return (
-    <MuiThemeProvider theme={theme}>
-      <CssBaseline />
-      <BrowserRouter>
-        <NavBar /> {/*pass in user status (logged in, shopper/shopkeeper) */}
-        <Route exact path="/" component={LandingPage} />
-        <Route exact path="/login" component={LoginPage} />
-        <Route exact path="/register" component={RegisterPage} />
-      </BrowserRouter>
-    </MuiThemeProvider>
-  );
+class App extends Component {
+  state = {
+    userType: 'shopper'
+  }
+
+  updateUserType = (userType) => {
+    this.setState({ userType: userType });
+  }
+
+  render() {
+    return (
+      <MuiThemeProvider theme={theme}>
+        <CssBaseline />
+        <BrowserRouter>
+          <NavBar userType={this.state.userType} />
+          <Route exact path="/" component={LandingPage} />
+          <Route exact path="/login" component={LoginPage} userType={this.updateUserType} />
+          <Route exact path="/register" component={RegisterPage} userType={this.updateUserType}/>
+        </BrowserRouter>
+      </MuiThemeProvider>
+    );
+  }
 }
 
 export default App;

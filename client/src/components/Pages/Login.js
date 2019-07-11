@@ -94,6 +94,7 @@ class LoginPage extends Component {
               label="Email" 
               onChange={event => this.setState({ email: event.target.value })} 
               onBlur={this.handleBlur('email')} 
+              type="text"
               value={this.state.email} 
             />
             <FormTextFieldWrapper 
@@ -103,6 +104,7 @@ class LoginPage extends Component {
               label="Password" 
               onChange={event => this.setState({ password: event.target.value })} 
               onBlur={this.handleBlur('password')} 
+              type="password"
               value={this.state.password} 
             />
                   

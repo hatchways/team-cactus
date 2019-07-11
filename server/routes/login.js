@@ -2,8 +2,7 @@ const User = require('../models/user').User;
 const validateLogin = require('../models/user').validateLogin;
 const argon2 = require("argon2"); // for password hashing
 const jwt = require("jsonwebtoken");
-// const keys = require("../config/keys");
-const keys = process.env.SECRETORKEY;
+const secretOrKey = process.env.SECRETORKEY;
 
 async function login(req, res) {
 	try {
@@ -20,9 +19,7 @@ async function login(req, res) {
 	    }
 
 	    // Check if the password matches
-	    let hashedPassword = user.password;
-		let plaintextPassword = req.body.password;
-		if (await argon2.verify(hashedPassword, plaintextPassword)) {
+		if (user.validatePassword(req.body.password)) {
 			// Passwords match! Create JWT payload and sign
 			const payload = { email: user.email };
 			jwt.sign(
@@ -43,7 +40,7 @@ async function login(req, res) {
 
 	} catch (err) { // some issue trying to access the database or check the passwords
 		console.error(err.message);
-		res.status(500).send({ errors: {err: "Could not sign in" } });
+		res.status(503).send({ errors: {err: "Could not sign in" } });
 	}
 }
 

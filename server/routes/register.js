@@ -1,6 +1,5 @@
 const User = require('../models/user').User;
 const validateRegister = require('../models/user').validateRegister;
-const argon2 = require("argon2"); // for password hashing
  
  async function register(req, res) {    // First validate register parameters
     try {
@@ -15,16 +14,17 @@ const argon2 = require("argon2"); // for password hashing
         if (user) {
             return res.status(400).send({ errors: { email: 'The email address provided is already in use' } });
         } else {
-            // Insert the new user if they do not exist yet
-            let hashedPassword = await hashPassword(req.body.password);
-            if (hashedPassword === "") { // could not hash password
-                return res.status(422);
-            }
+            // Insert the new user since they do not exist yet
             user = new User({
                 name: req.body.name,
                 email: req.body.email,
-                password: hashedPassword
+                password: await User.hashPassword(req.body.password)
             });
+
+            if (user.password === "") { // could not hash password
+                return res.status(422);
+            }
+
             await user.save();
             res.status(201).send(user);
             // TODO: jwt signin here
@@ -32,21 +32,10 @@ const argon2 = require("argon2"); // for password hashing
     }
     catch (errorCantSave) {
         // console.error(errorCantSave);
-        res.status(503).send({ errors: { err : 'The user could not be created' } });
+        res.status(503).send({ errors: { err : errorCantSave.message }});
+            // 'The user could not be created' } });
     }
 }
 
-
-async function hashPassword(plaintextPwd) {
-    // Assume the password has been validated
-    try {
-        const hash = await argon2.hash(plaintextPwd);
-        return hash;
-    } catch (err) {
-        console.log(`Could not hash password. Error: ${err}`);
-        return "";
-
-    }
-}
  
 module.exports = register;

@@ -4,6 +4,7 @@ var mongoose = require("mongoose");
 var path = require("path");
 var cookieParser = require("cookie-parser");
 var logger = require("morgan");
+const passport = require("passport");
 
 const routes = require("./routes/index.js");
 
@@ -20,6 +21,10 @@ const db = require("./config/keys").mongoURI;
 mongoose.connect(db, { useNewUrlParser: true, retryWrites: true, w: "majority" })
   	.then(() => console.log("MongoDB successfully connected"))
   	.catch(err => console.log(err));
+
+// Passport middleware and config
+app.use(passport.initialize());
+require("./config/passport")(passport);
 
 // Connect all our API routes to our app
 app.use("/api", routes);

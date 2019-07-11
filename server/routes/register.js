@@ -26,12 +26,12 @@ const argon2 = require("argon2"); // for password hashing
             });
 
             await user.save();
-            return res.status(201).send(user);
+            res.status(201).send(user);
         }
     }
     catch (errorCantSave) {
-        console.error(errorCantSave);
-        return res.status(500).send('The user could not be created');
+        // console.error(errorCantSave);
+        res.status(500).send('The user could not be created');
     }
 }
 

@@ -2,12 +2,13 @@ const { User, validateLogin } = require('../models/user');
 const argon2 = require("argon2"); // for password hashing
 
 async function login(req, res) {
-	const { error } = validateLogin(req.body);
-	if (error) {
-        return res.status(400).send(error.details[0].message);
-    }
-
 	try {
+		// Make sure all fields are filled
+		const { errors, isValid } = validateLogin(req.body);
+		if (!isValid) {
+	        return res.status(400).json(errors);
+	    }
+
 		// Check if sign-in address exists
 		let user = await User.findOne({ email: req.body.email });
 	    if (!user) {

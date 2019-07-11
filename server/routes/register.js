@@ -2,12 +2,13 @@ const { User, validateRegister } = require('../models/user');
 const argon2 = require("argon2"); // for password hashing
  
  async function register(req, res) {    // First validate register parameters
-    const { error } = validateRegister(req.body);
-    if (error) {
-        return res.status(400).send(error.details[0].message);
-    }
- 
     try {
+        // Make sure all fields are filled
+        const { errors, isValid } = validateRegister(req.body);
+        if (!isValid) {
+            return res.status(400).json(errors);
+        }
+ 
         // Check if this user already exists
         let user = await User.findOne({ email: req.body.email });
         if (user) {

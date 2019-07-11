@@ -10,7 +10,9 @@ import RegisterPage from "./Pages/Register";
 
 class App extends Component {
   state = {
-    userType: 'shopper'
+    userType: 'shopper' 
+    //current types: shopper(user not logged in), shopkeeper(user logged in)
+    //future types: anonymous(not logged in), shopper, shopkeeper
   }
 
   updateUserType = (userType) => {
@@ -26,6 +28,7 @@ class App extends Component {
           <Route exact path="/" component={LandingPage} />
           <Route exact path="/login" component={LoginPage} userType={this.updateUserType} />
           <Route exact path="/register" component={RegisterPage} userType={this.updateUserType}/>
+          <Route exact path="/myshop" component={LandingPage} />
         </BrowserRouter>
       </MuiThemeProvider>
     );

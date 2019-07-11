@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { Redirect } from 'react-router-dom'
 import axios from 'axios';
 import { withStyles } from "@material-ui/core/styles";
 import ButtonWrapper from '../Wrappers/ButtonWrapper';
@@ -65,17 +66,20 @@ class RegisterPage extends Component {
             const data = {
                 name: this.state.name,
                 email: this.state.email,
-                password: this.state.password, 
+                password: this.state.password1, 
             }
-
+            
             axios({
                 method: 'post',
-                url: `${window.location.pathname}/users`,
+                // url: `${window.location.origin}/users`,
+                url: `http://localhost:3001/users`,
                 data: data,
-                headers: { "Content-Type": "application/json" }
+                headers: { "Content-Type" : "application/x-www-form-urlencoded" }
             }).then(response => {
-                // Redirect to shop
                 console.log('SUCCESS', response);
+                this.props.updateUserType('shopkeeper');  //must change this to be dynamic
+                // Redirect to shop
+                this.props.history.push(`/myshop`);
             }).catch(error => {
                 console.log('ERROR', error);
                 if(error.response){

@@ -2,7 +2,8 @@ const User = require('../models/user').User;
 const validateLogin = require('../models/user').validateLogin;
 const argon2 = require("argon2"); // for password hashing
 const jwt = require("jsonwebtoken");
-const keys = require("../config/keys");
+// const keys = require("../config/keys");
+const keys = process.env.SECRETORKEY;
 
 async function login(req, res) {
 	try {

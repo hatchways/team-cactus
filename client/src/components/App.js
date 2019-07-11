@@ -4,9 +4,9 @@ import CssBaseline from "@material-ui/core/CssBaseline";
 import { MuiThemeProvider } from "@material-ui/core";
 import { theme } from "../themes/theme";
 import NavBar from "./Nav/NavBar";
-import LandingPage from "./Pages/Landing";
-import LoginPage from "./Pages/Login";
-import RegisterPage from "./Pages/Register";
+import LandingPage from "./Pages/LandingPage";
+import LoginPage from "./Pages/LoginPage";
+import RegisterPage from "./Pages/RegisterPage";
 
 class App extends Component {
   state = {
@@ -26,8 +26,8 @@ class App extends Component {
         <BrowserRouter>
           <NavBar userType={this.state.userType} />
           <Route exact path="/" component={LandingPage} />
-          <Route exact path="/login" component={LoginPage} userType={this.updateUserType} />
-          <Route exact path="/register" component={RegisterPage} userType={this.updateUserType}/>
+          <Route exact path="/login" component={LoginPage} updateUserType={this.updateUserType} />
+          <Route exact path='/register' render={(props) => <RegisterPage {...props} updateUserType={this.updateUserType} />} />
           <Route exact path="/myshop" component={LandingPage} />
         </BrowserRouter>
       </MuiThemeProvider>

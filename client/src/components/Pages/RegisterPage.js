@@ -73,10 +73,10 @@ class RegisterPage extends Component {
                 method: 'post',
                 // url: `${window.location.origin}/users`,
                 url: `http://localhost:3001/users`,
-                data: data,
-                headers: { "Content-Type" : "application/x-www-form-urlencoded" }
+                data: data
             }).then(response => {
                 console.log('SUCCESS', response);
+                console.log('this.props', this.props);
                 this.props.updateUserType('shopkeeper');  //must change this to be dynamic
                 // Redirect to shop
                 this.props.history.push(`/myshop`);

@@ -45,10 +45,28 @@ function validateRegisterFields(data) {
     };
 }
 
-// module.exports = { 
-//     User: mongoose.model("users", UserSchema),
-//     validateRegister: validateRegisterFields 
-// }
+function validateLoginFields(data) {
+    let errors = {};
 
-exports.User = mongoose.model("users", UserSchema);
-exports.validateRegister = validateRegisterFields;
+    data.email = !isEmpty(data.email) ? data.email : "";
+    data.password = !isEmpty(data.password) ? data.password : "";
+
+    if (Validator.isEmpty(data.email)) {
+        errors.email = "Email field is required";
+    }
+
+    if (Validator.isEmpty(data.password)) {
+        errors.password = "Password field is required";
+    }
+
+    return {
+        errors,
+        isValid: isEmpty(errors)
+    };
+}
+
+module.exports = {
+    User: mongoose.model("users", UserSchema),
+    validateRegister: validateRegisterFields,
+    validateLogin: validateLoginFields
+}

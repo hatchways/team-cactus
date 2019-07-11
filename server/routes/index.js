@@ -1,8 +1,10 @@
 var express = require("express");
 var router = express.Router();
+// All our API routes
+const register = require("./register");
+const login = require("./login");
 
-router.get("/welcome", function(req, res, next) {
-  res.status(200).send({ welcomeMessage: "Step 1 (completed)" });
-});
+router.use("/users/login", login);
+router.use("/users", register);
 
 module.exports = router;

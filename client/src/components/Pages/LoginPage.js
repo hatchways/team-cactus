@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import axios from 'axios';
 import { withStyles } from "@material-ui/core/styles";
 import ButtonWrapper from '../Wrappers/ButtonWrapper';
 import FormCardWrapper from '../Wrappers/FormCardWrapper';
@@ -49,7 +50,31 @@ class LoginPage extends Component {
 
       this.setState({ touched : touched });
     } else {
-      //Submit data
+      // Send a POST request to login api
+      const data = {
+        email: this.state.email,
+        password: this.state.password, 
+      }
+      console.log(data);
+    
+      axios({
+          method: 'post',
+          // url: `${window.location.origin}/users`,
+          url: `http://localhost:3001/users/login`,
+          data: data
+      }).then(response => {
+          console.log('SUCCESS', response);
+          this.props.updateUserType('shopkeeper');  //must change this to be dynamic
+          // Redirect to shop
+          this.props.history.push(`/myshop`);
+      }).catch(error => {
+          console.log('ERROR', error);
+          if(error.response){
+              this.setState({ responseError: error.response});
+          } else {
+              this.setState({ responseError: 'Something went wrong :('});
+          }
+      });
     }
   };
 

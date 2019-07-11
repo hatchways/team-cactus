@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import { Redirect } from 'react-router-dom'
 import axios from 'axios';
 import { withStyles } from "@material-ui/core/styles";
 import ButtonWrapper from '../Wrappers/ButtonWrapper';
@@ -76,7 +75,6 @@ class RegisterPage extends Component {
                 data: data
             }).then(response => {
                 console.log('SUCCESS', response);
-                console.log('this.props', this.props);
                 this.props.updateUserType('shopkeeper');  //must change this to be dynamic
                 // Redirect to shop
                 this.props.history.push(`/myshop`);

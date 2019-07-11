@@ -26,7 +26,7 @@ class App extends Component {
         <BrowserRouter>
           <NavBar userType={this.state.userType} />
           <Route exact path="/" component={LandingPage} />
-          <Route exact path="/login" component={LoginPage} updateUserType={this.updateUserType} />
+          <Route exact path='/login' render={(props) => <LoginPage {...props} updateUserType={this.updateUserType} />} />
           <Route exact path='/register' render={(props) => <RegisterPage {...props} updateUserType={this.updateUserType} />} />
           <Route exact path="/myshop" component={LandingPage} />
         </BrowserRouter>

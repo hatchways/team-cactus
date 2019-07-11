@@ -18,7 +18,7 @@ const argon2 = require("argon2"); // for password hashing
             // Insert the new user if they do not exist yet
             let hashedPassword = await hashPassword(req.body.password);
             if (hashedPassword === "") { // could not hash password
-                return res.status(500);
+                return res.status(422);
             }
             user = new User({
                 name: req.body.name,
@@ -32,7 +32,7 @@ const argon2 = require("argon2"); // for password hashing
     }
     catch (errorCantSave) {
         // console.error(errorCantSave);
-        res.status(500).send({ errors: { err : 'The user could not be created' } });
+        res.status(503).send({ errors: { err : 'The user could not be created' } });
     }
 }
 

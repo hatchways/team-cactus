@@ -1,4 +1,5 @@
-const { User, validateRegister } = require('../models/user');
+const User = require('../models/user').User;
+const validateRegister = require('../models/user').validateRegister;
 const argon2 = require("argon2"); // for password hashing
  
  async function register(req, res) {    // First validate register parameters

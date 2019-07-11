@@ -65,6 +65,8 @@ function validateLoginFields(data) {
     };
 }
 
-exports.User = mongoose.model("users", UserSchema);
-exports.validateRegister = validateRegisterFields;
-exports.validateLogin = validateLoginFields;
+module.exports = {
+    User: mongoose.model("users", UserSchema),
+    validateRegister: validateRegisterFields,
+    validateLogin: validateLoginFields
+}

@@ -4,7 +4,7 @@ var router = express.Router();
 const register = require("./register");
 const login = require("./login");
 
-router.use("/register", register);
-router.use("/login", login);
+router.use("/users/login", login);
+router.use("/users", register);
 
 module.exports = router;

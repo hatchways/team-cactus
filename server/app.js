@@ -27,7 +27,7 @@ app.use(passport.initialize());
 require("./config/passport")(passport);
 
 // Connect all our API routes to our app
-app.use("/api", routes);
+app.use("/", routes);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

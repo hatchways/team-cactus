@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { Link } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 import { withStyles } from "@material-ui/core/styles";
 import AppBar from '@material-ui/core/AppBar';
 import IconButton from '@material-ui/core/IconButton';
@@ -26,6 +27,7 @@ const styles = theme => ({
   },
   logo: {
     '& > a': {
+      fontFamily: 'Source Sans Pro',
       textTransform: 'uppercase',
       padding: '0 30px 0 15px',
       margin: '0 16px 0 0',
@@ -42,9 +44,15 @@ const styles = theme => ({
 });
 
 class NavBar extends Component {
+
   state = {
     userType: 'shopper',
     navDrawerOpen: false
+  };
+
+  //When area outside of drawer clicked, close NavDrawer
+  backdropClickHandler = () => {
+    this.setState({navDrawerOpen: false});
   };
 
   //Generate array of navLinks for all userTypes
@@ -76,11 +84,6 @@ class NavBar extends Component {
     return entries;
   }
 
-  //When area outside of drawer clicked, close NavDrawer
-  backdropClickHandler = () => {
-    this.setState({navDrawerOpen: false});
-  };
-
   //When hamburger icon clicked, open NavDrawer
   drawerToggleClickHandler = () => {
     this.setState((prevState) => {
@@ -92,7 +95,6 @@ class NavBar extends Component {
     const { classes } = this.props;
     const navLinksShopper = this.createNavLinksShopper();
     const navLinksShopKeeper = this.createNavLinksShopKeeper(this.state.userType);
-
 
     return (
       <div>
@@ -116,4 +118,4 @@ class NavBar extends Component {
   }
 }
 
-export default withStyles(styles)(NavBar);
+export default withRouter(withStyles(styles)(NavBar));

@@ -4,8 +4,8 @@ import { withStyles } from "@material-ui/core/styles";
 import IconButton from '@material-ui/core/IconButton';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
-import Typography from '@material-ui/core/Typography';
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCartOutlined';
+import NavItemWrapper from './NavItemWrapper';
 
 const styles = theme => ({
     list: {
@@ -15,24 +15,6 @@ const styles = theme => ({
         padding: 0,
         listStyle: 'none',
     },
-    listLink: {
-        '& > a': {
-            paddingTop: '5px',
-            textDecoration: 'none',
-            color: '#fff',
-            fontWeight: 600,
-            fontSize: '.9em',
-            whiteSpace: 'nowrap',
-            '&:hover': {
-                borderTop: '2px solid #fff',
-                webkitTransition:  'all 0.1s ease-in',
-                mozTransition: 'all 0.1s ease-in',
-                msTransition: 'all 0.1s ease-in',
-                oTransition: 'all 0.1s ease-in',
-                transition: 'all 0.1s ease-in'
-            }
-        }
-    }
 });
 
 class NavActions extends Component {
@@ -43,24 +25,23 @@ class NavActions extends Component {
 
         if(window.location.pathname === '/login' && this.props.userType === 'shopper'){
             jsx = 
-            <Typography classes={{ root: this.props.classes.listLink }}>
+            <NavItemWrapper>
                 <Link to='/register'>Create Shop</Link>
-            </Typography>;
+            </NavItemWrapper>
 
             jsxArray.push(jsx);
 
         } else if(window.location.pathname === '/register' && this.props.userType === 'shopper'){
             jsx = 
-            <Typography classes={{ root: this.props.classes.listLink }}>
+            <NavItemWrapper>
                 <Link to='/login'>Shop Login</Link>
-            </Typography>;
+            </NavItemWrapper>
 
             jsxArray.push(jsx);
         }
 
         return (jsxArray);
     }
-
 
     render() {
         const { classes } = this.props;
@@ -73,8 +54,8 @@ class NavActions extends Component {
                     </ListItem>
                 ))}
                 <ListItem>
-                    <IconButton classes={{ root: classes.iconButton }} component={Link} to="/cart" edge="start" color="inherit" aria-label="Menu">
-                        <ShoppingCartIcon />
+                    <IconButton classes={{ root: classes.iconButton }} component={Link} to="/placeholder" edge="start"  color="secondary" aria-label="Menu">
+                        <ShoppingCartIcon fontSize="small"/>
                     </IconButton>
                 </ListItem>
             </List>

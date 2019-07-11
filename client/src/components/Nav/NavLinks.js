@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { withStyles } from "@material-ui/core/styles";
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
-import Typography from '@material-ui/core/Typography';
+import NavItemWrapper from './NavItemWrapper';
 
 const styles = theme => ({
     listContainer: {
@@ -21,47 +21,30 @@ const styles = theme => ({
         flexDirection: 'row',
         listStyle: 'none'
     },
-    listLink: {
-        '& > a': {
-            paddingTop: '5px',
-            textDecoration: 'none',
-            color: '#fff',
-            fontWeight: 600,
-            fontSize: '.9em',
-            '&:hover': {
-                borderTop: '2px solid #fff',
-                webkitTransition:  'all 0.1s ease-in',
-                mozTransition: 'all 0.1s ease-in',
-                msTransition: 'all 0.1s ease-in',
-                oTransition: 'all 0.1s ease-in',
-                transition: 'all 0.1s ease-in'
-            }
-        }
-    }
 });
 
 class NavLinks extends Component {
 
     render() {
-        const { classes } = this.props;
+        const { classes, navLinksShopper, navLinksShopKeeper } = this.props;
 
         return (
             <div className={classes.listContainer}>
                 <List classes={{ root: classes.list }} component="ul">
-                    {this.props.navLinksShopper.map((entry) => (
+                    {navLinksShopper.map((entry) => (
                         <ListItem component="li" key={entry[0]}>
-                            <Typography classes={{ root: classes.listLink }}>
+                            <NavItemWrapper>
                                 <Link to={entry[1]}>{entry[0]}</Link>
-                            </Typography>
+                            </NavItemWrapper>
                         </ListItem>
                     ))}
                 </List>
                 <List classes={{ root: classes.list }} component="ul">
-                    {this.props.navLinksShopKeeper.map((entry) => (
+                    {navLinksShopKeeper.map((entry) => (
                         <ListItem component="li" key={entry[0]}>
-                            <Typography classes={{ root: classes.listLink }}>
+                            <NavItemWrapper>
                                 <Link to={entry[1]}>{entry[0]}</Link>
-                            </Typography>
+                            </NavItemWrapper>
                         </ListItem>
                     ))}
                 </List>

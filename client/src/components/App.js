@@ -4,9 +4,9 @@ import CssBaseline from "@material-ui/core/CssBaseline";
 import { MuiThemeProvider } from "@material-ui/core";
 import { theme } from "../themes/theme";
 import NavBar from "./Nav/NavBar";
-import LandingPage from "./Landing";
-import LoginPage from "./Login";
-import RegisterPage from "./Register";
+import LandingPage from "./Pages/Landing";
+import LoginPage from "./Pages/Login";
+import RegisterPage from "./Pages/Register";
 
 function App() {
   return (

@@ -17,8 +17,9 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 
 // Connect to MongoDB
-const db = require("./config/keys").mongoURI;
-mongoose.connect(db, { useNewUrlParser: true, retryWrites: true, w: "majority" })
+// const db = require("./config/keys").mongoURI;
+const db_connect_uri = process.env.MONGO_URI;
+mongoose.connect(db_connect_uri, { useNewUrlParser: true, retryWrites: true, w: "majority" })
   	.then(() => console.log("MongoDB successfully connected"))
   	.catch(err => console.log(err));
 

@@ -9,9 +9,47 @@ export const theme = createMuiTheme({
         boxShadow: 'none'
       },
     },
+    MuiFormControl: {
+      marginDense: {
+        marginBottom: '6px'
+      }
+    },
+    MuiFormHelperText: {
+      root: {
+        '&$error': {
+          color: '#df5353',
+          marginTop: '3px',
+          marginBottom: '6px'
+        }
+      },
+    },
+    MuiInputLabel: {
+      root: {
+        fontSize: '.9rem',
+        '&$error': {
+            color: 'rgba(0, 0, 0, 0.54)',
+            zIndex: 99,
+        }
+      }
+    },
+    MuiOutlinedInput: {
+      root: {
+          '& $notchedOutline': {
+              borderColor: 'rgba(0, 0, 0, 0.23)',
+              borderRadius: 0,
+          },
+          '&$error $notchedOutline': {
+              borderColor: 'rgba(0, 0, 0, 0.23)',
+              backgroundColor: '#ffe8e6',
+          },
+      },
+      input: {
+        zIndex: 99,
+      }
+    },
   },
   typography: {
-    "fontFamily": "Source Sans Pro"
+    fontFamily: 'Roboto'
   },
   palette: {
     primary: {

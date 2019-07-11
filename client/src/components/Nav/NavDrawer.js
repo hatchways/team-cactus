@@ -11,21 +11,13 @@ const styles = theme => ({
     list: {
         width: '200px'
     },
-    listLink: {
+    navItem: {
         '& > a': {
             paddingTop: '5px',
             textDecoration: 'none',
             color: '#000',
             fontWeight: 600,
             fontSize: '.9em',
-            '&:hover': {
-                // borderTop: '2px solid #fff',
-                // webkitTransition:  'all 0.1s ease-in',
-                // mozTransition: 'all 0.1s ease-in',
-                // msTransition: 'all 0.1s ease-in',
-                // oTransition: 'all 0.1s ease-in',
-                // transition: 'all 0.1s ease-in'
-            }
         }
     }
 });
@@ -55,49 +47,37 @@ class NavDrawer extends Component {
     }
 
     render() {
-        const { classes } = this.props;
-
-        // const [state, setState] = React.useState({
-        //     open: false,
-        // });
-
-        // const toggleDrawer = (open) => event => {
-        //     if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
-        //         return;
-        //     }
-
-        //     setState({ ...state, open: open });
-        // };
+        const { classes, close, navLinksShopper, navLinksShopKeeper, show, userType } = this.props;
 
         const sideList = () => (
             <div className={classes.list} >
                 <List>
-                    {this.props.navLinksShopper.map((entry) => (
+                    {navLinksShopper.map((entry) => (
                         <ListItem component="li" key={entry[0]}>
-                            <Typography classes={{ root: classes.listLink }}>
-                                <Link to={entry[1]}>{entry[0]}</Link>
+                            <Typography classes={{ root: classes.navItem }}>
+                                <Link to={entry[1]} onClick={close}>{entry[0]}</Link>
                             </Typography>
                         </ListItem>
                     ))}
                 </List>
                 <Divider />
-                {this.props.userType === 'shopkeeper' ? 
+                {userType === 'shopkeeper' ? 
                     (<List>
-                        {this.props.navLinksShopKeeper.map((entry) => (
+                        {navLinksShopKeeper.map((entry) => (
                             <ListItem component="li" key={entry[0]}>
-                                <Typography classes={{ root: classes.listLink }}>
-                                    <Link to={entry[1]}>{entry[0]}</Link>
+                                <Typography classes={{ root: classes.navItem }}>
+                                    <Link to={entry[1]} onClick={close}>{entry[0]}</Link>
                                 </Typography>
                             </ListItem>
                         ))} 
                     </List>) : '' 
                 }
-                {this.props.userType === 'shopkeeper' ? <Divider /> : ''}
+                {userType === 'shopkeeper' ? <Divider /> : ''}
                 <List>
-                    {this.createNavActions(this.props.userType).map((entry) => (
+                    {this.createNavActions(userType).map((entry) => (
                         <ListItem component="li" key={entry[0]}>
-                            <Typography classes={{ root: classes.listLink }}>
-                                <Link to={entry[1]}>{entry[0]}</Link>
+                            <Typography classes={{ root: classes.navItem }}>
+                                <Link to={entry[1]} onClick={close}>{entry[0]}</Link>
                             </Typography>
                         </ListItem>
                     ))}
@@ -107,7 +87,7 @@ class NavDrawer extends Component {
 
         return (
             <div>
-            <Drawer open={this.props.show} onClose={this.props.close}>
+            <Drawer open={show} onClose={close}>
                 {sideList()}
             </Drawer>
             </div>

@@ -25,7 +25,6 @@ const { Shop, validateShopCreation, validateCoverURL } = require('../models/shop
  	}
  }
 
-
 async function fetchShop(req, res) {
 	try {
 		const email = req.user.email;

@@ -71,21 +71,21 @@ class RegisterPage extends Component {
                 password: this.state.password1,
                 isShopOwner: true 
             }
-            console.log(data);
+ 
             axios({
                 method: 'post',
                 // url: `${window.location.origin}/users`,
                 url: `http://localhost:3001/users`,
                 data: data
             }).then(response => {
-                console.log('SUCCESS', response);
+                localStorage.setItem('token', response.data.token);
+
                 this.props.updateUserType('shopkeeper');  //must change this to be dynamic
                 // Redirect to shop
-                this.props.history.push(`/myshop`);
+                this.props.history.push(`/mystore`);
             }).catch(error => {
-                console.log('ERROR', error);
                 if(error.response){
-                    this.setState({ responseError: error.response});
+                    this.setState({ responseError: error.response.data.errors.message});
                 } else {
                     this.setState({ responseError: 'Something went wrong :('});
                 }

@@ -1,7 +1,6 @@
 var express = require("express");
 var router = express.Router();
 const passport = require("passport")
-const {ensureAuthenticatedWithRedirect} = require('../config/auth');
 
 // All our API routes
 const register = require("./register");

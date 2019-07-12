@@ -24,7 +24,7 @@ async function login(req, res) {
 			const payload = { email: user.email };
 			jwt.sign(
 				payload,
-				keys.secretOrKey,
+				secretOrKey,
 				{ expiresIn: 31556926 }, // 1 year in seconds
 				// Append token to a Bearer string since we chose bearer scheme in config
 				(err, token) => {

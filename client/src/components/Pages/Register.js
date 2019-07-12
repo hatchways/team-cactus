@@ -179,9 +179,9 @@ class RegisterPage extends Component {
                             value={this.state.password2} 
                         />
 
-                        {this.state.serverError ? (
+                        {this.state.responseError ? (
                             <ErrorWrapper>
-                                {this.state.serverError}
+                                {this.state.responseError}
                             </ErrorWrapper> ) : ''
                         }
                             

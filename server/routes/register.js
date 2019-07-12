@@ -1,52 +1,41 @@
-const { User, validateRegister } = require('../models/user');
-const express = require('express');
-const router = express.Router();
-const argon2 = require("argon2"); // for password hashing
+const User = require('../models/user').User;
+const validateRegister = require('../models/user').validateRegister;
  
-router.post('/register', async (req, res) => {
-    // First validate register parameters
-    const { error } = validateRegister(req.body);
-    if (error) {
-        return res.status(400).send(error.details[0].message);
-    }
+ async function register(req, res) {    // First validate register parameters
+    try {
+        // Make sure all fields are filled
+        const { errors, isValid } = validateRegister(req.body);
+        if (!isValid) {
+            return res.status(400).json({ errors: errors });
+        }
  
-    // Check if this user already exists
-    let user = await User.findOne({ email: req.body.email });
-    if (user) {
-        return res.status(400).send('The email address provided is already in use');
-    } else {
-        try {
-            // Insert the new user if they do not exist yet
-            let hashedPassword = await hashPassword(req.body.password);
-            if (hashedPassword === "") { // could not hash password
-                return res.status(500);
-            }
+        // Check if this user already exists
+        let user = await User.findOne({ email: req.body.email });
+        if (user) {
+            return res.status(400).send({ errors: { email: 'The email address provided is already in use' } });
+        } else {
+            // Insert the new user since they do not exist yet
             user = new User({
                 name: req.body.name,
                 email: req.body.email,
-                password: hashedPassword
+                password: await User.hashPassword(req.body.password)
             });
+
+            if (user.password === "") { // could not hash password
+                return res.status(422);
+            }
 
             await user.save();
             res.status(201).send(user);
-        }
-        catch (errorCantSave) {
-            res.status(500).send('The user could not be created');
-            console.error(errorCantSave);
+            // TODO: jwt signin here
         }
     }
-});
-
-async function hashPassword(plaintextPwd) {
-    // Assume the password has been validated
-    try {
-        const hash = await argon2.hash(plaintextPwd);
-        return hash;
-    } catch (err) {
-        console.log(`Could not hash password. Error: ${err}`);
-        return "";
-
+    catch (errorCantSave) {
+        // console.error(errorCantSave);
+        res.status(503).send({ errors: { err : errorCantSave.message }});
+            // 'The user could not be created' } });
     }
 }
+
  
-module.exports = router;
+module.exports = register;

@@ -39,7 +39,7 @@ const styles = theme => ({
 
 class MyStorePage extends Component {
 	state = {
-		storeName: "",
+		storeName: "My Store!",
 		storeDesc: "",
 		coverURL: "https://source.unsplash.com/user/erondu"
 	}
@@ -53,7 +53,7 @@ class MyStorePage extends Component {
             let name = response.data.name;
             let desc = response.data.description;
             let coverURL = response.data.coverPhoto;
-            this.setState({ storeName: name});
+            // this.setState({ storeName: name});
             this.setState({ storeDesc: desc ? desc : "" });
             // this.setState({ coverURL: coverURL ? coverURL : ""});
           }).catch(error => {
@@ -64,7 +64,6 @@ class MyStorePage extends Component {
                 this.setState({ responseError: 'Something went wrong :('});
             }
           });
-         console.log(this.state.storeName);
     }
 
     componentDidMount() {

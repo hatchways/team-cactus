@@ -4,9 +4,9 @@ class LandingPage extends Component {
   
 
   render() {
-    const { classes } = this.props;
+
     return (
-      <div className={classes.landingContainer}>
+      <div>
         Landing Page
       </div>
     );

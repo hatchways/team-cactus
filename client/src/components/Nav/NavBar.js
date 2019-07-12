@@ -50,10 +50,6 @@ class NavBar extends Component {
     navDrawerOpen: false
   };
 
-  componentDidMount = () => {
-    this.setState({ userType: this.props.userType });
-  }
- 
   //When area outside of drawer clicked, close NavDrawer
   backdropClickHandler = () => {
     this.setState({navDrawerOpen: false});

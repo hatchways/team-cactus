@@ -4,7 +4,7 @@ import TextField from '@material-ui/core/TextField';
 class FormTextField extends Component {
 
     render() {
-        const { error, label, helperText, id, onBlur, onChange, type, value } = this.props;
+        const { error, label, helperText, id, onBlur, onChange, value } = this.props;
 
         return (
             <TextField
@@ -16,7 +16,7 @@ class FormTextField extends Component {
                 margin="dense"
                 onBlur={onBlur}
                 onChange={onChange}
-                type={type}
+                type="text"
                 value={value}
                 variant="outlined"
             />          

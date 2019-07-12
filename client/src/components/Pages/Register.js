@@ -1,8 +1,6 @@
 import React, { Component } from "react";
-import axios from 'axios';
 import { withStyles } from "@material-ui/core/styles";
 import ButtonWrapper from '../Wrappers/ButtonWrapper';
-import ErrorWrapper from '../Wrappers/ErrorWrapper';
 import FormCardWrapper from '../Wrappers/FormCardWrapper';
 import FormTextFieldWrapper from '../Wrappers/FormTextFieldWrapper';
 import TitleWrapper from '../Wrappers/TitleWrapper';
@@ -38,8 +36,7 @@ class RegisterPage extends Component {
             password1: false,
             password2: false,
         },
-        errors: {},
-        responseError: ''
+        errors: {}
     }
 
     handleSubmit = (event) => {
@@ -56,36 +53,9 @@ class RegisterPage extends Component {
                 password2: true,
             };
 
-            this.setState({ 
-                touched : touched, 
-                responseError: '' 
-            });
+            this.setState({ touched : touched });
         } else {
-            // Send a POST request to register api
-            const data = {
-                name: this.state.name,
-                email: this.state.email,
-                password: this.state.password1, 
-            }
-            
-            axios({
-                method: 'post',
-                // url: `${window.location.origin}/users`,
-                url: `http://localhost:3001/users`,
-                data: data
-            }).then(response => {
-                console.log('SUCCESS', response);
-                this.props.updateUserType('shopkeeper');  //must change this to be dynamic
-                // Redirect to shop
-                this.props.history.push(`/myshop`);
-            }).catch(error => {
-                console.log('ERROR', error);
-                if(error.response){
-                    this.setState({ responseError: error.response});
-                } else {
-                    this.setState({ responseError: 'Something went wrong :('});
-                }
-            });
+            //Submit data
         }
     };
 
@@ -142,7 +112,6 @@ class RegisterPage extends Component {
                             label="Name" 
                             onBlur={this.handleBlur('name')} 
                             onChange={event => this.setState({ name: event.target.value })}
-                            type="text"
                             value={this.state.name} 
                         />
                         <FormTextFieldWrapper 
@@ -152,7 +121,6 @@ class RegisterPage extends Component {
                             label="Email" 
                             onChange={event => this.setState({ email: event.target.value })} 
                             onBlur={this.handleBlur('email')} 
-                            type="text"
                             value={this.state.email} 
                         />
                         <FormTextFieldWrapper 
@@ -162,7 +130,6 @@ class RegisterPage extends Component {
                             label="Create Password" 
                             onChange={event => this.setState({ password1: event.target.value })} 
                             onBlur={this.handleBlur('password1')} 
-                            type="password"
                             value={this.state.password1} 
                         />
                         <FormTextFieldWrapper 
@@ -172,14 +139,9 @@ class RegisterPage extends Component {
                             label="Confirm Password" 
                             onChange={event => this.setState({ password2: event.target.value })} 
                             onBlur={this.handleBlur('password2')} 
-                            type="password"
                             value={this.state.password2} 
                         />
-                        {this.state.serverError ? (
-                            <ErrorWrapper>
-                                {this.state.serverError}
-                            </ErrorWrapper> ) : ''
-                        }
+                            
                         <ButtonWrapper type="submit" classes={{ button: classes.button }}>
                             Create
                         </ButtonWrapper>

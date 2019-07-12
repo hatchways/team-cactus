@@ -1,11 +1,12 @@
 import React, { Component } from "react";
+
 class LandingPage extends Component {
   
 
   render() {
-
+    const { classes } = this.props;
     return (
-      <div>
+      <div className={classes.landingContainer}>
         Landing Page
       </div>
     );

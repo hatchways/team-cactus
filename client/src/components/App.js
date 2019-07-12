@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Component } from "react";
 import { BrowserRouter, Route } from "react-router-dom";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import { MuiThemeProvider } from "@material-ui/core";
@@ -7,7 +7,7 @@ import NavBar from "./Nav/NavBar";
 import LandingPage from "./Pages/Landing";
 import LoginPage from "./Pages/Login";
 import RegisterPage from "./Pages/Register";
-import MyStorePage from "./Pages/MyStore";
+
 
 function App() {
   return (

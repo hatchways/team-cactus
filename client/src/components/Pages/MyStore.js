@@ -40,7 +40,7 @@ const styles = theme => ({
 class MyStorePage extends Component {
 	state = {
 		storeName: "My Store!",
-		storeDesc: "",
+		storeDesc: "default description",
 		coverURL: "https://source.unsplash.com/user/erondu"
 	}
     
@@ -50,11 +50,11 @@ class MyStorePage extends Component {
             url: `http://localhost:3001/users/mystore`,
             headers: {'Authorization': localStorage.token },
           }).then(response => {
-            let name = response.data.name;
-            let desc = response.data.description;
-            let coverURL = response.data.coverPhoto;
+            // let name = response.data.name;
+            // let desc = response.data.description;
+            // let coverURL = response.data.coverPhoto;
             // this.setState({ storeName: name});
-            this.setState({ storeDesc: desc ? desc : "" });
+            // this.setState({ storeDesc: desc ? desc : "" });
             // this.setState({ coverURL: coverURL ? coverURL : ""});
           }).catch(error => {
             console.log('ERROR', error.response);

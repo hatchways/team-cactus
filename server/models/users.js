@@ -93,15 +93,7 @@ UserSchema.statics.hashPassword = async function(plaintextPassword) {
 };
 
 UserSchema.methods.validatePassword = async function(plaintextPassword) {
-    console.log('this.password', this.password);
-    
-    if(argon2.verify(this.password, plaintextPassword)){
-        console.log('successss argon');
-    } else {
-        console.log('nope argon');
-    }
-    
-    //return await argon2.verify(this.password, plaintextPassword);
+    return await argon2.verify(this.password, plaintextPassword);
 };
 
 UserSchema.methods.generateJWT = function() {

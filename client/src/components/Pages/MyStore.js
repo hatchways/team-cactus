@@ -41,7 +41,7 @@ class MyStorePage extends Component {
 	state = {
 		storeName: "",
 		storeDesc: "",
-		coverURL: ""
+		coverURL: "https://source.unsplash.com/user/erondu"
 	}
     
     fetchStoreData = () => {
@@ -55,7 +55,7 @@ class MyStorePage extends Component {
             let coverURL = response.data.coverPhoto;
             this.setState({ storeName: name});
             this.setState({ storeDesc: desc ? desc : "" });
-            this.setState({ coverURL: coverURL ? coverURL : ""});
+            // this.setState({ coverURL: coverURL ? coverURL : ""});
           }).catch(error => {
             console.log('ERROR', error.response);
             if(error.response){

@@ -45,7 +45,7 @@ class MyStorePage extends Component {
             headers: {'Authorization': localStorage.token },
           }).then(response => {
             console.log('I GOT STORE DATA!');
-            this.setState({ storeName: "response.data.name"});
+            this.setState({ storeName: response.data.name});
           }).catch(error => {
             console.log('ERROR');
             if(error.response){
@@ -59,10 +59,10 @@ class MyStorePage extends Component {
 
     render() {
 		const { classes } = this.props;
-		
+    	this.fetchStoreData();
+
 		return (
 			<div className={classes.storeBanner}>
-                {this.fetchStoreData()}
                 <Grid container direction="column">
     				<Grid container item direction="row" justify="flex-start" alignItems="center">
                         <Grid item md={5}>

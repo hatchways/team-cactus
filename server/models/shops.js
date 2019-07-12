@@ -46,12 +46,12 @@ function validateShopCreation(data) {
     };
 }
 
-function validateFetchShop(data) {
-	return { isValid: !isEmpty(data.userEmail) };
-}
+// function validateFetchShop(data) {
+// 	return { isValid: !isEmpty(data.userEmail) };
+// }
 
 module.exports = {
 	Shop: mongoose.model("shops", ShopSchema),
 	validateShopCreation: validateShopCreation,
-	validateFetchShop: validateFetchShop
+	//validateFetchShop: validateFetchShop
 }

@@ -31,7 +31,7 @@ async function login(req, res) {
 					res.status(200).json({
 						success: true,
 						token: "Bearer " + token,
-						user
+						user ///can i add this here???
 					});
 				}
     		);

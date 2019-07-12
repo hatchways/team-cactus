@@ -1,6 +1,8 @@
 const User = require('../models/users').User;
 const validateRegister = require('../models/users').validateRegister;
 const createShop = require('./mystore').createShop;
+const jwt = require("jsonwebtoken");
+const secretOrKey = process.env.SECRETORKEY;
 
  async function register(req, res) {    // First validate register parameters
     try {
@@ -14,7 +16,7 @@ const createShop = require('./mystore').createShop;
         // Check if this user already exists
         let user = await User.findOne({ email: req.body.email });
         if (user) {
-            return res.status(409).json({ errors: { email: 'The email address provided is already in use' } });
+            return res.status(409).json({ errors: { message: 'The email address provided is already in use.' } });
         }
         // Insert the new user since they do not exist yet
         user = new User({
@@ -40,15 +42,32 @@ const createShop = require('./mystore').createShop;
         //         return res.status(400).json({ errors: { shop: "Unable to create shop; user was not created" } });
         //     }
         // }
-        res.status(201).send(user);
-        // TODO: jwt signin here
+        // res.status(201).send(user);
+        
+        try {
+            console.log(user.email);
+            const payload = { email: user.email };
+            jwt.sign(
+                payload,
+                secretOrKey,
+                { expiresIn: 31556926 }, // 1 year in seconds
+                // Append token to a Bearer string since we chose bearer scheme in config
+                (err, token) => {
+                    res.status(200).json({
+                        success: true,
+                        token: "Bearer " + token,
+                    });
+                }
+            );
+        } catch (err) { // some issue trying to access the database or check the passwords
+            res.status(503).send({ errors: {message: "Could not sign in." } });
+        }
     }
     catch (errorCantSave) {
         // console.error(errorCantSave);
         // return res.status(503).json({ errors: { err : "The user could not be created" }});
-        return res.status(503).json({ errors: { err : errorCantSave.message }});
+        return res.status(503).json({ errors: { message : errorCantSave.message }});
     }
 }
 
- 
 module.exports = register;

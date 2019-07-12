@@ -30,7 +30,8 @@ async function login(req, res) {
 				(err, token) => {
 					res.status(200).json({
 						success: true,
-						token: "Bearer " + token
+						token: "Bearer " + token,
+						user
 					});
 				}
     		);

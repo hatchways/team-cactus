@@ -50,8 +50,23 @@ function validateFetchShop(data) {
 	return { isValid: !isEmpty(data.userEmail) && !isEmpty(data.name) };
 }
 
+function validateCoverURL(data) {
+	return { isValid: !isEmpty(data.coverURL) && !isEmpty(data.userEmail) };
+}
+
+function validateName(data) {
+	return { isValid: !isEmpty(data.name) && !isEmpty(data.userEmail) };
+}
+
+function validateDescription(data) {
+	return { isValid: !isEmpty(data.description) && !isEmpty(data.userEmail) };
+}
+
+
+
 module.exports = {
 	Shop: mongoose.model("shops", ShopSchema),
 	validateShopCreation: validateShopCreation,
-	validateFetchShop: validateFetchShop
+	validateFetchShop: validateFetchShop,
+	validateCoverURL: validateCoverURL
 }

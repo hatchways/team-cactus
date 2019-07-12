@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
+const createShop = require("../routes/mystore").createShop;
 const Validator = require("validator");
 const isEmpty = require("is-empty");
 const argon2 = require("argon2"); // for password hashing
@@ -18,6 +19,20 @@ const UserSchema = new Schema({
     password: {
         type: String,
         required: true
+    }, 
+    isShopOwner: {
+        type: Boolean,
+        required: true
+    }
+}, {collection: 'users'});
+
+UserSchema.pre('save', async function() {
+    if (this.isShopOwner) {
+        data = { userEmail: this.email, name: "My Store" };
+        let shop = await createShop(data);
+        if (!shop || shop.errors) {
+            throw new Error(shop.errors ? shop.errors : {errors: { shop: "Could not create shop"} });
+        }
     }
 });
 

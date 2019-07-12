@@ -26,7 +26,14 @@ const styles = theme => ({
         width: '100%',
     },
     storeBanner: {
-    	backgroundSize: 'cover',
+        alignItems: 'center',
+        justify: 'center',
+        textAlign: 'center'
+    },
+    coverPhoto: {
+        height: '450px',
+        overflow: 'hidden',
+        objectFit: 'cover',
     }
 });
 
@@ -38,16 +45,19 @@ class MyStorePage extends Component {
 	}
     
     fetchStoreData = () => {
-    	console.log("fetching store");
         axios({
             method: 'post',
             url: `http://localhost:3001/users/mystore`,
             headers: {'Authorization': localStorage.token },
           }).then(response => {
-            console.log('I GOT STORE DATA!');
-            this.setState({ storeName: response.data.name});
+            let name = response.data.name;
+            let desc = response.data.description;
+            let coverURL = response.data.coverPhoto;
+            this.setState({ storeName: name});
+            this.setState({ storeDesc: desc ? desc : "" });
+            this.setState({ coverURL: coverURL ? coverURL : ""});
           }).catch(error => {
-            console.log('ERROR');
+            console.log('ERROR', error.response);
             if(error.response){
                 this.setState({ responseError: error.response});
             } else {
@@ -57,38 +67,59 @@ class MyStorePage extends Component {
          console.log(this.state.storeName);
     }
 
+    componentDidMount() {
+        this.fetchStoreData();
+    }
+
     render() {
 		const { classes } = this.props;
-    	this.fetchStoreData();
 
 		return (
-			<div className={classes.storeBanner}>
+			<div>
                 <Grid container direction="column">
-    				<Grid container item direction="row" justify="flex-start" alignItems="center">
-                        <Grid item md={5}>
-                            <div>
-                                <Typography component="h1" variant="h3" color="inherit" gutterBottom>
-                                    Store name
-                                </Typography>
-                                <Typography variant="h5" color="inherit" paragraph>
-                                    Store description
-                                </Typography>
-                                <ButtonWrapper type="button" classes={{ button: classes.button }}>
-                                    Edit Cover
-                                </ButtonWrapper>
-                            </div>
-                        </Grid>
+                    <div className={classes.storeBanner}>
+        				<Grid container item direction="row" justify="flex-start" alignItems="center">
+                            <Grid item md={5}>
+                                <div>
+                                    <Typography component="h1" variant="h3" color="inherit" gutterBottom>
+                                        {this.state.storeName}
+                                    </Typography>
+                                    <Typography variant="h5" color="inherit" paragraph>
+                                        {this.state.storeDesc}
+                                    </Typography>
+                                    <br/> <br/> <br/>
+                                    <ButtonWrapper type="button" classes={{ button: classes.button }}>
+                                        Edit Cover
+                                    </ButtonWrapper>
+                                </div>
+                            </Grid>
 
-                        <Grid item md={7}>
-                            <div>
-                                <img
-                                    // style={{ display: 'none' }}
-                                    src="https://source.unsplash.com/user/erondu"
-                                    alt="background"
-                                />
-                            </div>
+                            <Grid item md={7}>
+                                <div className={classes.coverPhoto}>
+                                    <img
+                                        style={{ height: '100%', width: '100%' }}
+                                        src={this.state.coverURL}
+                                        alt="background"
+                                    />
+                                </div>
+                            </Grid>
                         </Grid>
-                    </Grid>
+                    </div>
+                    <div>
+                        <Grid container item direction="row">
+                            <Grid container item direction="column" justify="flex-start" alignItems="center">
+                                <Grid item md={4}>
+                                    
+                                </Grid>
+                                <Grid item md={4}>
+                                    
+                                </Grid>
+                                <Grid item md={4}>
+                                    
+                                </Grid>
+                            </Grid>
+                        </Grid>
+                    </div>
                 </Grid>
 		  	</div>
 		);

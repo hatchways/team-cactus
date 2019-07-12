@@ -1,6 +1,5 @@
 const User = require('../models/users').User;
 const validateRegister = require('../models/users').validateRegister;
-const createShop = require('./mystore').createShop;
 
  async function register(req, res) {    // First validate register parameters
     try {

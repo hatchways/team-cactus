@@ -27,9 +27,6 @@ function validateShopCreation(data) {
     // Convert empty fields to an empty string so we can use validator functions
     data.userEmail = !isEmpty(data.userEmail) ? data.userEmail : "";
     data.name = !isEmpty(data.name) ? data.name : "My Store";
-    // The following are allowed to be empty
-    data.description = !isEmpty(data.description) ? data.description : "";
-    data.coverPhoto = !isEmpty(data.coverPhoto) ? data.coverPhoto : "";
 
     // Email check
     if (Validator.isEmpty(data.userEmail)) {

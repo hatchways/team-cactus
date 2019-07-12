@@ -12,8 +12,8 @@ const { Shop, validateShopCreation, validateCoverURL } = require('../models/shop
  		store = new Shop({
             userEmail: data.userEmail,
             name: data.name,
-            description: data.description,
-            coverPhoto: data.coverPhoto
+            description: data.description ? data.description : "default description",
+            coverPhoto: data.coverPhoto ? data.coverPhoto : "https://source.unsplash.com/user/erondu"
         });
 
         await store.save();
@@ -25,24 +25,6 @@ const { Shop, validateShopCreation, validateCoverURL } = require('../models/shop
  	}
  }
 
-//  async function fetchShop(req, res) {
-//  	try {
-//  		if (!validateFetchShop(req.body).isValid) {
-//  			return res.status(400);
-//  		}
-// 	 	// Create a new shop if this user doesn't already have one,
-// 	 	// or else return the existing one
-// 	 	let shop = await Shop.findOne({userEmail: req.body.userEmail});
-// 	 	if (shop) {
-// 	 		return res.status(200).json(shop);
-// 	 	} else {
-// 	 		return await createShop(req, res);
-// 	 	}
-// 	} catch (err) {
-// 		return res.status(503);
-// 	}
-// }
-
 
 async function fetchShop(req, res) {
 	try {
@@ -52,7 +34,7 @@ async function fetchShop(req, res) {
 		if (shop) {
 			return res.status(200).json(shop);
 		} else {
-			let shop = await createShop(req, res);
+			let shop = await createShop({ userEmail: email, name: "My Store" });
 			if (shop) {
 				return res.status(201).json(shop);
 			} else { // todo: does this get caught in catch anyway?

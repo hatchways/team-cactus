@@ -89,7 +89,7 @@ UserSchema.methods.generateJWT = function() {
   return jwt.sign({
     email: this.email,
     id: this._id,
-    exp: parseInt(expirationDate.getTime() / 1000, 10),
+    exp: parseInt(expirationDate.getTime() / 1000, 10)
   }, secretOrKey);
 }
 
@@ -97,7 +97,7 @@ UserSchema.methods.toAuthJSON = function() {
   return {
     _id: this._id,
     email: this.email,
-    token: this.generateJWT(),
+    token: this.generateJWT()
   };
 };
 

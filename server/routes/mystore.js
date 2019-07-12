@@ -20,6 +20,7 @@ const { Shop, validateShopCreation, validateFetchShop } = require('../models/sho
         return res.status(201).json(store);
 
  	} catch (err) {
+		 console.log(err);
  		return res.status(503);
  	}
  }
@@ -38,7 +39,9 @@ const { Shop, validateShopCreation, validateFetchShop } = require('../models/sho
 	 		return createShop(req, res);
 	 	}
 	} catch (err) {
-		// return res.send("couldn't search shops");
+		console.log(err);
+		res.status(503);
+		return res.send("couldn't search shops");
 	}
  }
 

@@ -80,7 +80,7 @@ class NavBar extends Component {
 
     if(userType === "shopkeeper"){
         links = {
-            'My Shop': '/placeholder',
+            'My Shop': '/mystore',
         };
     } else {
       links = 0;

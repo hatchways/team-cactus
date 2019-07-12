@@ -27,9 +27,6 @@ function validateShopCreation(data) {
     // Convert empty fields to an empty string so we can use validator functions
     data.userEmail = !isEmpty(data.userEmail) ? data.userEmail : "";
     data.name = !isEmpty(data.name) ? data.name : "My Store";
-    // The following are allowed to be empty
-    data.description = !isEmpty(data.description) ? data.description : "";
-    data.coverPhoto = !isEmpty(data.coverPhoto) ? data.coverPhoto : "";
 
     // Email check
     if (Validator.isEmpty(data.userEmail)) {
@@ -50,8 +47,23 @@ function validateShopCreation(data) {
 // 	return { isValid: !isEmpty(data.userEmail) };
 // }
 
+function validateCoverURL(data) {
+	return { isValid: !isEmpty(data.coverURL) && !isEmpty(data.userEmail) };
+}
+
+function validateName(data) {
+	return { isValid: !isEmpty(data.name) && !isEmpty(data.userEmail) };
+}
+
+function validateDescription(data) {
+	return { isValid: !isEmpty(data.description) && !isEmpty(data.userEmail) };
+}
+
+
+
 module.exports = {
 	Shop: mongoose.model("shops", ShopSchema),
 	validateShopCreation: validateShopCreation,
-	//validateFetchShop: validateFetchShop
+	// validateFetchShop: validateFetchShop,
+	validateCoverURL: validateCoverURL
 }

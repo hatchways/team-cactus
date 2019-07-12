@@ -74,7 +74,7 @@ class LoginPage extends Component {
           const storeData = {
             userEmail: response.data.user.email,
           }
-          console.log('storeData', storeData);
+
           // Fetch Shop Info
           axios({
             method: 'post',

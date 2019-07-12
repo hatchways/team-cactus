@@ -78,9 +78,9 @@ class NavBar extends Component {
   createNavLinksShopKeeper = (userType) => {
     let links, entries = 0; 
 
-    if(userType == "shopkeeper"){
+    if(userType === "shopkeeper"){
         links = {
-            'My Shop': '/placeholder',
+            'My Shop': '/mystore',
         };
     } else {
       links = 0;

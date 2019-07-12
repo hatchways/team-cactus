@@ -52,7 +52,12 @@ async function fetchShop(req, res) {
 		if (shop) {
 			return res.status(200).json(shop);
 		} else {
-			return await createShop(req, res);
+			let shop = await createShop(req, res);
+			if (shop) {
+				return res.status(201).json(shop);
+			} else { // todo: does this get caught in catch anyway?
+				res.status(503);
+			}
 		}
 	} catch (err) {
 		res.status(503);

@@ -24,22 +24,45 @@ const styles = theme => ({
         alignItems: 'center',
         justifyContent: 'center',
         width: '100%',
+    },
+    storeBanner: {
+    	backgroundSize: 'cover',
     }
 });
 
 class MyStorePage extends Component {
 	state = {
-
+		storeName: "",
+		storeDesc: "",
+		coverURL: ""
 	}
+    
+    fetchStoreData = () => {
+    	console.log("fetching store");
+        axios({
+            method: 'post',
+            url: `http://localhost:3001/users/mystore`,
+            headers: {'Authorization': localStorage.token },
+          }).then(response => {
+            console.log('I GOT STORE DATA!');
+            this.setState({ storeName: "response.data.name"});
+          }).catch(error => {
+            console.log('ERROR');
+            if(error.response){
+                this.setState({ responseError: error.response});
+            } else {
+                this.setState({ responseError: 'Something went wrong :('});
+            }
+          });
+         console.log(this.state.storeName);
+    }
 
-	render() {
+    render() {
 		const { classes } = this.props;
-
+		
 		return (
-			<div className={classes.container}>
-                HIII
+			<div className={classes.storeBanner}>
                 {this.fetchStoreData()}
-				{`${localStorage.name}'s Store!`}
                 <Grid container direction="column">
     				<Grid container item direction="row" justify="flex-start" alignItems="center">
                         <Grid item md={5}>
@@ -69,28 +92,6 @@ class MyStorePage extends Component {
                 </Grid>
 		  	</div>
 		);
-    }
-    
-    fetchStoreData = () => {
-        axios({
-            method: 'post',
-            // url: `${window.location.origin}/users`,
-            url: `http://localhost:3001/users/mystore`,
-            headers: {'Authorization': localStorage.token },
-          }).then(response => {
-            console.log('I GOT STORE DATA!', response);
-          }).catch(error => {
-            console.log('ERROR', error);
-            if(error.response){
-                this.setState({ responseError: error.response});
-            } else {
-                this.setState({ responseError: 'Something went wrong :('});
-            }
-          });
-
-        return(
-            <div>testing</div>
-        );
     }
 
 }

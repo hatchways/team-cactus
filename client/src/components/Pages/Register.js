@@ -39,8 +39,7 @@ class RegisterPage extends Component {
             password2: false,
         },
         errors: {},
-        responseError: '',
-        errors: {}
+        responseError: ''
     }
 
     handleSubmit = (event) => {

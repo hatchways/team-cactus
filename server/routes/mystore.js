@@ -28,7 +28,7 @@ const { Shop, validateShopCreation, validateFetchShop } = require('../models/sho
  async function fetchShop(req, res) {
  	try {
  		if (!validateFetchShop(req.body).isValid) {
- 			return res.status(400).send("not enough parameters");
+ 			return res.status(400); //.send("not enough parameters");
  		}
 	 	// Create a new shop if this user doesn't already have one,
 	 	// or else return the existing one
@@ -36,12 +36,12 @@ const { Shop, validateShopCreation, validateFetchShop } = require('../models/sho
 	 	if (shop) {
 	 		return res.status(200).json(shop);
 	 	} else {
-	 		return createShop(req, res);
+	 		return createShop(req.body);
 	 	}
 	} catch (err) {
-		console.log(err);
+		// console.log(err);
 		res.status(503);
-		return res.send("couldn't search shops");
+		// return res.send("couldn't search shops");
 	}
  }
 

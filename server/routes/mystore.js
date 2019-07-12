@@ -1,27 +1,27 @@
 const { Shop, validateShopCreation, validateFetchShop } = require('../models/shops');
  
- async function createShop(req, res) {
+ async function createShop(data) {
  	try {
 	 	// Check all needed parameters are provided
-	 	const { errors, isValid } = validateShopCreation(req.body);
+	 	const { errors, isValid } = validateShopCreation(data);
 	    if (!isValid) {
-	        return res.status(400).json({ errors: errors });
+	        return { errors: errors };
 	    }
 
     	// Create shop for user
  		store = new Shop({
-            userEmail: req.body.userEmail,
-            name: req.body.name,
-            description: req.body.description,
-            coverPhoto: req.body.coverPhoto
+            userEmail: data.userEmail,
+            name: data.name,
+            description: data.description,
+            coverPhoto: data.coverPhoto
         });
 
         await store.save();
-        return res.status(201).json(store);
+        return store;
 
  	} catch (err) {
-		 console.log(err);
- 		return res.status(503);
+		// console.log(err);
+ 		return null;
  	}
  }
 

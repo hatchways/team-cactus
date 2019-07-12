@@ -9,9 +9,6 @@ const createShop = require('./mystore').createShop;
         if (!isValid) {
             return res.status(400).json({ errors: errors });
         }
-
-        //TODO: change this according to req
-        let isShopkeeper = true;
  
         // Check if this user already exists
         let user = await User.findOne({ email: req.body.email });
@@ -22,7 +19,8 @@ const createShop = require('./mystore').createShop;
         user = new User({
             name: req.body.name,
             email: req.body.email,
-            password: await User.hashPassword(req.body.password)
+            password: await User.hashPassword(req.body.password),
+            isShopOwner: true
         });
 
         if (user.password === "") { // could not hash password
@@ -31,18 +29,23 @@ const createShop = require('./mystore').createShop;
 
         await user.save();
 
-        if (isShopkeeper) {
-            let name = "store name";
-            data = { userEmail: email, name: name };
-            createShop(data, res);
-        }
+        // Create their shop first and then try to save the user, to make sure
+        // we don't get a shopowner account with an unitialized shop
+        // if (isShopkeeper) {
+        //     let name = "store name";
+        //     data = { userEmail: req.body.email, name: name };
+        //     let store = await createShop(data);
+        //     if (!store || store.errors) {
+        //         return res.status(400).json({ errors: { shop: "Unable to create shop; user was not created" } });
+        //     }
+        // }
         res.status(201).send(user);
         // TODO: jwt signin here
     }
     catch (errorCantSave) {
         // console.error(errorCantSave);
-        return res.status(503).json({ errors: { err : "The user could not be created" }});
-            // 'The user could not be created' } });
+        // return res.status(503).json({ errors: { err : "The user could not be created" }});
+        return res.status(503).json({ errors: { err : errorCantSave.message }});
     }
 }
 

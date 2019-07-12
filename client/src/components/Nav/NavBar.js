@@ -46,9 +46,15 @@ const styles = theme => ({
 class NavBar extends Component {
 
   state = {
-    userType: 'shopper',
+    userType: this.props.userType,
     navDrawerOpen: false
   };
+
+  static getDerivedStateFromProps(nextProps) {    
+    return {
+      userType: nextProps.userType,
+    }
+  }
 
   //When area outside of drawer clicked, close NavDrawer
   backdropClickHandler = () => {
@@ -81,6 +87,7 @@ class NavBar extends Component {
     }
     
     entries = Object.entries(links);
+
     return entries;
   }
 

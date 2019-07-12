@@ -15,11 +15,11 @@ async function login(req, res) {
 		// Check if sign-in address exists
 		let user = await User.findOne({ email: req.body.email });
 	    if (!user) {
-	    	return res.status(401).send({ errors: { email: "There is no account associated with the email address provided"} });
+	    	return res.status(401).send({ errors: { message: "There is no account associated with the email provided."} });
 	    }
 
 	    // Check if the password matches
-		if (user.validatePassword(req.body.password)) {
+		if (await user.validatePassword(req.body.password)) {
 			// Passwords match! Create JWT payload and sign
 			const payload = { email: user.email };
 			jwt.sign(
@@ -30,17 +30,17 @@ async function login(req, res) {
 				(err, token) => {
 					res.status(200).json({
 						success: true,
-						token: "Bearer " + token
+						token: "Bearer " + token,
 					});
 				}
     		);
 		} else { // Passwords did not match
-			res.status(401).send({ errors: {password: "Your password is incorrect" } });
+			res.status(401).send({ errors: {message: "Your password is incorrect." } });
 		}
 
 	} catch (err) { // some issue trying to access the database or check the passwords
 		// console.error(err.message);
-		res.status(503).send({ errors: {err: "Could not sign in" } });
+		res.status(503).send({ errors: {message: "Could not sign in." } });
 	}
 }
 

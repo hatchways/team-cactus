@@ -19,7 +19,7 @@ async function login(req, res) {
 	    }
 
 	    // Check if the password matches
-		if (user.validatePassword(req.body.password)) {
+		if (await user.validatePassword(req.body.password)) {
 			// Passwords match! Create JWT payload and sign
 			const payload = { email: user.email };
 			jwt.sign(

@@ -77,7 +77,7 @@ class NavBar extends Component {
   //Generate array of navLinks for shopkeeper
   createNavLinksShopKeeper = (userType) => {
     let links, entries = 0; 
-    console.log('userType', userType);
+
     if(userType == "shopkeeper"){
         links = {
             'My Shop': '/placeholder',
@@ -87,7 +87,7 @@ class NavBar extends Component {
     }
     
     entries = Object.entries(links);
-    console.log('entries', entries);
+
     return entries;
   }
 
@@ -100,8 +100,6 @@ class NavBar extends Component {
 
   render() {
     const { classes } = this.props;
-    console.log('navbar', this.props);
-    console.log('userTypeState', this.state.userType);
     const navLinksShopper = this.createNavLinksShopper();
     const navLinksShopKeeper = this.createNavLinksShopKeeper(this.state.userType);
 

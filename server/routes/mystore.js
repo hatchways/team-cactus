@@ -25,24 +25,37 @@ const { Shop, validateShopCreation, validateFetchShop, validateCoverURL } = requ
  	}
  }
 
- async function fetchShop(req, res) {
- 	try {
- 		if (!validateFetchShop(req.body).isValid) {
- 			return res.status(400);
- 		}
-	 	// Create a new shop if this user doesn't already have one,
-	 	// or else return the existing one
-	 	let shop = await Shop.findOne({userEmail: req.body.userEmail});
-	 	if (shop) {
-	 		return res.status(200).json(shop);
-	 	} else {
-	 		return createShop(req, res);
-	 	}
+//  async function fetchShop(req, res) {
+//  	try {
+//  		if (!validateFetchShop(req.body).isValid) {
+//  			return res.status(400);
+//  		}
+// 	 	// Create a new shop if this user doesn't already have one,
+// 	 	// or else return the existing one
+// 	 	let shop = await Shop.findOne({userEmail: req.body.userEmail});
+// 	 	if (shop) {
+// 	 		return res.status(200).json(shop);
+// 	 	} else {
+// 	 		return await createShop(req, res);
+// 	 	}
+// 	} catch (err) {
+// 		return res.status(503);
+// 	}
+// }
+
+
+async function fetchShop(req, res) {
+	try {
+		const email = req.user.email;
+		let shop = await Shop.findOne({userEmail: email});
+
+		if (shop) {
+			return res.status(200).json(shop);
+		} else {
+			return await createShop(req, res);
+		}
 	} catch (err) {
-		// console.log(err);
-		return res.status(503);
-		// return res.send("couldn't search shops");
-		return res.status(503);
+		res.status(503);
 	}
  }
 

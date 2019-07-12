@@ -65,10 +65,12 @@ class RegisterPage extends Component {
             this.setState({ touched : touched });
         } else {
             // Send a POST request to register api
+            // TODO: change isShopOwner flag to be set by the UI
             const data = {
                 name: this.state.name,
                 email: this.state.email,
-                password: this.state.password1, 
+                password: this.state.password1,
+                isShopOwner: true 
             }
             console.log(data);
             axios({

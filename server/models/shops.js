@@ -26,7 +26,7 @@ function validateShopCreation(data) {
  	let errors = {};
     // Convert empty fields to an empty string so we can use validator functions
     data.userEmail = !isEmpty(data.userEmail) ? data.userEmail : "";
-    data.name = !isEmpty(data.name) ? data.name : "";
+    data.name = !isEmpty(data.name) ? data.name : "My Store";
     // The following are allowed to be empty
     data.description = !isEmpty(data.description) ? data.description : "";
     data.coverPhoto = !isEmpty(data.coverPhoto) ? data.coverPhoto : "";
@@ -35,7 +35,7 @@ function validateShopCreation(data) {
     if (Validator.isEmpty(data.userEmail)) {
         errors.email = "Email field is required";
     }
-    // Name check
+    //Name check
     if (Validator.isEmpty(data.name)) {
         errors.name = "Name field is required";
     }
@@ -46,9 +46,9 @@ function validateShopCreation(data) {
     };
 }
 
-function validateFetchShop(data) {
-	return { isValid: !isEmpty(data.userEmail) && !isEmpty(data.name) };
-}
+// function validateFetchShop(data) {
+// 	return { isValid: !isEmpty(data.userEmail) };
+// }
 
 function validateCoverURL(data) {
 	return { isValid: !isEmpty(data.coverURL) && !isEmpty(data.userEmail) };

@@ -68,35 +68,35 @@ class LoginPage extends Component {
           console.log('SUCCESS', response);
           localStorage.setItem('token', response.data.token);
           console.log(localStorage);
-          //console.log('request', req.user);
+
           this.props.updateUserType('shopkeeper');  //TODO: must change this to be dynamic
 
-          const storeData = {
-            userEmail: response.data.user.email,
-          }
-          console.log('storeData', storeData);
-          // Fetch Shop Info
-          axios({
-            method: 'post',
-            // url: `${window.location.origin}/users`,
-            url: `http://localhost:3001/users/mystore`,
-            headers: {'Authorization': localStorage.token },
-            data: storeData
-          }).then(response => {
-            console.log('GOT IN STORE', response);
+          this.props.history.push(`/mystore`);
+          // const storeData = {
+          //   userEmail: response.data.user.email,
+          // }
 
-            // Redirect to shop
-            
-            // this.props.history.push(`/myshop`);
-          }).catch(error => {
-            console.log('ERROR', error);
-            if(error.response){
-                this.setState({ responseError: error.response});
-            } else {
-                this.setState({ responseError: 'Something went wrong :('});
-            }
-          });
-          // this.props.history.push(`/myshop`);
+          // Fetch Shop Info
+          // axios({
+          //   method: 'post',
+          //   // url: `${window.location.origin}/users`,
+          //   url: `http://localhost:3001/users/mystore`,
+          //   headers: {'Authorization': localStorage.token },
+          //   data: storeData
+          // }).then(response => {
+          //   console.log('GOT IN STORE', response);
+
+          //   // Redirect to shop
+          //   this.props.history.push(`/mystore`);
+          // }).catch(error => {
+          //   console.log('ERROR', error);
+          //   if(error.response){
+          //       this.setState({ responseError: error.response});
+          //   } else {
+          //       this.setState({ responseError: 'Something went wrong :('});
+          //   }
+          // });
+          
       }).catch(error => {
           console.log('ERROR', error);
           if(error.response){

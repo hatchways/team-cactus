@@ -1,4 +1,4 @@
-const { Shop, validateShopCreation, validateFetchShop, validateCoverURL } = require('../models/shops');
+const { Shop, validateShopCreation, validateCoverURL } = require('../models/shops');
  
  async function createShop(data) {
  	try {

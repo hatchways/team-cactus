@@ -39,9 +39,7 @@ class MyStorePage extends Component {
 			<div className={classes.container}>
                 HIII
                 {this.fetchStoreData()}
-				{/* {`${localStorage.name}'s Store!`} */}
-			</div>
-			<div>
+				{`${localStorage.name}'s Store!`}
                 <Grid container direction="column">
     				<Grid container item direction="row" justify="flex-start" alignItems="center">
                         <Grid item md={5}>

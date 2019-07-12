@@ -67,6 +67,6 @@ function validateDescription(data) {
 module.exports = {
 	Shop: mongoose.model("shops", ShopSchema),
 	validateShopCreation: validateShopCreation,
-	validateFetchShop: validateFetchShop,
+	// validateFetchShop: validateFetchShop,
 	validateCoverURL: validateCoverURL
 }

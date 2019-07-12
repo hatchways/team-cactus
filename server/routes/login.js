@@ -1,5 +1,5 @@
-const User = require('../models/user').User;
-const validateLogin = require('../models/user').validateLogin;
+const User = require('../models/users').User;
+const validateLogin = require('../models/users').validateLogin;
 const argon2 = require("argon2"); // for password hashing
 const jwt = require("jsonwebtoken");
 const secretOrKey = process.env.SECRETORKEY;
@@ -39,7 +39,7 @@ async function login(req, res) {
 		}
 
 	} catch (err) { // some issue trying to access the database or check the passwords
-		console.error(err.message);
+		// console.error(err.message);
 		res.status(503).send({ errors: {err: "Could not sign in" } });
 	}
 }

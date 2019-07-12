@@ -7,6 +7,7 @@ import NavBar from "./Nav/NavBar";
 import LandingPage from "./Pages/Landing";
 import LoginPage from "./Pages/Login";
 import RegisterPage from "./Pages/Register";
+import MyStorePage from "./Pages/MyStore";
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
         <Route exact path="/" component={LandingPage} />
         <Route exact path="/login" component={LoginPage} />
         <Route exact path="/register" component={RegisterPage} />
+        <Route exact path="/mystore" component={MyStorePage} />
       </BrowserRouter>
     </MuiThemeProvider>
   );

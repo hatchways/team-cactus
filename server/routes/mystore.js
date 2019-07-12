@@ -37,9 +37,9 @@ const { Shop, validateShopCreation, validateFetchShop } = require('../models/sho
 			return createShop(req, res);
 		}
 	} catch (err) {
-		console.log(err);
+		// console.log(err);
 		res.status(503);
-		return res.send("couldn't search shops");
+		// return res.send("couldn't search shops");
 	}
 
 

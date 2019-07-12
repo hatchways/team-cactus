@@ -9,6 +9,7 @@ const createShop = require('./mystore').createShop;
         if (!isValid) {
             return res.status(400).json({ errors: errors });
         }
+        let shopOwnerCheck = (req.body.isShopOwner && req.body.isShopOwner !== "false") ? true : false;
  
         // Check if this user already exists
         let user = await User.findOne({ email: req.body.email });
@@ -20,7 +21,7 @@ const createShop = require('./mystore').createShop;
             name: req.body.name,
             email: req.body.email,
             password: await User.hashPassword(req.body.password),
-            isShopOwner: true
+            isShopOwner: shopOwnerCheck
         });
 
         if (user.password === "") { // could not hash password

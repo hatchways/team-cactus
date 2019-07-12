@@ -72,30 +72,6 @@ class LoginPage extends Component {
           this.props.updateUserType('shopkeeper');  //TODO: must change this to be dynamic
 
           this.props.history.push(`/mystore`);
-          // const storeData = {
-          //   userEmail: response.data.user.email,
-          // }
-
-          // Fetch Shop Info
-          // axios({
-          //   method: 'post',
-          //   // url: `${window.location.origin}/users`,
-          //   url: `http://localhost:3001/users/mystore`,
-          //   headers: {'Authorization': localStorage.token },
-          //   data: storeData
-          // }).then(response => {
-          //   console.log('GOT IN STORE', response);
-
-          //   // Redirect to shop
-          //   this.props.history.push(`/mystore`);
-          // }).catch(error => {
-          //   console.log('ERROR', error);
-          //   if(error.response){
-          //       this.setState({ responseError: error.response});
-          //   } else {
-          //       this.setState({ responseError: 'Something went wrong :('});
-          //   }
-          // });
           
       }).catch(error => {
           console.log('ERROR', error);

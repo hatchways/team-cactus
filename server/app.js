@@ -23,7 +23,6 @@ app.options('*', cors());
 
 
 // Connect to MongoDB
-// const db = require("./config/keys").mongoURI;
 const db_connect_uri = process.env.MONGO_URI;
 mongoose.connect(db_connect_uri, { useNewUrlParser: true, retryWrites: true, w: "majority" })
   	.then(() => console.log("MongoDB successfully connected"))

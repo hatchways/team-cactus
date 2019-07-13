@@ -116,6 +116,7 @@ UserSchema.methods.toAuthJSON = function() {
   };
 };
 
+
 module.exports = {
     User: mongoose.model("users", UserSchema),
     validateRegister: validateRegisterFields,

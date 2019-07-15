@@ -36,7 +36,18 @@ router.post('/', async function(req, res, next) {
         
         const payload = { email: user.email };
         
-        user.generateJWT(payload);
+        jwt.sign(
+            payload,
+            secretOrKey,
+            { expiresIn: 31556926 }, // 1 year in seconds
+            // Append token to a Bearer string since we chose bearer scheme in config
+            (err, token) => {
+                res.status(200).json({
+                    success: true,
+                    token: "Bearer " + token,
+                });
+            }
+        );
     }
     catch (error) {
         console.log(error);
@@ -62,8 +73,21 @@ router.post('/login', async function(req, res, next) {
 	    // Check if the password matches
 		if (await user.validatePassword(req.body.password)) {
 			// Passwords match! Create JWT payload and sign
-			const payload = { email: user.email };
-			user.generateJWT(payload);
+            const payload = { email: user.email };
+            
+            jwt.sign(
+                payload,
+                secretOrKey,
+                { expiresIn: 31556926 }, // 1 year in seconds
+                // Append token to a Bearer string since we chose bearer scheme in config
+                (err, token) => {
+                    res.status(200).json({
+                        success: true,
+                        token: "Bearer " + token,
+                    });
+                }
+            );
+
 		} else { // Passwords did not match
 			res.status(401).send({ errors: {message: "Your password is incorrect." } });
 		}

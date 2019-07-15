@@ -1,5 +1,6 @@
 var express = require('express');
-var router = express.Router();
+var routerPublic = express.Router();
+var routerProtected = express.Router();
 const { Shop, validateShopCreation, validateCoverURL } = require('../models/shops');
 const secretOrKey = process.env.SECRETORKEY;
 
@@ -30,8 +31,8 @@ async function createShop(data) {
      }
 }
 
-/* Get shop data ----------------------------------------------------------------*/
-router.get('/', async function(req, res, next) {
+/* Get shop data (user logged in) ----------------------------------------------------------------*/
+routerProtected.get('/', async function(req, res, next) {
     try {
 		const email = req.user.email;
 		let shop = await Shop.findOne({userEmail: email});
@@ -52,10 +53,15 @@ router.get('/', async function(req, res, next) {
     }
 });
 
+/* Get shop data (public) ----------------------------------------------------------------*/
+// routerPublic.get('/{:id}', async function(req, res, next) {
+// }
+
 /* Edit shop data ----------------------------------------------------------------*/
 // router.put('/', async function(req, res, next) {
 
 // });
 
-module.exports.routes = router;
 module.exports.createShop = createShop;
+module.exports.protectedRoutes = routerProtected;
+module.exports.publicRoutes = routerPublic;

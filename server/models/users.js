@@ -103,24 +103,25 @@ UserSchema.methods.validatePassword = async function(plaintextPassword) {
 };
 
 //-----------------------------------------------------------------
-UserSchema.methods.generateJWT = function(payload) {
-    const today = new Date();
-    const expirationDate = new Date(today);
-    expirationDate.setDate(today.getDate() + 60);
+// UserSchema.methods.generateJWT = async function(payload) {
+//     const today = new Date();
+//     const expirationDate = new Date(today);
+//     expirationDate.setDate(today.getDate() + 60);
 
-    jwt.sign(
-        payload,
-        secretOrKey,
-        { expiresIn: 31556926 }, // 1 year in seconds
-        // Append token to a Bearer string since we chose bearer scheme in config
-        (err, token) => {
-            res.status(200).json({
-                success: true,
-                token: "Bearer " + token,
-            });
-        }
-    );
-}
+//     return await jwt.sign(
+//         payload,
+//         secretOrKey,
+//         { expiresIn: 31556926 }, // 1 year in seconds
+//         // Append token to a Bearer string since we chose bearer scheme in config
+//         (err, token) => {
+//             res.status(200).json({
+//                 success: true,
+//                 token: "Bearer " + token,
+//             });
+//         }
+//     );
+
+// }
 
 // UserSchema.methods.toAuthJSON = function() {
 //   return {

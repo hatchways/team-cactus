@@ -61,15 +61,34 @@ router.get('/', passport.authenticate('jwt', { session: false }), async function
 // router.put('/', passport.authenticate('jwt'), async function(req, res, next) {
 //     try {
 // 		const email = req.user.email;
-// 		let shop = await Shop.findOne({userEmail: email});
-
+//         let shop = await Shop.findOne({userEmail: email});
+        
+//         req.body
+//         //data.name
 //         //data.coverURL
 //         //data.description
 
 // 		if (shop) {
 // 			return res.status(200).json(shop);
 //         } 
+
+
+
+//         // if (!validateName(req.body).isValid) {
+//         //     return res.status(400);
+//         // }
+//         // let shop = await Shop.findOne({userEmail: req.body.userEmail});
+//         // if (shop) {
+//         //     shop.name = req.body.name;
+//         //     shop.save();
+//         // } else {
+//         //     return res.status(400).json({ errors: { email: "There is no shop associated with this account"}});
+//         // }
+//     } catch (err) {
+// 		res.status(503);
+//     }
 // });
+
 
 module.exports.createShop = createShop;
 module.exports.routes = router;

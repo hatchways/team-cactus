@@ -1,6 +1,6 @@
 var express = require('express');
-var routerPublic = express.Router();
-var routerProtected = express.Router();
+var router = express.Router();
+const passport = require("passport");
 const { Shop, validateShopCreation, validateCoverURL } = require('../models/shops');
 const secretOrKey = process.env.SECRETORKEY;
 
@@ -32,7 +32,7 @@ async function createShop(data) {
 }
 
 /* Get shop data (user logged in) ----------------------------------------------------------------*/
-routerProtected.get('/', async function(req, res, next) {
+router.get('/', passport.authenticate('jwt', { session: false }), async function(req, res, next) {
     try {
 		const email = req.user.email;
 		let shop = await Shop.findOne({userEmail: email});
@@ -54,14 +54,22 @@ routerProtected.get('/', async function(req, res, next) {
 });
 
 /* Get shop data (public) ----------------------------------------------------------------*/
-// routerPublic.get('/{:id}', async function(req, res, next) {
+// router.get('/{:id}', async function(req, res, next) {
 // }
 
 /* Edit shop data ----------------------------------------------------------------*/
-// router.put('/', async function(req, res, next) {
+// router.put('/', passport.authenticate('jwt'), async function(req, res, next) {
+//     try {
+// 		const email = req.user.email;
+// 		let shop = await Shop.findOne({userEmail: email});
 
+//         //data.coverURL
+//         //data.description
+
+// 		if (shop) {
+// 			return res.status(200).json(shop);
+//         } 
 // });
 
 module.exports.createShop = createShop;
-module.exports.protectedRoutes = routerProtected;
-module.exports.publicRoutes = routerPublic;
+module.exports.routes = router;

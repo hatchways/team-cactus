@@ -1,9 +1,9 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
-const createShop = require("../routes/mystore").createShop;
 const Validator = require("validator");
 const isEmpty = require("is-empty");
 const argon2 = require("argon2"); // for password hashing
+const createShop = require("../routes/shops").createShop;
 const jwt = require('jsonwebtoken');
 const secretOrKey = process.env.SECRETORKEY;
 
@@ -28,7 +28,8 @@ const UserSchema = new Schema({
 
 UserSchema.pre('save', async function() {
     if (this.isShopOwner) {
-        data = { userEmail: this.email, name: "My Store" };
+        data = { userEmail: this.email };
+        
         let shop = await createShop(data);
         if (!shop || shop.errors) {
             throw new Error(shop.errors ? shop.errors : {errors: { shop: "Could not create shop"} });
@@ -96,25 +97,25 @@ UserSchema.methods.validatePassword = async function(plaintextPassword) {
     return await argon2.verify(this.password, plaintextPassword);
 };
 
-UserSchema.methods.generateJWT = function() {
-  const today = new Date();
-  const expirationDate = new Date(today);
-  expirationDate.setDate(today.getDate() + 60);
+// UserSchema.methods.generateJWT = function() {
+//   const today = new Date();
+//   const expirationDate = new Date(today);
+//   expirationDate.setDate(today.getDate() + 60);
 
-  return jwt.sign({
-    email: this.email,
-    id: this._id,
-    exp: parseInt(expirationDate.getTime() / 1000, 10)
-  }, secretOrKey);
-}
+//   return jwt.sign({
+//     email: this.email,
+//     id: this._id,
+//     exp: parseInt(expirationDate.getTime() / 1000, 10)
+//   }, secretOrKey);
+// }
 
-UserSchema.methods.toAuthJSON = function() {
-  return {
-    _id: this._id,
-    email: this.email,
-    token: this.generateJWT()
-  };
-};
+// UserSchema.methods.toAuthJSON = function() {
+//   return {
+//     _id: this._id,
+//     email: this.email,
+//     token: this.generateJWT()
+//   };
+// };
 
 module.exports = {
     User: mongoose.model("users", UserSchema),

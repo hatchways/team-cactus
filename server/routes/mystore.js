@@ -1,29 +1,29 @@
 const { Shop, validateShopCreation, validateCoverURL } = require('../models/shops');
  
- async function createShop(data) {
- 	try {
-	 	// Check all needed parameters are provided
-	 	const { errors, isValid } = validateShopCreation(data);
-	    if (!isValid) {
-	        return { errors: errors };
-	    }
+async function createShop(data) {
+	try {
+		// Check all needed parameters are provided
+		const { errors, isValid } = validateShopCreation(data);
+		if (!isValid) {
+			return { errors: errors };
+		}
 
-    	// Create shop for user
- 		store = new Shop({
-            userEmail: data.userEmail,
-            name: data.name,
-            description: data.description ? data.description : "default description",
-            coverPhoto: data.coverPhoto ? data.coverPhoto : "https://source.unsplash.com/user/erondu"
-        });
+		// Create shop for user
+		store = new Shop({
+			userEmail: data.userEmail,
+			name: data.name,
+			description: data.description ? data.description : "default description",
+			coverPhoto: data.coverPhoto ? data.coverPhoto : "https://source.unsplash.com/user/erondu"
+		});
 
-        await store.save();
-        return store;
+		await store.save();
+		return store;
 
- 	} catch (err) {
+	} catch (err) {
 		// console.log(err);
- 		return null;
- 	}
- }
+		return null;
+	}
+}
 
 async function fetchShop(req, res) {
 	try {

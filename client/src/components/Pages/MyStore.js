@@ -44,12 +44,14 @@ class MyStorePage extends Component {
 		coverURL: "https://source.unsplash.com/user/erondu"
 	}
     
-    fetchStoreData = () => {
-        axios({
-            method: 'post',
-            url: `http://localhost:3001/users/mystore`,
+    fetchStoreData = async () => {
+        console.log('hereeeee');
+        await axios({
+            method: 'get',
+            url: `http://localhost:3001/shops`,
             headers: {'Authorization': localStorage.token },
           }).then(response => {
+              console.log('got shop info', response.data);
             // let name = response.data.name;
             // let desc = response.data.description;
             // let coverURL = response.data.coverPhoto;
@@ -66,13 +68,12 @@ class MyStorePage extends Component {
           });
     }
 
-    componentDidMount() {
-        this.fetchStoreData();
+    async componentDidMount() {
+        await this.fetchStoreData();
     }
 
     render() {
 		const { classes } = this.props;
-
 		return (
 			<div>
                 <Grid container direction="column">

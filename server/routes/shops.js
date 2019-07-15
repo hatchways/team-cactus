@@ -52,5 +52,10 @@ router.get('/', async function(req, res, next) {
     }
 });
 
+/* Edit shop data ----------------------------------------------------------------*/
+// router.put('/', async function(req, res, next) {
+
+// });
+
 module.exports.routes = router;
 module.exports.createShop = createShop;

@@ -5,7 +5,6 @@ const passport = require("passport");
 // All our API routes
 const userRoutes = require("./users");
 const shopRoutes = require("./shops").routes;
-// const ping = require("./ping");
 
 router.use("/users", userRoutes);
 router.use("/shops",  passport.authenticate('jwt', {session: false}), shopRoutes);

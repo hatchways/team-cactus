@@ -22,6 +22,7 @@ const ShopSchema = new Schema({
 	}
 }, {collection: 'shops'});
 
+//-----------------------------------------------------------------
 function validateShopCreation(data) {
  	let errors = {};
     // Convert empty fields to an empty string so we can use validator functions
@@ -43,18 +44,17 @@ function validateShopCreation(data) {
     };
 }
 
-// function validateFetchShop(data) {
-// 	return { isValid: !isEmpty(data.userEmail) };
-// }
-
+//-----------------------------------------------------------------
 function validateCoverURL(data) {
 	return { isValid: !isEmpty(data.coverURL) && !isEmpty(data.userEmail) };
 }
 
+//-----------------------------------------------------------------
 function validateName(data) {
 	return { isValid: !isEmpty(data.name) && !isEmpty(data.userEmail) };
 }
 
+//-----------------------------------------------------------------
 function validateDescription(data) {
 	return { isValid: !isEmpty(data.description) && !isEmpty(data.userEmail) };
 }
@@ -64,6 +64,5 @@ function validateDescription(data) {
 module.exports = {
 	Shop: mongoose.model("shops", ShopSchema),
 	validateShopCreation: validateShopCreation,
-	// validateFetchShop: validateFetchShop,
 	validateCoverURL: validateCoverURL
 }

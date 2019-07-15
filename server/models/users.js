@@ -20,14 +20,15 @@ const UserSchema = new Schema({
         type: String,
         required: true
     }, 
-    isShopOwner: {
+    isShopkeeper: {
         type: Boolean,
         required: true
     }
 }, {collection: 'users'});
 
+//-----------------------------------------------------------------
 UserSchema.pre('save', async function() {
-    if (this.isShopOwner) {
+    if (this.isShopkeeper) {
         data = { userEmail: this.email };
         
         let shop = await createShop(data);
@@ -37,6 +38,7 @@ UserSchema.pre('save', async function() {
     }
 });
 
+//-----------------------------------------------------------------
 function validateRegisterFields(data) {
     let errors = {};
     // Convert empty fields to an empty string so we can use validator functions
@@ -64,6 +66,7 @@ function validateRegisterFields(data) {
     };
 }
 
+//-----------------------------------------------------------------
 function validateLoginFields(data) {
     let errors = {};
 
@@ -84,6 +87,7 @@ function validateLoginFields(data) {
     };
 }
 
+//-----------------------------------------------------------------
 UserSchema.statics.hashPassword = async function(plaintextPassword) {
     try {
         return await argon2.hash(plaintextPassword);
@@ -93,21 +97,30 @@ UserSchema.statics.hashPassword = async function(plaintextPassword) {
     }
 };
 
+//-----------------------------------------------------------------
 UserSchema.methods.validatePassword = async function(plaintextPassword) {
     return await argon2.verify(this.password, plaintextPassword);
 };
 
-// UserSchema.methods.generateJWT = function() {
-//   const today = new Date();
-//   const expirationDate = new Date(today);
-//   expirationDate.setDate(today.getDate() + 60);
+//-----------------------------------------------------------------
+UserSchema.methods.generateJWT = function(payload) {
+    const today = new Date();
+    const expirationDate = new Date(today);
+    expirationDate.setDate(today.getDate() + 60);
 
-//   return jwt.sign({
-//     email: this.email,
-//     id: this._id,
-//     exp: parseInt(expirationDate.getTime() / 1000, 10)
-//   }, secretOrKey);
-// }
+    jwt.sign(
+        payload,
+        secretOrKey,
+        { expiresIn: 31556926 }, // 1 year in seconds
+        // Append token to a Bearer string since we chose bearer scheme in config
+        (err, token) => {
+            res.status(200).json({
+                success: true,
+                token: "Bearer " + token,
+            });
+        }
+    );
+}
 
 // UserSchema.methods.toAuthJSON = function() {
 //   return {

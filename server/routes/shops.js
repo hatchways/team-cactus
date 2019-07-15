@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
 const passport = require("passport");
-const { Shop, validateShopCreation, validateCoverURL } = require('../models/shops');
+const { Shop, validateShopCreation, validateCoverPhoto, validateDescription, validateName } = require('../models/shops');
 const secretOrKey = process.env.SECRETORKEY;
 
 /* Create new shop ----------------------------------------------------------------*/
@@ -58,37 +58,34 @@ router.get('/', passport.authenticate('jwt', { session: false }), async function
 // }
 
 /* Edit shop data ----------------------------------------------------------------*/
-// router.put('/', passport.authenticate('jwt'), async function(req, res, next) {
-//     try {
-// 		const email = req.user.email;
-//         let shop = await Shop.findOne({userEmail: email});
-        
-//         req.body
-//         //data.name
-//         //data.coverURL
-//         //data.description
+router.put('/', passport.authenticate('jwt', { session: false }), async function(req, res, next) {
+    
+    try {
+		const email = req.user.email;
+        let shop = await Shop.findOne({userEmail: email});
 
-// 		if (shop) {
-// 			return res.status(200).json(shop);
-//         } 
+        if (shop) {
+            const key = Object.keys(req.body);
+            const value = Object.values(req.body);
+            
+            if((key === 'name') && !validateName(req.body).isValid) {
+                res.status(400).send({ errors: { message: "Error with shop name."}});
+            } else if((key === 'description') && !validateDescription(req.body).isValid) {
+                res.status(400).send({ errors: { message: "Error with shop description."}});
+            } else if((key === 'coverPhoto') && !validateCoverPhoto(req.body).isValid) {
+                res.status(400).send({ errors: { message: "Error with shop cover photo."}});
+            }
+            shop[key[0]] = value[0];
+            shop.save();
 
-
-
-//         // if (!validateName(req.body).isValid) {
-//         //     return res.status(400);
-//         // }
-//         // let shop = await Shop.findOne({userEmail: req.body.userEmail});
-//         // if (shop) {
-//         //     shop.name = req.body.name;
-//         //     shop.save();
-//         // } else {
-//         //     return res.status(400).json({ errors: { email: "There is no shop associated with this account"}});
-//         // }
-//     } catch (err) {
-// 		res.status(503);
-//     }
-// });
-
+            res.status(200).send(shop);
+        } else {
+			res.status(400).send({ errors: { message: "There is no shop associated with this account"}});
+        } 
+    } catch (err) {
+		res.status(503).send({ errors: { message: "Something went wrong"}});
+    }
+});
 
 module.exports.createShop = createShop;
 module.exports.routes = router;

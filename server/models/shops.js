@@ -45,24 +45,26 @@ function validateShopCreation(data) {
 }
 
 //-----------------------------------------------------------------
-function validateCoverURL(data) {
-	return { isValid: !isEmpty(data.coverURL) && !isEmpty(data.userEmail) };
-}
-
-//-----------------------------------------------------------------
-function validateName(data) {
-	return { isValid: !isEmpty(data.name) && !isEmpty(data.userEmail) };
+function validateCoverPhoto(data) {
+	return { isValid: !isEmpty(data.coverURL) };
 }
 
 //-----------------------------------------------------------------
 function validateDescription(data) {
-	return { isValid: !isEmpty(data.description) && !isEmpty(data.userEmail) };
+	return { isValid: !isEmpty(data.description) };
 }
 
+//-----------------------------------------------------------------
+function validateName(data) {
+	return { isValid: !isEmpty(data.name) };
+}
 
 
 module.exports = {
 	Shop: mongoose.model("shops", ShopSchema),
 	validateShopCreation: validateShopCreation,
-	validateCoverURL: validateCoverURL
+	validateCoverPhoto: validateCoverPhoto,
+	validateDescription: validateDescription,
+	validateName: validateName
+
 }

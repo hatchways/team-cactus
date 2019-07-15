@@ -1,14 +1,8 @@
 var express = require("express");
 var router = express.Router();
-const passport = require("passport")
 
 // All our API routes
-const register = require("./register");
-const login = require("./login");
-const fetchShop = require("./mystore").fetchShop;
-
-router.use("/users/login", login);
-router.use("/users/mystore", passport.authenticate('jwt', {session: false}), fetchShop);
-router.use("/users", register);
+router.use("/shops",  require("./shops").routes);
+router.use("/users", require("./users"));
 
 module.exports = router;

@@ -2,8 +2,6 @@ import React, { Component } from "react";
 import axios from 'axios';
 import { withStyles } from "@material-ui/core/styles";
 import ButtonWrapper from '../Wrappers/ButtonWrapper';
-// import FormCardWrapper from '../Wrappers/FormCardWrapper';
-// import FormTextFieldWrapper from '../Wrappers/FormTextFieldWrapper';
 // import TitleWrapper from '../Wrappers/TitleWrapper';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
@@ -44,18 +42,16 @@ class MyStorePage extends Component {
 		coverURL: ""
 	}
     
-    fetchStoreData = () => {
-        axios({
-            method: 'post',
-            url: `http://localhost:3001/users/mystore`,
+    fetchStoreData = async () => {
+        console.log('hereeeee');
+        await axios({
+            method: 'get',
+            url: `http://localhost:3001/shops`,
             headers: {'Authorization': localStorage.token },
           }).then(response => {
-            let name = response.data.name;
-            let desc = response.data.description;
-            let coverURL = response.data.coverPhoto;
-            this.setState({ storeName: name});
-            this.setState({ storeDesc: desc});
-            this.setState({ coverURL: coverURL});
+            this.setState({ storeName: response.data.name});
+            this.setState({ storeDesc: response.data.description});
+            this.setState({ coverURL: response.data.coverPhoto});
           }).catch(error => {
             if (error.response){
                 this.setState({ responseError: error.response});
@@ -71,8 +67,8 @@ class MyStorePage extends Component {
         }
     }
 
-    componentDidMount() {
-        this.fetchStoreData();
+    async componentDidMount() {
+        await this.fetchStoreData();
     }
 
     render() {

@@ -80,8 +80,7 @@ class RegisterPage extends Component {
             }).then(response => {
                 localStorage.setItem('token', response.data.token);
 
-                this.props.updateUserType('shopkeeper');  //must change this to be dynamic
-                // Redirect to shop
+                this.props.updateUserType(response.data.isShopOwner ? 'shopkeeper' : 'shopper');
                 this.props.history.push(`/mystore`);
             }).catch(error => {
                 if(error.response){

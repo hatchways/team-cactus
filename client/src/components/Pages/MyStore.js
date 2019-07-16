@@ -39,11 +39,11 @@ class MyStorePage extends Component {
 	state = {
 		storeName: "",
 		storeDesc: "",
-		coverURL: ""
+		coverURL: "",
+        shopID: ""
 	}
     
     fetchStoreData = async () => {
-        console.log('hereeeee');
         await axios({
             method: 'get',
             url: `http://localhost:3001/shops`,
@@ -52,6 +52,7 @@ class MyStorePage extends Component {
             this.setState({ storeName: response.data.name});
             this.setState({ storeDesc: response.data.description});
             this.setState({ coverURL: response.data.coverPhoto});
+            this.setState({ shopID: response.data.shopID});
           }).catch(error => {
             if (error.response){
                 this.setState({ responseError: error.response});
@@ -69,6 +70,22 @@ class MyStorePage extends Component {
 
     async componentDidMount() {
         await this.fetchStoreData();
+    }
+
+    loadJackets() {
+        axios({
+            method: 'get',
+            url: `http://localhost:3001/shops/{this.state.shopID/products}`,
+            headers: {'Authorization': localStorage.token },
+        }).
+    }
+
+    getJacketItemRow() {
+
+    }
+
+    getNextJacketItem() {
+
     }
 
     render() {
@@ -125,6 +142,10 @@ class MyStorePage extends Component {
 		  	</div>
 		);
     }
+
+}
+
+class JacketItem extends Component {
 
 }
 

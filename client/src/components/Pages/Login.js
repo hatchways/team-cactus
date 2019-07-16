@@ -66,7 +66,7 @@ class LoginPage extends Component {
       }).then(response => {
           localStorage.setItem('token', response.data.token);
 
-          this.props.updateUserType(response.data.isShopOwner ? 'shopkeeper' : 'shopper');  //TODO: must change this to be dynamic
+          this.props.updateUserType(response.data.isShopOwner ? 'shopkeeper' : 'shopper');
 
           this.props.history.push(`/mystore`);
           

@@ -27,10 +27,12 @@ const UserSchema = new Schema({
 }, {collection: 'users'});
 
 //-----------------------------------------------------------------
-UserSchema.pre('save', async function() {
+UserSchema.pre('save', async function() {     
+    // Before adding a new user document to the collection, also create a new store for them iff they
+    // have signed up as a shopowner
     if (this.isShopkeeper) {
         data = { userEmail: this.email };
-        
+        //     data = { userEmail: this.email, name: "My Store" };
         let shop = await createShop(data);
         if (!shop || shop.errors) {
             throw new Error(shop.errors ? shop.errors : {errors: { shop: "Could not create shop"} });

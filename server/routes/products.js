@@ -3,7 +3,6 @@ var router = express.Router();
 const passport = require("passport");
 const { Product, validateProductCreation } = require('../models/products');
 const { Shop } = require('../models/shops');
-const secretOrKey = process.env.SECRETORKEY;5
 
 /* Create new product ----------------------------------------------------------------*/
 router.post('/', passport.authenticate('jwt', { session: false }), async function(req, res, next) {

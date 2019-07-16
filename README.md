@@ -19,3 +19,5 @@ To start: `node bin/www`<br/>
 GET /shops (get shop data for logged in user)
 GET /shops/{:id} (get shop data for public)
 PUT /shops (edit shop data)
+
+POST /products (create new product)

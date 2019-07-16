@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 const Validator = require("validator");
 const isEmpty = require("is-empty");
-var float = require('mongoose-float').loadType(mongoose, 2);
+const Float = require('mongoose-float').loadType(mongoose, 2);
 
 const ProductSchema = new Schema({
 	shopID: {
@@ -18,10 +18,8 @@ const ProductSchema = new Schema({
 		required: false
 	},
 	price: {
-		price: { 
-            type: Float,
-            required: true 
-        }
+        type: String,
+        required: true 
     },
     sizes: {
         xsmall: {
@@ -52,29 +50,35 @@ const ProductSchema = new Schema({
     photos: [{
         type: String
     }]
-}, {collection: 'products'});
+});
 
 //-----------------------------------------------------------------
-// function validateShopCreation(data) {
-//  	let errors = {};
-//     // Convert empty fields to an empty string so we can use validator functions
-//     data.userEmail = !isEmpty(data.userEmail) ? data.userEmail : "";
-//     data.name = !isEmpty(data.name) ? data.name : "My Store";
+function validateProductCreation(data) {
+    console.log('data', data);
+ 	let errors = {};
+    // Convert empty fields to an empty string so we can use validator functions
+    data.shopID = !isEmpty(data.shopID) ? data.shopID : "";
+    data.name = !isEmpty(data.name) ? data.name : "";
+    data.price = !isEmpty(data.price) ? data.price : "";
 
-//     // Email check
-//     if (Validator.isEmpty(data.userEmail)) {
-//         errors.email = "Email field is required";
-//     }
-//     //Name check
-//     if (Validator.isEmpty(data.name)) {
-//         errors.name = "Name field is required";
-//     }
+    // Shop ID check
+    if (Validator.isEmpty(data.shopID)) {
+        errors.shopID = "Shop ID field is required";
+    }
+    //Name check
+    if (Validator.isEmpty(data.name)) {
+        errors.name = "Name field is required";
+    }
+    //Price check
+    if (Validator.isEmpty(data.price)) {
+        errors.price = "Price field is required";
+    }
 
-//     return {
-//         errors,
-//         isValid: isEmpty(errors)
-//     };
-// }
+    return {
+        errors,
+        isValid: isEmpty(errors)
+    };
+}
 
 // //-----------------------------------------------------------------
 // function validateCoverURL(data) {
@@ -94,7 +98,7 @@ const ProductSchema = new Schema({
 
 
 module.exports = {
-	Shop: mongoose.model("shops", ShopSchema),
-	// validateShopCreation: validateShopCreation,
+	Product: mongoose.model("products", ProductSchema),
+	validateProductCreation: validateProductCreation,
 	// validateCoverURL: validateCoverURL
 }

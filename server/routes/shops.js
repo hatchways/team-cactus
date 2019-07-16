@@ -12,23 +12,23 @@ async function createShop(data) {
        
         if (!isValid) {
            return { errors: errors };
-       }
+        }
 
-       // Create shop for user
+        // Create shop for user
         shop = new Shop({
            userEmail: data.userEmail,
            name: data.name ? data.name : "My Store",
            description: data.description ? data.description : "default description",
            coverPhoto: data.coverPhoto ? data.coverPhoto : "https://source.unsplash.com/user/erondu"
-       });
+        });
 
-       await shop.save();
-       return shop;
+        await shop.save();
+        return shop;
 
     } catch (err) {
         console.log('createShop error', err);
  		return null;
-     }
+    }
 }
 
 /* Get shop data (user logged in) ----------------------------------------------------------------*/

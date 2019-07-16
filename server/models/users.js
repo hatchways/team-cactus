@@ -3,9 +3,9 @@ const Schema = mongoose.Schema;
 const Validator = require("validator");
 const isEmpty = require("is-empty");
 const argon2 = require("argon2"); // for password hashing
-const createShop = require("../routes/shops").createShop;
 const jwt = require('jsonwebtoken');
 const secretOrKey = process.env.SECRETORKEY;
+const createShop = require("../routes/shops").createShop;
 
 const UserSchema = new Schema({
     name: {
@@ -24,7 +24,7 @@ const UserSchema = new Schema({
         type: Boolean,
         required: true
     }
-}, {collection: 'users'});
+});
 
 //-----------------------------------------------------------------
 UserSchema.pre('save', async function() {

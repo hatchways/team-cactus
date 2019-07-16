@@ -20,24 +20,19 @@ const ShopSchema = new Schema({
 		type: String,
 		required: false
 	}
-}, {collection: 'shops'});
+});
 
 //-----------------------------------------------------------------
 function validateShopCreation(data) {
  	let errors = {};
     // Convert empty fields to an empty string so we can use validator functions
     data.userEmail = !isEmpty(data.userEmail) ? data.userEmail : "";
-    data.name = !isEmpty(data.name) ? data.name : "My Store";
 
     // Email check
     if (Validator.isEmpty(data.userEmail)) {
         errors.email = "Email field is required";
-    }
-    //Name check
-    if (Validator.isEmpty(data.name)) {
-        errors.name = "Name field is required";
-    }
-
+	}
+	
     return {
         errors,
         isValid: isEmpty(errors)

@@ -13,9 +13,11 @@ To install node-argon2, we will need node-gyp installed globally, which means th
 To start: `node bin/www`<br/>
 
 ### API Endpoints
-/users (register new user)
-/users/login (login user)
-
-GET /shops (get shop data for logged in user)
-GET /shops/{:id} (get shop data for public)
-PUT /shops (edit shop data)
+POST /users (register new user)<br/>
+POST /users/login (login user)<br/>
+<br/>
+GET /shops (get shop data for logged in user)<br/>
+GET /shops/{:id} (get shop data for public)<br/>
+PUT /shops (edit shop data)<br/>
+<br/>
+POST /products (create new product)<br/>

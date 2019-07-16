@@ -71,5 +71,57 @@ router.get('/', passport.authenticate('jwt', { session: false }), async function
 //         } 
 // });
 
+async function editName(req, res) {
+  try {
+    if (!validateName(req.body).isValid) {
+      return res.status(400);
+    }
+    let shop = await Shop.findOne({userEmail: req.body.userEmail});
+    if (shop) {
+      shop.name = req.body.name;
+      shop.save();
+    } else {
+      return res.status(400).json({ errors: { email: "There is no shop associated with this account"}});
+    }
+  } catch (err) {
+    return res.status(503);
+  }
+ }
+
+ async function editDescription(req, res) {
+  try {
+    if (!validateDescription(req.body).isValid) {
+      return res.status(400);
+    }
+    let shop = await Shop.findOne({userEmail: req.body.userEmail});
+    if (shop) {
+      shop.description = req.body.description;
+      shop.save();
+    } else {
+      return res.status(400).json({ errors: { email: "There is no shop associated with this account"}});
+    }
+  } catch (err) {
+    return res.status(503);
+  }
+ }
+
+  async function editCoverPhoto(req, res) {
+  try {
+    if (!validateCoverURL(req.body).isValid) {
+      return res.status(400);
+    }
+    let shop = await Shop.findOne({userEmail: req.body.userEmail});
+    if (shop) {
+      shop.coverPhoto = req.body.coverURL;
+      shop.save();
+      return res.status(200).send(shop);
+    } else {
+      return res.status(400).json({ errors: { email: "There is no shop associated with this account"}});
+    }
+  } catch (err) {
+    return res.status(503);
+  }
+ }
+
 module.exports.createShop = createShop;
 module.exports.routes = router;

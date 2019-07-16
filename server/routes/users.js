@@ -45,6 +45,7 @@ router.post('/', async function(req, res, next) {
                 res.status(200).json({
                     success: true,
                     token: "Bearer " + token,
+                    isShopkeeper: user.isShopkeeper
                 });
             }
         );

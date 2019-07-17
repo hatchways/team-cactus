@@ -45,6 +45,8 @@ function validateRegisterFields(data) {
     data.email = !isEmpty(data.email) ? data.email : "";
     data.password = !isEmpty(data.password) ? data.password : "";
     data.name = !isEmpty(data.name) ? data.name : "";
+    data.isShopkeeper = !isEmpty(data.isShopkeeper) ? data.isShopkeeper : "";
+
     // Email checks
     if (Validator.isEmpty(data.email)) {
         errors.email = "Email field is required";
@@ -58,6 +60,11 @@ function validateRegisterFields(data) {
     // Name check
     if (Validator.isEmpty(data.name)) {
         errors.name = "Name field is required";
+    }
+
+    // isShopkeeper check
+    if (Validator.isEmpty(data.isShopkeeper)) {
+        errors.isShopkeeper = "isShopkeeper field is required";
     }
 
     return {

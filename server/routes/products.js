@@ -26,7 +26,7 @@ router.post('/', passport.authenticate('jwt', { session: false }), async functio
                 description: data.description ? data.description : "default description",
                 price: data.price ? data.price : "0",
                 sizes: data.sizes ? data.sizes : { xsmall: 0, small: 0, medium: 0, large: 0, xlarge: 0, xxlarge: 0 },
-                photos: data.photos ? data.photos : []
+                photos: data.photos ? data.photos : [] //array of objects {url: __, id: __}
             })
 
             await product.save();

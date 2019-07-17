@@ -18,7 +18,7 @@ const ProductSchema = new Schema({
 		required: false
 	},
 	price: {
-        type: String,
+        type: Float,
         required: true 
     },
     sizes: {

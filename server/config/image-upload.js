@@ -7,7 +7,7 @@ const IAM_USER_SECRET = process.env.IAM_USER_SECRET;
 aws.config.update({
   secretAccessKey: IAM_USER_SECRET,
   accessKeyId: IAM_USER_KEY,
-  region: 'us-east-2'
+  regiona: 'us-east-2'
 });
 
 const s3 = new aws.S3();

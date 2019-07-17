@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
 const passport = require("passport");
-const { Shop, validateShopCreation, validateCoverPhoto, validateDescription, validateName } = require('../models/shops');
+const { Shop, validateShopCreation, validateCoverImage, validateName } = require('../models/shops');
 const secretOrKey = process.env.SECRETORKEY;
 
 /* Create new shop ----------------------------------------------------------------*/
@@ -19,7 +19,7 @@ async function createShop(data) {
            userEmail: data.userEmail,
            name: data.name ? data.name : "My Store",
            description: data.description ? data.description : "default description",
-           coverPhoto: data.coverPhoto ? data.coverPhoto : "https://source.unsplash.com/user/erondu"
+           coverImage: data.coverImage ? data.coverImage : { URL: "https://source.unsplash.com/user/erondu", ID: 'madeup1' }
         });
 
         await shop.save();
@@ -61,20 +61,20 @@ router.get('/', passport.authenticate('jwt', { session: false }), async function
 router.put('/', passport.authenticate('jwt', { session: false }), async function(req, res, next) {
     
     try {
-		const email = req.user.email;
+        const email = req.user.email;
         let shop = await Shop.findOne({userEmail: email});
 
         if (shop) {
             const key = Object.keys(req.body);
             const value = Object.values(req.body);
-            
-            if((key === 'name') && !validateName(req.body).isValid) {
-                res.status(400).send({ errors: { message: "Error with shop name."}});
-            } else if((key === 'description') && !validateDescription(req.body).isValid) {
-                res.status(400).send({ errors: { message: "Error with shop description."}});
-            } else if((key === 'coverPhoto') && !validateCoverPhoto(req.body).isValid) {
-                res.status(400).send({ errors: { message: "Error with shop cover photo."}});
+
+            //Check that required fields are not blank
+            if((key[0] === 'name') && !validateName(value[0]).isValid) {
+                res.status(400).send({ errors: { message: "Shop name cannot be empty"}});
+            } else if((key[0] === 'coverImage') && !validateCoverImage(value[0]).isValid) {
+                res.status(400).send({ errors: { message: "Cover Image must have URL and ID"}});
             }
+
             shop[key[0]] = value[0];
             shop.save();
 

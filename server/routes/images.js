@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const upload = require('../services/image-upload');
+const upload = require('../config/image-upload');
 const singleUpload = upload.single('image');
 const passport = require("passport");
 

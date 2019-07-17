@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
 const passport = require("passport");
-const { Shop, validateShopCreation, validateCoverPhoto, validateDescription, validateName } = require('../models/shops');
+const { Shop, validateShopCreation, validateCoverImage, validateName } = require('../models/shops');
 const secretOrKey = process.env.SECRETORKEY;
 
 /* Create new shop ----------------------------------------------------------------*/
@@ -19,7 +19,7 @@ async function createShop(data) {
            userEmail: data.userEmail,
            name: data.name ? data.name : "My Store",
            description: data.description ? data.description : "default description",
-           coverPhoto: data.coverPhoto ? data.coverPhoto : "https://source.unsplash.com/user/erondu"
+           coverImage: data.coverImage ? data.coverImage : { URL: "https://source.unsplash.com/user/erondu", ID: 'madeup1' }
         });
 
         await shop.save();
@@ -61,13 +61,13 @@ router.get('/', passport.authenticate('jwt', { session: false }), async function
 router.put('/', passport.authenticate('jwt', { session: false }), async function(req, res, next) {
     
     try {
-		const email = req.user.email;
+        const email = req.user.email;
         let shop = await Shop.findOne({userEmail: email});
 
         if (shop) {
             const key = Object.keys(req.body);
             const value = Object.values(req.body);
-            
+
             // if((key === 'name') && !validateName(req.body).isValid) {
             //     res.status(400).send({ errors: { message: "Error with shop name."}});
             // } else if((key === 'description') && !validateDescription(req.body).isValid) {

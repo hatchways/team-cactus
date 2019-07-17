@@ -22,4 +22,4 @@ PUT /shops (edit shop data)<br/>
 <br/>
 POST /products (create new product)<br/>
 <br/>
-POST /images (upload single image to Amazon S3)<br/> 
+POST /images/single (upload single image to AWS S3)<br/> 

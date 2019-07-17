@@ -16,10 +16,16 @@ const ShopSchema = new Schema({
 		type: String,
 		required: false
 	},
-	coverPhoto: {
-		type: String,
-		required: false
-	}
+	coverImage: {
+		URL: {
+			type: String,
+			required: false
+		},
+		ID: {
+			type: String,
+			required: false
+		},
+	},
 });
 
 //-----------------------------------------------------------------
@@ -40,26 +46,20 @@ function validateShopCreation(data) {
 }
 
 //-----------------------------------------------------------------
-function validateCoverPhoto(data) {
-	return { isValid: !isEmpty(data.coverURL) };
+function validateCoverImage(image) {
+	return { isValid: ((!isEmpty(image.URL) && !isEmpty(image.ID)) || (isEmpty(image.URL) && isEmpty(image.ID))) };
 }
 
 //-----------------------------------------------------------------
-function validateDescription(data) {
-	return { isValid: !isEmpty(data.description) };
-}
-
-//-----------------------------------------------------------------
-function validateName(data) {
-	return { isValid: !isEmpty(data.name) };
+function validateName(name) {
+	return { isValid: !isEmpty(name) };
 }
 
 
 module.exports = {
 	Shop: mongoose.model("shops", ShopSchema),
 	validateShopCreation: validateShopCreation,
-	validateCoverPhoto: validateCoverPhoto,
-	validateDescription: validateDescription,
+	validateCoverImage: validateCoverImage,
 	validateName: validateName
 
 }

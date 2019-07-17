@@ -3,7 +3,6 @@ const multer = require('multer');
 const multerS3 = require('multer-s3');
 const IAM_USER_KEY = process.env.IAM_USER_KEY;
 const IAM_USER_SECRET = process.env.IAM_USER_SECRET;
-console.log('key', IAM_USER_KEY);
 aws.config.update({
   secretAccessKey: IAM_USER_SECRET,
   accessKeyId: IAM_USER_KEY,

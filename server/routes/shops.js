@@ -68,13 +68,17 @@ router.put('/', passport.authenticate('jwt', { session: false }), async function
             const key = Object.keys(req.body);
             const value = Object.values(req.body);
             
-            if((key === 'name') && !validateName(req.body).isValid) {
-                res.status(400).send({ errors: { message: "Error with shop name."}});
-            } else if((key === 'description') && !validateDescription(req.body).isValid) {
-                res.status(400).send({ errors: { message: "Error with shop description."}});
-            } else if((key === 'coverPhoto') && !validateCoverPhoto(req.body).isValid) {
-                res.status(400).send({ errors: { message: "Error with shop cover photo."}});
+            // if((key === 'name') && !validateName(req.body).isValid) {
+            //     res.status(400).send({ errors: { message: "Error with shop name."}});
+            // } else if((key === 'description') && !validateDescription(req.body).isValid) {
+            //     res.status(400).send({ errors: { message: "Error with shop description."}});
+            // } else if((key === 'coverPhoto') && !validateCoverPhoto(req.body).isValid) {
+            //     res.status(400).send({ errors: { message: "Error with shop cover photo."}});
+            // }
+            if(!validateName(req.body).isValid) {
+                res.status(400).send({ errors: { message: `Error with shop ${key}.`}});
             }
+            // Set the new value for one the shop's columns that is specified in key
             shop[key[0]] = value[0];
             shop.save();
 

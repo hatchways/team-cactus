@@ -13,10 +13,10 @@ const styles = theme => ({
 class CardWrapper extends Component {
 
     render() {
-        const { classes, children, type } = this.props;
+        const { classes, children, type, onClick } = this.props;
 
         return (
-            <Button type={type} variant="contained" color="primary" size="medium" classes={{ contained: classes.button }}>
+            <Button type={type} variant="contained" color="primary" size="medium" classes={{ contained: classes.button }} onClick={onClick}>
                 { children }
             </Button>         
         );

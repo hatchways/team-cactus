@@ -43,11 +43,9 @@ router.post('/', passport.authenticate('jwt', { session: false }), async functio
 /* Get product info --------------------------------------------------------------------*/
 router.get('/:id', passport.authenticate('jwt', { session: false }), async function(req, res, next) {
     try {
-
         const id = req.params.id;
-        console.log('id', id);
         let product = await Product.findOne({_id: id});
-        console.log('product', product);
+
         if (product) {
             res.status(200).send(product);
         } else {
@@ -56,7 +54,6 @@ router.get('/:id', passport.authenticate('jwt', { session: false }), async funct
     } catch (err) {
 		res.status(503).send({ errors: { message: "Something went wrong"}});
     }
-
 });
 
 module.exports = router;

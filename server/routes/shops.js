@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 const passport = require("passport");
 const { Shop, validateShopCreation, validateCoverImage, validateName } = require('../models/shops');
+const { Product } = require('../models/products');
 const secretOrKey = process.env.SECRETORKEY;
 
 /* Create new shop ----------------------------------------------------------------*/
@@ -82,6 +83,25 @@ router.put('/', passport.authenticate('jwt', { session: false }), async function
         } else {
 			res.status(400).send({ errors: { message: "There is no shop associated with this account"}});
         } 
+    } catch (err) {
+		res.status(503).send({ errors: { message: "Something went wrong"}});
+    }
+});
+
+/* Get list of products for shop --------------------------------------------------------------------*/
+router.get('/:id/products', async function(req, res, next) {
+    try {
+        const shopID = req.params.id;
+        console.log('shopId', shopID);
+        
+        let products = await Product.find({ shopID: shopID });
+
+        if(products) {
+            res.status(200).send(products);
+        } else {
+            res.status(204).send({ errors: { message: "No products found."}});
+        }
+
     } catch (err) {
 		res.status(503).send({ errors: { message: "Something went wrong"}});
     }

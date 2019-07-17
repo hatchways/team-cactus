@@ -1,20 +1,22 @@
 var createError = require("http-errors");
 var express = require("express");
-var bodyParser = require('body-parser');
+// var bodyParser = require('body-parser');
 var mongoose = require("mongoose");
 var path = require("path");
 var cookieParser = require("cookie-parser");
 var logger = require("morgan");
 var passport = require("passport");
 var cors = require("cors");
-const routes = require("./routes/index.js");
 var app = express();
+
+//API routes
+const routes = require("./routes/index.js");
 
 app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(bodyParser.urlencoded({ extended: true }));
+// app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, "public")));
 
 // Allow cross-origin requests on all resources
@@ -34,15 +36,10 @@ require("./config/passport")(passport);
 // Connect all our API routes to our app
 app.use("/", routes);
 
-//Amazon S3 Upload
-// var s3FileUpload = require('./routes/s3Upload');
-// app.use('/api', s3FileUpload);
-
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   next(createError(404));
 });
-
 
 // error handler
 app.use(function(err, req, res, next) {

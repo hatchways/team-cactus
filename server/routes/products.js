@@ -14,13 +14,9 @@ router.post('/', passport.authenticate('jwt', { session: false }), async functio
         if (!isValid) {
             res.status(400).send({ errors: { message: "There are errors"}});
         }
-        console.log(isValid);
-        console.log(errors);
 
         const email = req.user.email;
         let shop = await Shop.findOne({userEmail: email});
-        //res.status(200).send(shop);
-        
 
         if (shop) {
             //Create product

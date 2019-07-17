@@ -21,3 +21,5 @@ GET /shops/{:id} (get shop data for public)<br/>
 PUT /shops (edit shop data)<br/>
 <br/>
 POST /products (create new product)<br/>
+<br/>
+POST /images (upload single image to Amazon S3)<br/> 

@@ -12,7 +12,7 @@ aws.config.update({
 
 const s3 = new aws.S3();
 
-const fileFilter = (req, file, cb) => {
+const validateFile = (req, file, cb) => {
   if (file.mimetype === 'image/jpeg' || file.mimetype === 'image/png') {
     cb(null, true);
   } else {
@@ -21,7 +21,7 @@ const fileFilter = (req, file, cb) => {
 }
 
 const upload = multer({
-  fileFilter,
+  validateFile,
   storage: multerS3({
     acl: 'public-read',
     s3,

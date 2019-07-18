@@ -23,6 +23,7 @@ GET /shops/:id/products (get list of products for shop)<br/>
 <br/>
 POST /products (create new product)<br/>
 GET /products/:id (get product data)<br/>
+PUT /products/:id (edit product data)<br/>
 <br/>
 POST /images/single (upload single image to AWS S3)<br/> 
 POST /images/multiple (upload multiple images to AWS S3)<br/> 

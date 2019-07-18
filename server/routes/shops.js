@@ -63,6 +63,9 @@ router.put('/', passport.authenticate('jwt', { session: false }), async function
     
     try {
         const email = req.user.email;
+        let error = "";
+
+        // Find shop
         let shop = await Shop.findOne({userEmail: email});
 
         if (shop) {
@@ -70,22 +73,30 @@ router.put('/', passport.authenticate('jwt', { session: false }), async function
             
             keys.forEach(key => {
                 if((key === "_id") || (key === "userEmail")){
-                    return res.status(400).send({ errors: { message: "Cannot change shop ID or user Email"}});
+                    error = "Cannot change shop ID or user Email";
+                    return;
                 } else if((key === 'name') && !validateName(req.body[key]).isValid) {
-                    return res.status(400).send({ errors: { message: "Shop name cannot be blank"}});
+                    error = "Shop name cannot be blank";
+                    return;
                 } else if((key === 'coverImage') && !validateCoverImage(req.body[key]).isValid) {
-                    return res.status(400).send({ errors: { message: "Cover Image must have URL and ID"}});
+                    error = "Cover Image must have URL and ID";
+                    return;
                 } 
                 shop[key] = req.body[key];
             });  
-
-            shop.save();
-            return res.status(200).send(shop);
+            
+            if(error) {
+                return res.status(400).send({ errors: { message: error }});
+            } else {
+                // Save shop in db
+                await shop.save();
+                return res.status(200).send(shop);
+            }  
         } else {
 			return res.status(400).send({ errors: { message: "There is no shop associated with this account"}});
         } 
     } catch (err) {
-		return res.status(503).send({ errors: { message: "Something went wrong"}});
+		return res.status(500).send({ errors: { message: "Something went wrong :(" }});
     }
 });
 
@@ -93,18 +104,17 @@ router.put('/', passport.authenticate('jwt', { session: false }), async function
 router.get('/:id/products', async function(req, res, next) {
     try {
         const shopID = req.params.id;
-        console.log('shopId', shopID);
-        
+
+        // Find products
         let products = await Product.find({ shopID: shopID });
 
         if(products) {
             return res.status(200).send(products);
         } else {
-            return res.status(204).send({ errors: { message: "No products found."}});
+            return res.status(204).send({ message: "No products found." });
         }
-
     } catch (err) {
-		return res.status(503).send({ errors: { message: "Something went wrong"}});
+		return res.status(500).send({ errors: { message: "Something went wrong :(" }});
     }
 });
 

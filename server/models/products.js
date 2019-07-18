@@ -80,25 +80,21 @@ function validateProductCreation(data) {
     };
 }
 
-// //-----------------------------------------------------------------
-// function validateCoverURL(data) {
-// 	return { isValid: !isEmpty(data.coverURL) && !isEmpty(data.userEmail) };
-// }
+//-----------------------------------------------------------------
+function validatePrice(price) {
+	return { isValid: !isEmpty(price) };
+}
 
-// //-----------------------------------------------------------------
-// function validateName(data) {
-// 	return { isValid: !isEmpty(data.name) && !isEmpty(data.userEmail) };
-// }
-
-// //-----------------------------------------------------------------
-// function validateDescription(data) {
-// 	return { isValid: !isEmpty(data.description) && !isEmpty(data.userEmail) };
-// }
+//-----------------------------------------------------------------
+function validateName(name) {
+	return { isValid: !isEmpty(name) };
+}
 
 
 
 module.exports = {
 	Product: mongoose.model("products", ProductSchema),
 	validateProductCreation: validateProductCreation,
-	// validateCoverURL: validateCoverURL
+    validateName: validateName,
+    validatePrice: validatePrice
 }

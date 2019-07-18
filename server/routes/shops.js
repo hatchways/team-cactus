@@ -66,19 +66,19 @@ router.put('/', passport.authenticate('jwt', { session: false }), async function
         let shop = await Shop.findOne({userEmail: email});
 
         if (shop) {
-            const key = Object.keys(req.body);
-            const value = Object.values(req.body);
+            const keys = Object.keys(req.body);
 
-            //Check that required fields are not blank
-            if((key[0] === 'name') && !validateName(value[0]).isValid) {
-                res.status(400).send({ errors: { message: "Shop name cannot be empty"}});
-            } else if((key[0] === 'coverImage') && !validateCoverImage(value[0]).isValid) {
-                res.status(400).send({ errors: { message: "Cover Image must have URL and ID"}});
-            }
+            keys.forEach(key => {
+                //Check that required fields are not blank
+                if((key === 'name') && !validateName(req.body[key]).isValid) {
+                    res.status(400).send({ errors: { message: "Shop name cannot be empty"}});
+                } else if((key === 'coverImage') && !validateCoverImage(req.body[key]).isValid) {
+                    res.status(400).send({ errors: { message: "Cover Image must have URL and ID"}});
+                }
+                shop[key] = req.body[key];
+            });  
 
-            shop[key[0]] = value[0];
             shop.save();
-
             res.status(200).send(shop);
         } else {
 			res.status(400).send({ errors: { message: "There is no shop associated with this account"}});

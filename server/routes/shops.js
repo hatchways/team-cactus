@@ -3,7 +3,6 @@ var router = express.Router();
 const passport = require("passport");
 const { Shop, validateShopCreation, validateCoverImage, validateName } = require('../models/shops');
 const { Product } = require('../models/products');
-const secretOrKey = process.env.SECRETORKEY;
 
 /* Create new shop ----------------------------------------------------------------*/
 async function createShop(data) {
@@ -27,7 +26,7 @@ async function createShop(data) {
         return shop;
 
     } catch (err) {
-        console.log('createShop error', err);
+        console.log('Shop could not be created.', err);
  		return null;
     }
 }
@@ -39,24 +38,35 @@ router.get('/', passport.authenticate('jwt', { session: false }), async function
 		let shop = await Shop.findOne({userEmail: email});
 
 		if (shop) {
-			return res.status(200).json(shop);
+			return res.status(200).send(shop);
         } 
         else {
-			let shop = await createShop({ userEmail: email, name: "My Store" });
-			if (shop) {
-				return res.status(201).json(shop);
-			} else { // todo: does this get caught in catch anyway?
-				return res.status(503);
-			}
+            return res.status(400).send({ errors: { message: "There is no shop associated with this user."}});
+		}
+	} catch (err) {
+		return res.status(500).send({ errors: { message: "Something went wrong :(" }});
+    }
+});
+
+/* Get shop data (public) ----------------------------------------------------------------*/
+router.get('/:id', async function(req, res, next) {
+    try {
+
+        const id = req.params.id;
+        
+        // Find shop
+        let shop = await Shop.findOne({ _id: id });
+
+		if (shop) {
+			return res.status(200).send(shop);
+        } 
+        else {
+            return res.status(400).send({ errors: { message: "Could not find a shop with this shop ID."}});
 		}
 	} catch (err) {
 		return res.status(503);
     }
 });
-
-/* Get shop data (public) ----------------------------------------------------------------*/
-// router.get('/{:id}', async function(req, res, next) {
-// }
 
 /* Edit shop data ----------------------------------------------------------------*/
 router.put('/', passport.authenticate('jwt', { session: false }), async function(req, res, next) {
@@ -73,13 +83,13 @@ router.put('/', passport.authenticate('jwt', { session: false }), async function
             
             keys.forEach(key => {
                 if((key === "_id") || (key === "userEmail")){
-                    error = "Cannot change shop ID or user Email";
+                    error = "Cannot change shop ID or user email.";
                     return;
                 } else if((key === 'name') && !validateName(req.body[key]).isValid) {
-                    error = "Shop name cannot be blank";
+                    error = "Shop name field is required.";
                     return;
                 } else if((key === 'coverImage') && !validateCoverImage(req.body[key]).isValid) {
-                    error = "Cover Image must have URL and ID";
+                    error = "Cover Image must have URL and ID.";
                     return;
                 } 
                 shop[key] = req.body[key];
@@ -93,7 +103,7 @@ router.put('/', passport.authenticate('jwt', { session: false }), async function
                 return res.status(200).send(shop);
             }  
         } else {
-			return res.status(400).send({ errors: { message: "There is no shop associated with this account"}});
+			return res.status(400).send({ errors: { message: "There is no shop associated with this user."}});
         } 
     } catch (err) {
 		return res.status(500).send({ errors: { message: "Something went wrong :(" }});

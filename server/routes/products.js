@@ -34,7 +34,7 @@ router.post('/', passport.authenticate('jwt', { session: false }), async functio
             await product.save();
             return res.status(200).send(product);
         } else {
-            return res.status(400).send({ errors: { message: "There is no shop associated with this account."}});
+            return res.status(400).send({ errors: { message: "There is no shop associated with this user."}});
         } 
     } catch (err) {
         return res.status(500).send({ errors: { message: "Something went wrong :(" }});
@@ -62,36 +62,45 @@ router.get('/:id', async function(req, res, next) {
 /* Update product info --------------------------------------------------------------------*/
 router.put('/:id', passport.authenticate('jwt', { session: false }), async function(req, res, next) {
     try {
+        
+        const email = req.user.email;
         const keys = Object.keys(req.body);
         const id = req.params.id;
         let error = "";
         
         // Find product
         let product = await Product.findOne({_id: id});
-        
+
         if (product) {
-            keys.forEach(key => {
-                if((key === "_id") || (key === "shopID")){
-                    error = "Cannot change product ID or shop ID.";
-                    return;
-                } else if((key === 'name') && !validateName(req.body[key]).isValid) {
-                    error = "Product name cannot be blank.";
-                    return;
-                } else if((key === 'price') && !validatePrice(req.body[key]).isValid) {
-                    error = "Price cannot be blank.";
-                    return;
-                }
-                product[key] = req.body[key];
-            });   
+            // Find shop associated with this product
+            let shop = await Shop.findOne({ _id: product.shopID });
 
-            if(error) {
-                return res.status(400).send({ errors: { message: error }});
+            // Check that token's email matches shop's userEmail
+            if(shop.userEmail === email) {
+                keys.forEach(key => {
+                    if((key === "_id") || (key === "shopID")){
+                        error = "Cannot change product ID or shop ID.";
+                        return;
+                    } else if((key === 'name') && !validateName(req.body[key]).isValid) {
+                        error = "Product name cannot be blank.";
+                        return;
+                    } else if((key === 'price') && !validatePrice(req.body[key]).isValid) {
+                        error = "Price cannot be blank.";
+                        return;
+                    }
+                    product[key] = req.body[key];
+                });   
+    
+                if(error) {
+                    return res.status(400).send({ errors: { message: error }});
+                } else {
+                    // Save product in db
+                    await product.save();
+                    return res.status(200).send(product);
+                } 
             } else {
-                // Save product in db
-                await product.save();
-                return res.status(200).send(product);
-            }  
-
+                return res.status(401).send({ errors: { message: "Cannot edit product that doesn't belong to this user's shop."}});
+            }
         } else {
 			return res.status(400).send({ errors: { message: "There is no product associated with that product ID."}});
         } 

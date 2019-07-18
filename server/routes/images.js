@@ -9,18 +9,18 @@ const passport = require("passport");
 router.post('/single', passport.authenticate('jwt', { session: false }), function(req, res) {
   singleUpload(req, res, function(err) {
     if (err) {
-      return res.status(422).send({errors: [{title: 'Image Upload Error', detail: err.message}]});
+      return res.status(422).send({errors: [{ message: 'Image Upload Error', detail: err.message }]});
     }
 
     return res.json({'imageUrl': req.file.location, 'imageID': req.file.key });
   });
 });
 
-/* Upload multiple image ----------------------------------------------------------------------- */
+/* Upload multiple images ----------------------------------------------------------------------- */
 router.post('/multiple', passport.authenticate('jwt', { session: false }), function(req, res) {
   multipleUpload(req, res, function(err) {
     if (err) {
-      return res.status(422).send({errors: [{title: 'Images Upload Error', detail: err.message}]});
+      return res.status(422).send({errors: [{ message: 'Images Upload Error', detail: err.message }]});
     }
 
     return res.send(req.files)

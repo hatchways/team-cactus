@@ -6,6 +6,7 @@ import ImageOverlayWrapper from '../Wrappers/ImageOverlayWrapper';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
 import Dropzone from 'react-dropzone';
+import TextField from '@material-ui/core/TextField';
 
 
 const styles = theme => ({
@@ -42,12 +43,20 @@ class MyStorePage extends Component {
         this.state = {
             storeName: "",
             storeDesc: "",
-            coverURL: "",
+            coverPhoto: "", // the URL of the image that's saved
+            uploadedImg: {url: "", key: ""}, // the URL of the image once uploaded to server, before being saved
             shopID: "",
             isEditMode: false
         }
 
         this.handleEditStoreClick = this.handleEditStoreClick.bind(this);
+        this.handleSaveStoreClick = this.handleSaveStoreClick.bind(this);
+        this.handlePhotoUpdate = this.handlePhotoUpdate.bind(this);
+        this.handleNameUpdate = this.handleNameUpdate.bind(this);
+        this.handleDescUpdate = this.handleDescUpdate.bind(this);
+        // this.updatePhotoInDB = this.updatePhotoInDB.bind(this);
+        this.uploadPhoto = this.uploadPhoto.bind(this);
+        this.updateDB = this.updateDB.bind(this);
     }
     
     fetchStoreData = async () => {
@@ -56,10 +65,15 @@ class MyStorePage extends Component {
             url: `http://localhost:3001/shops`,
             headers: {'Authorization': localStorage.token },
           }).then(response => {
-            this.setState({ storeName: response.data.name});
-            this.setState({ storeDesc: response.data.description});
-            this.setState({ coverURL: response.data.coverPhoto});
-            this.setState({ shopID: response.data.shopID});
+            this.setState({ storeName: response.data.name,
+                            storeDesc: response.data.description,
+                            coverURL: response.data.coverImage.URL,
+                            shopID: response.data.shopID});
+
+            if (!this.state.uploadedImg || this.state.uploadedImg.url === "") {
+                this.setState({uploadedImg: {url: response.data.coverImage.URL, key: response.data.coverImage.ID}} );
+            }
+
           }).catch(error => {
             if (error.response){
                 this.setState({ responseError: error.response});
@@ -99,10 +113,82 @@ class MyStorePage extends Component {
 
     }
 
-    handleEditStoreClick(e){
-        e.preventDefault();
-        console.log("clicked");
-        this.setState({isEditMode: true});
+    async updateDB() {
+        try {
+            await axios({
+                method: 'put',
+                url: `http://localhost:3001/shops`,
+                headers: {
+                    'Authorization': localStorage.token
+                },
+                data: {
+                    name: this.state.storeName,
+                    description: this.state.storeDesc,
+                    coverImage: {URL: this.state.uploadedImg.url, ID: this.state.uploadedImg.key}
+                }
+            }).then(response => {
+                this.setState({ coverPhoto: this.state.uploadedImg.url});
+            }).catch(error => {
+                this.setState({responseError: "Could not update image in database"});
+            })
+        }
+        catch (asyncErr) {}
+    }
+
+    async uploadPhoto(file) {
+
+        try {
+            let data = new FormData();
+            data.append( 'image', file );
+
+            await axios({
+                method: 'post',
+                url: `http://localhost:3001/images/single`,
+                headers: {
+                    'Authorization': localStorage.token, 
+                    'Content-Type': `multipart/form-data;boundary=${data._boundary}`
+                },
+                data: data
+            }).then(response => {
+                // Change only the uploaded image and not the permanent one
+                this.setState({ uploadedImg: {url: response.data.imageUrl, key: response.data.imageID }});
+            }).catch(error => {
+                this.setState({ responseError: 'Could not upload image'});
+            });
+        } 
+        catch (asyncErr) {}
+    }
+
+    async handleEditStoreClick(e) {
+        try {
+            e.preventDefault();
+            this.setState({isEditMode: true});
+        } 
+        catch (asyncErr) {
+            this.setState( {responseError: "Could not update store" });
+        }
+    }
+
+    async handleSaveStoreClick(e) {
+        try {
+            e.preventDefault();
+            this.updateDB();
+            this.setState({isEditMode: false});
+        } catch (asyncErr) {
+            this.setState( {responseError: "Could not save store"});
+        }
+    }
+
+    async handlePhotoUpdate(newCoverFile) {
+        await this.uploadPhoto(newCoverFile); // this sets state of uploadedImg
+    }
+
+    handleNameUpdate(newName) {
+        this.setState({storeName: newName});
+    }
+
+    handleDescUpdate(newDesc) {
+        this.setState({storeDesc: newDesc});
     }
 
     render() {
@@ -115,25 +201,25 @@ class MyStorePage extends Component {
                     <div className={classes.storeBanner}>
         				<Grid container item direction="row" justify="flex-start" alignItems="center">
                             <Grid item md={5}>
-                                <div>
-                                    <Typography component="h1" variant="h3" color="inherit" gutterBottom>
-                                        {this.state.storeName}
-                                    </Typography>
-                                    <Typography variant="subtitle1" color="inherit" paragraph>
-                                        {this.state.storeDesc}
-                                    </Typography>
-                                    <br/> <br/> <br/>
-                                    <ButtonWrapper classes={{ button: classes.button }} onClick={this.handleEditStoreClick} 
-                                        type="button">
-                                        Edit Store
-                                    </ButtonWrapper>
-                                </div>
+                                <EditableText isEditMode={this.state.isEditMode} handleUpdate={this.handleNameUpdate} 
+                                                value={this.state.storeName} label="Store name"/>
+
+                                <br/> <br/>
+                                <EditableText isEditMode={this.state.isEditMode} handleUpdate={this.handleDescUpdate}
+                                                value={this.state.storeDesc} label="Store description" />
+
+                                <br/> <br/> <br/>
+                                <ButtonWrapper classes={{ button: classes.button }} 
+                                    onClick={this.state.isEditMode ? this.handleSaveStoreClick : this.handleEditStoreClick } 
+                                    type="button">
+                                    {this.state.isEditMode ? "Save Store" : "Edit Store"}
+                                </ButtonWrapper>
                             </Grid>
 
                             <Grid item md={7}>
                                 <div className={classes.coverPhoto}>
-                                    <CoverPhoto isEditOn={this.state.isEditMode} 
-                                                imgSrc={this.state.coverURL}/>
+                                    <CoverPhoto imgSrc={this.state.uploadedImg.url} handlePhotoUpdate={this.handlePhotoUpdate} 
+                                                isEditMode={this.state.isEditMode}/>
                                 </div>
                             </Grid>
                         </Grid>
@@ -160,30 +246,44 @@ class MyStorePage extends Component {
 
 }
 
+class EditableText extends Component {
+    render() {
+        let text = null;
+        if (this.props.isEditMode) {
+            text = <TextField value={this.props.value} label={this.props.label} 
+                              onChange={(e) => this.props.handleUpdate(e.target.value)} 
+                              multiline={this.props.label === "Store description"}
+                    />
+        }
+        else {
+            if (this.props.label === "Store name") {
+                text = <Typography component="h1" variant="h3" color="inherit" gutterBottom> {this.props.value} </Typography>
+            } else { // store description
+                text = <Typography variant="body1" color="inherit" paragraph> {this.props.value} </Typography>
+            }
+            
+        }
+
+        return (
+            <span> {text} </span>
+        );
+    }
+}
+
 // class JacketItem extends Component {
 
 // }
 
 class CoverPhoto extends Component {    
-    constructor(props) {
-        super(props);
-        this.state = { isEditOn : this.props.isEditOn }
-
-        this.handlePhotoUpdate = this.handlePhotoUpdate.bind(this);
-    }
-
-    handlePhotoUpdate() {
-        console.log("resetting edit setting");
-        this.setState({ isEditOn: false });
-    }
 
     render() {
         let image = <div> <img src={this.props.imgSrc} alt="background" style={{ maxHeight: '100%', maxWidth: '100%' }} /> </div>
 
-        if (this.props.isEditOn) {
+        if (this.props.isEditMode) {
             image =  
                 <ImageOverlayWrapper>
-                    <ImageUpload oldCover={this.props.imgSrc} handleUpdate={this.handlePhotoUpdate} style={{ position: 'relative' }}/>
+                    <ImageUpload uploadedImg={this.props.imgSrc} handleUpdate={this.props.handlePhotoUpdate} 
+                                style={{ position: 'relative' }}/>
                 </ImageOverlayWrapper>
         }
 
@@ -198,44 +298,19 @@ class CoverPhoto extends Component {
 class ImageUpload extends Component {
     constructor(props) {
         super(props);
-        this.state = { coverPhotoSrc: this.props.oldCover }
         this.handleDrop = this.handleDrop.bind(this)
     }
 
   
-    handleDrop = async (uploadedFiles) => {
-    	if (uploadedFiles.length > 0) {
-	    	console.log(uploadedFiles[0]);
-
-            let data = new FormData();
-            data.append( 'image', uploadedFiles[0] );
-
-	    	await axios({
-				method: 'post',
-				url: `http://localhost:3001/images`,
-				headers: {
-                    'Authorization': localStorage.token, 
-                    'Content-Type': `multipart/form-data;boundary=${data._boundary}`
-                },
-				data: data
-	      	}).then(response => {
-	      		let newCoverSrc = response.data.imageUrl;
-	      		console.log("new url: " + response.data.imageUrl);
-	        	this.setState({ coverPhotoSrc: newCoverSrc });
-	    	}).catch(error => {
-                // if (error.response) console.log(error.response);
-	    		console.log(error.response);
-	    		this.setState({ responseError: 'Could not upload image'});
-	    	});
-		}
-        this.props.handleUpdate();
+    handleDrop(uploadedFiles) {
+        if (uploadedFiles.length > 0) {
+            this.props.handleUpdate(uploadedFiles[0]);
+        }
     }
 
-
-  
     render() {
-        const { coverPhotoSrc } = this.state;
-        const image = <img src={ coverPhotoSrc } alt="" style={{ height: '100%', width:'100%' }}/>;
+        // const { coverPhotoSrc } = this.state;
+        const image = <img src={ this.props.uploadedImg } alt="" style={{ height: '100%', width:'100%' }}/>;
         
         return (    
             <section>
@@ -244,9 +319,7 @@ class ImageUpload extends Component {
                         <section>
                             <div {...getRootProps()}>
                                 <input {...getInputProps()} />
-                                {!isDragActive && image}
-                                {isDragActive && !isDragReject && image }
-                                {isDragReject && image }
+                                {image}
                             </div>
                         </section>
                     )}

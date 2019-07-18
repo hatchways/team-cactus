@@ -12,7 +12,8 @@ router.post('/', async function(req, res, next) {
         if (!isValid) {
             return res.status(400).json({ errors: errors });
         }
-        let shopkeeperCheck = (req.body.isShopkeeper && req.body.isShopkeeper !== "false") ? true : false;
+        // let shopkeeperCheck = (req.body.isShopkeeper && (req.body.isShopkeeper !== "false")) ? true : false;
+        let shopkeeperCheck = true;
  
         // Check if this user already exists
         let user = await User.findOne({ email: req.body.email });

@@ -17,9 +17,13 @@ POST /users (register new user)<br/>
 POST /users/login (login user)<br/>
 <br/>
 GET /shops (get shop data for logged in user)<br/>
-GET /shops/{:id} (get shop data for public)<br/>
+GET /shops/:id (get shop data for public)<br/>
 PUT /shops (edit shop data)<br/>
+GET /shops/:id/products (get list of products for shop)<br/>
 <br/>
 POST /products (create new product)<br/>
+GET /products/:id (get product data)<br/>
+PUT /products/:id (edit product data)<br/>
 <br/>
 POST /images/single (upload single image to AWS S3)<br/> 
+POST /images/multiple (upload multiple images to AWS S3)<br/> 

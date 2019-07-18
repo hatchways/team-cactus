@@ -19,7 +19,7 @@ const ProductSchema = new Schema({
 	},
 	price: {
         type: Float,
-        required: true 
+        required: true
     },
     sizes: {
         xsmall: {
@@ -54,24 +54,20 @@ const ProductSchema = new Schema({
 
 //-----------------------------------------------------------------
 function validateProductCreation(data) {
-    console.log('data', data);
- 	let errors = {};
-    // Convert empty fields to an empty string so we can use validator functions
-    data.shopID = !isEmpty(data.shopID) ? data.shopID : "";
+    let errors = {};
+
+    // Convert empty fields to an empty string so we can use Validator functions
     data.name = !isEmpty(data.name) ? data.name : "";
     data.price = !isEmpty(data.price) ? data.price : "";
 
-    // Shop ID check
-    if (Validator.isEmpty(data.shopID)) {
-        errors.shopID = "Shop ID field is required";
-    }
-    //Name check
+    // Name check
     if (Validator.isEmpty(data.name)) {
-        errors.name = "Name field is required";
+        errors.name = "Name field is required.";
     }
-    //Price check
+    
+    // Price check
     if (Validator.isEmpty(data.price)) {
-        errors.price = "Price field is required";
+        errors.price = "Price field is required.";
     }
 
     return {
@@ -80,25 +76,19 @@ function validateProductCreation(data) {
     };
 }
 
-// //-----------------------------------------------------------------
-// function validateCoverURL(data) {
-// 	return { isValid: !isEmpty(data.coverURL) && !isEmpty(data.userEmail) };
-// }
+//-----------------------------------------------------------------
+function validatePrice(price) {
+	return { isValid: !isEmpty(price) };
+}
 
-// //-----------------------------------------------------------------
-// function validateName(data) {
-// 	return { isValid: !isEmpty(data.name) && !isEmpty(data.userEmail) };
-// }
-
-// //-----------------------------------------------------------------
-// function validateDescription(data) {
-// 	return { isValid: !isEmpty(data.description) && !isEmpty(data.userEmail) };
-// }
-
-
+//-----------------------------------------------------------------
+function validateName(name) {
+	return { isValid: !isEmpty(name) };
+}
 
 module.exports = {
 	Product: mongoose.model("products", ProductSchema),
 	validateProductCreation: validateProductCreation,
-	// validateCoverURL: validateCoverURL
+    validateName: validateName,
+    validatePrice: validatePrice
 }

@@ -2,8 +2,7 @@ var express = require('express');
 var router = express.Router();
 const passport = require("passport");
 const { Shop, validateShopCreation, validateCoverImage, validateName } = require('../models/shops');
-const secretOrKey = process.env.SECRETORKEY;
-// const uploadPhoto = require("./images");
+const { Product } = require('../models/products');
 
 /* Create new shop ----------------------------------------------------------------*/
 async function createShop(data) {
@@ -27,7 +26,7 @@ async function createShop(data) {
         return shop;
 
     } catch (err) {
-        console.log('createShop error', err);
+        console.log('Shop could not be created.', err);
  		return null;
     }
 }
@@ -39,24 +38,35 @@ router.get('/', passport.authenticate('jwt', { session: false }), async function
 		let shop = await Shop.findOne({userEmail: email});
 
 		if (shop) {
-			return res.status(200).json(shop);
+			return res.status(200).send(shop);
         } 
         else {
-			let shop = await createShop({ userEmail: email, name: "My Store" });
-			if (shop) {
-				return res.status(201).json(shop);
-			} else { // todo: does this get caught in catch anyway?
-				res.status(503);
-			}
+            return res.status(400).send({ errors: { message: "There is no shop associated with this user."}});
 		}
 	} catch (err) {
-		res.status(503);
+		return res.status(500).send({ errors: { message: "Something went wrong :(" }});
     }
 });
 
 /* Get shop data (public) ----------------------------------------------------------------*/
-// router.get('/{:id}', async function(req, res, next) {
-// }
+router.get('/:id', async function(req, res, next) {
+    try {
+
+        const id = req.params.id;
+        
+        // Find shop
+        let shop = await Shop.findOne({ _id: id });
+
+		if (shop) {
+			return res.status(200).send(shop);
+        } 
+        else {
+            return res.status(400).send({ errors: { message: "Could not find a shop with this shop ID."}});
+		}
+	} catch (err) {
+		return res.status(503);
+    }
+});
 
 /* Edit shop cover photo --------------------------------------------------------------------------*/
 // router.put('/coverPhoto', passport.authenticate('jwt', { session: false }), async function(req, res) {
@@ -94,27 +104,57 @@ router.put('/', passport.authenticate('jwt', { session: false }), async function
     
     try {
         const email = req.user.email;
+        let error = "";
+
+        // Find shop
         let shop = await Shop.findOne({userEmail: email});
 
         if (shop) {
             const keys = Object.keys(req.body);
-            const values = Object.values(req.body);
-
-            if(!validateName(req.body).isValid) {
-                res.status(400).send({ errors: { message: `Error with shop ${key}.`}});
-            }
-            // Set the new value for each the shop's columns that is specified in keys
-            for (let i = 0; i < keys.length; i++) {
-                shop[keys[i]] = values[i];
-            }
-            await shop.save();
-
-            res.status(200).send(shop);
+            
+            keys.forEach(key => {
+                if((key === "_id") || (key === "userEmail")){
+                    error = "Cannot change shop ID or user email.";
+                    return;
+                } else if((key === 'name') && !validateName(req.body[key]).isValid) {
+                    error = "Shop name field is required.";
+                    return;
+                } else if((key === 'coverImage') && !validateCoverImage(req.body[key]).isValid) {
+                    error = "Cover Image must have URL and ID.";
+                    return;
+                } 
+                shop[key] = req.body[key];
+            });  
+            
+            if(error) {
+                return res.status(400).send({ errors: { message: error }});
+            } else {
+                // Save shop in db
+                await shop.save();
+                return res.status(200).send(shop);
+            }  
         } else {
-			res.status(400).send({ errors: { message: "There is no shop associated with this account"}});
+			return res.status(400).send({ errors: { message: "There is no shop associated with this user."}});
         } 
     } catch (err) {
-		res.status(503).send({ errors: { message: "Something went wrong"}});
+		return res.status(500).send({ errors: { message: "Something went wrong :(" }});
+    }
+});
+
+/* Get list of products for shop --------------------------------------------------------------------*/
+router.get('/:id/products', async function(req, res, next) {
+    try {
+        const shopID = req.params.id;
+
+        // Find products
+        let products = await Product.find({ shopID: shopID });
+        if(products) {
+            return res.status(200).send(products);
+        } else {
+            return res.status(204).send({ message: "No products found." });
+        }
+    } catch (err) {
+		return res.status(500).send({ errors: { message: "Something went wrong :(" }});
     }
 });
 

@@ -5,7 +5,6 @@ import ButtonWrapper from '../Wrappers/ButtonWrapper';
 import PageWrapper from '../Wrappers/PageWrapper';
 import Profile from '../Profile';
 import SizePicker from '../SizePicker';
-import SizePicker1 from '../SizePicker1';
 import TitleProductWrapper from '../Wrappers/TitleProductWrapper';
 // import Tabs from '@material-ui/core/Tabs';
 // import Tab from '@material-ui/core/Tab';
@@ -26,9 +25,6 @@ const styles = theme => ({
         marginTop: '15px',
         color: '#777',
         fontSize: '16px'
-    },
-    info: {
-        
     },
     imageContainer: {
         display: 'flex',
@@ -67,18 +63,18 @@ const styles = theme => ({
     question: {
         marginTop: '15px'
     },
-    sizes: {
-        fontWeight: 600,
-        display: 'flex',
-        flexDirection: 'row',
-        alignItems: 'center'
-    },
-    title: {
-        marginTop: '25px',
-    },
     sizePicker: {
         marginTop: '30px',
     },
+    // sizes: {
+    //     fontWeight: 600,
+    //     display: 'flex',
+    //     flexDirection: 'row',
+    //     alignItems: 'center'
+    // },
+    title: {
+        marginTop: '25px',
+    }
 });
 
 class ShowProduct extends Component {
@@ -102,12 +98,13 @@ class ShowProduct extends Component {
     }
 
     componentDidMount() {
-        const id = '5d31e247ffa4b808a0ab6fb2';
+        const pathName = window.location.pathname;
+        const productID = pathName.replace('/product/','');
 
         axios({
             method: 'get',
             //url: `${window.location.origin}/users`,
-            url: `http://localhost:3001/products/${id}`,
+            url: `http://localhost:3001/products/${productID}`,
         }).then(response => {
             this.setState({ data: response.data })
         }).catch(error => {
@@ -151,7 +148,7 @@ class ShowProduct extends Component {
                             CAD ${this.state.data.price}
                         </div>
                         <div className={classes.sizePicker}>
-                            <SizePicker1 sizesAvailable={this.state.data.sizes} />
+                            <SizePicker sizesAvailable={this.state.data.sizes} />
                         </div>
                         <div className={classes.buttonContainer}>
                             <ButtonWrapper type="black" classes={{ button: classes.button }}>Add to Cart</ButtonWrapper>

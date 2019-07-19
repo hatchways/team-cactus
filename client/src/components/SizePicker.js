@@ -1,10 +1,9 @@
-import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-import Grid from '@material-ui/core/Grid';
+import React, { Component } from "react";
+import { withStyles } from "@material-ui/core/styles";
 import ToggleButton from '@material-ui/lab/ToggleButton';
 import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
 
-const useStyles = makeStyles(theme => ({
+const styles = theme => ({
     toggleContainer: {
         display: 'flex',
         flexDirection: 'row',
@@ -18,43 +17,47 @@ const useStyles = makeStyles(theme => ({
     toggleButtonGroup: {
         backgroundColor: 'transparent',
     }
-}));
+});
 
-const SizePicker = () => {
-    const [size, setSize] = React.useState('');
+class SizePicker extends Component {
+    state = {
+        size: ''
+    }
 
-    const handleSize = (event, newSize) => {
-        setSize(newSize);
+    handleSize = (event, newSize) => {
+        this.setState({size: newSize});
     };
 
-    const classes = useStyles();
-
-    return (
+    render() {
+        const { classes, sizesAvailable } = this.props;
+        console.log('sizes available', sizesAvailable.xsmall);
+        return (
 
             <div className={classes.toggleContainer}>
                 Size: 
-                <ToggleButtonGroup value={size} size="small" exclusive onChange={handleSize} classes={{ root: classes.toggleButtonGroup }}>
-                    <ToggleButton value="xsmall" classes={{ root: classes.toggleButton }}>
+                <ToggleButtonGroup value={this.state.size} size="small" exclusive onChange={this.handleSize} classes={{ root: classes.toggleButtonGroup }}>
+                    <ToggleButton value="xsmall" disabled={sizesAvailable.xsmall ? false : true}  classes={{ root: classes.toggleButton }}>
                         XS
                     </ToggleButton>
-                    <ToggleButton value="small" classes={{ root: classes.toggleButton }}>
+                    <ToggleButton value="small" disabled={sizesAvailable.small ? false : true} classes={{ root: classes.toggleButton }}>
                         S
                     </ToggleButton>
-                    <ToggleButton value="medium" classes={{ root: classes.toggleButton }}>
+                    <ToggleButton value="medium" disabled={sizesAvailable.medium ? false : true} classes={{ root: classes.toggleButton }}>
                         M
                     </ToggleButton>
-                    <ToggleButton value="large" disabled classes={{ root: classes.toggleButton }}>
+                    <ToggleButton value="large" disabled={sizesAvailable.large ? false : true} classes={{ root: classes.toggleButton }}>
                         L
                     </ToggleButton>
-                    <ToggleButton value="xlarge" disabled classes={{ root: classes.toggleButton }}>
+                    <ToggleButton value="xlarge" disabled={sizesAvailable.xlarge ? false : true} classes={{ root: classes.toggleButton }}>
                         XL
                     </ToggleButton>
-                    <ToggleButton value="xxlarge" disabled classes={{ root: classes.toggleButton }}>
+                    <ToggleButton value="xxlarge" disabled={sizesAvailable.xxlarge ? false : true} classes={{ root: classes.toggleButton }}>
                         XXL
                     </ToggleButton>
                 </ToggleButtonGroup>
             </div>
-  );
+        );
+    }
 }
 
-export default SizePicker;
+export default withStyles(styles)(SizePicker);

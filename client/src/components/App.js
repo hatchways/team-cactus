@@ -8,17 +8,18 @@ import LandingPage from "./Pages/Landing";
 import LoginPage from "./Pages/Login";
 import RegisterPage from "./Pages/Register";
 import MyStorePage from "./Pages/MyStore";
+import UploadJacketPage from "./Pages/UploadJacket";
 
 class App extends Component {
-  state = {
-    userType: 'shopper' 
-    //current types: shopper(user not logged in), shopkeeper(user logged in)
-    //future types: anonymous(not logged in), shopper, shopkeeper
-  }
+    state = {
+        userType: 'shopper' 
+        //current types: shopper(user not logged in), shopkeeper(user logged in)
+        //future types: anonymous(not logged in), shopper, shopkeeper
+    }
 
-  updateUserType = (userType) => {
-    this.setState({ userType: userType });
-  }
+    updateUserType = (userType) => {
+        this.setState({ userType: userType });
+    }
 
   render() {
     return (
@@ -30,6 +31,7 @@ class App extends Component {
           <Route exact path='/login' render={(props) => <LoginPage {...props} updateUserType={this.updateUserType} />} />
           <Route exact path='/register' render={(props) => <RegisterPage {...props} updateUserType={this.updateUserType} />} />
           <Route exact path="/mystore" render={(props) => <MyStorePage {...props} />} />
+          <Route exact path="/mystore/upload" render={(props) => <UploadJacketPage {...props} ensureLoggedIn={this.ensureLoggedIn}/>} />
         </BrowserRouter>
       </MuiThemeProvider>
     );

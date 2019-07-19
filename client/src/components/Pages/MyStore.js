@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-// import { Redirect } from "react-router";
+import { Redirect } from "react-router";
 import axios from 'axios';
 import { withStyles } from "@material-ui/core/styles";
 import Paper from '@material-ui/core/Paper';
@@ -356,24 +356,24 @@ class JacketRow extends Component {
 }
 
 class JacketCard extends Component {
-    // constructor(props) {
-    //     super(props);
-    //     this.state = {
-    //         redirect: false
-    //     }
-    //     this.handleClick = this.handleClick.bind(this);
-    // }
+    constructor(props) {
+        super(props);
+        this.state = {
+            redirect: false
+        }
+        this.handleClick = this.handleClick.bind(this);
+    }
 
-    // handleClick(e){
-    //     this.setState({redirect: true});
-    // }
+    handleClick(e){
+        this.setState({redirect: true});
+    }
 
     render() {
         let defaultImg = "https://cactus-jacketshop.s3.us-east-2.amazonaws.com/j1.jpg";
         if (!this.props.jacket) {
-            // if (this.state.redirect) {
-            //     return <Redirect push to="/mystore/upload" />;
-            // }
+            if (this.state.redirect) {
+                return <Redirect push to="/mystore/upload" />;
+            }
 
             return (
                 <Card className={this.props.card} elevation={2} square={true}>
@@ -382,7 +382,7 @@ class JacketCard extends Component {
                             src={defaultImg}
                             component="img"
                             alt=""
-                            //onClick={this.handleClick}
+                            onClick={this.handleClick}
                         />
                     </CardActionArea>
                     <CardContent className={this.props.cardContent}>
@@ -397,7 +397,7 @@ class JacketCard extends Component {
             //     return <Redirect push to="/mystore/edit" />;
             // }
 
-            // console.log(this.props.jacket);
+            console.log(this.props.jacket);
             return (
                 <Card className={this.props.card} elevation={2} square={true}>
                     <CardActionArea>

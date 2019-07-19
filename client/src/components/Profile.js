@@ -22,7 +22,7 @@ const Profile = () => {
 
     return (
         <div className={classes.profile}>
-            <img src="https://cactus-jacketshop.s3.us-east-2.amazonaws.com/profilepic.jpg" className={classes.image} />
+            <img src="https://cactus-jacketshop.s3.us-east-2.amazonaws.com/profilepic.jpg" className={classes.image} alt="profile"/>
             <p>Jessica Smith</p>
         </div>
   );

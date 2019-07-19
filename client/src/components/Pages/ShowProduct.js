@@ -15,7 +15,7 @@ const styles = theme => ({
         marginRight: '10px'
     },
     buttonContainer: {
-        marginTop: '30px'
+        marginTop: '50px'
     },
     container: {
         display: 'flex',
@@ -94,9 +94,7 @@ class ShowProduct extends Component {
     }
 
     render() {
-
         const { classes } = this.props;
-        console.log('this.state.data', this.state.data);
 
         return (
             <PageWrapper>

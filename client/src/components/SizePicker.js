@@ -12,7 +12,8 @@ const styles = theme => ({
     },
     toggleButton: {
         margin: '0 10px',
-        border: '1px solid rgba(0, 0, 0, .83) !important',
+        border: '1px solid rgba(0, 0, 0, .6) !important',
+        borderRadius: '0 !important',
         color: '#000'
     }, 
     toggleButtonDisabled: {
@@ -39,7 +40,7 @@ class SizePicker extends Component {
 
     render() {
         const { classes, sizesAvailable } = this.props;
-        console.log('sizes available', sizesAvailable.xsmall);
+
         return (
 
             <div className={classes.toggleContainer}>

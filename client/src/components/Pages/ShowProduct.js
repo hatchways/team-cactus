@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import axios from 'axios';
 import { withStyles } from "@material-ui/core/styles";
 import ButtonWrapper from '../Wrappers/ButtonWrapper';
+import ImageScroll from '../ImageScroll';
 import PageWrapper from '../Wrappers/PageWrapper';
 import Profile from '../Profile';
 import SizePicker from '../SizePicker';
@@ -26,27 +27,6 @@ const styles = theme => ({
         color: '#777',
         fontSize: '16px'
     },
-    imageContainer: {
-        display: 'flex',
-        flexDirection: 'row',
-        justifyContent: 'flex-start',
-        width: '60%',
-    },
-    imageScroll: {
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'flex-start',
-        paddingRight: '40px',
-        width: '25%',
-    },
-    imageScroll__image: {
-        marginBottom: '10px',
-        width: '100%'
-    },
-    imageMain: {
-        width: '75%',
-        paddingRight: '80px',
-    },
     infoContainer: {
         width: '40%',
         paddingRight: '30px'
@@ -66,12 +46,6 @@ const styles = theme => ({
     sizePicker: {
         marginTop: '30px',
     },
-    // sizes: {
-    //     fontWeight: 600,
-    //     display: 'flex',
-    //     flexDirection: 'row',
-    //     alignItems: 'center'
-    // },
     title: {
         marginTop: '25px',
     }
@@ -92,7 +66,9 @@ class ShowProduct extends Component {
                 xlarge: 0,
                 xxlarge: 0
             },
-            photos: []
+            photos: [
+                {URL: '', ID: ''}
+            ]
         },
         responseError: ""
     }
@@ -125,17 +101,7 @@ class ShowProduct extends Component {
         return (
             <PageWrapper>
                 <div className={classes.container}>
-                    <div className={classes.imageContainer}>
-                        <div className={classes.imageScroll}>
-                            <img src="https://cactus-jacketshop.s3.us-east-2.amazonaws.com/j1.jpg" className={classes.imageScroll__image}/> 
-                            <img src="https://cactus-jacketshop.s3.us-east-2.amazonaws.com/j2.jpg" className={classes.imageScroll__image}/>
-                            <img src="https://cactus-jacketshop.s3.us-east-2.amazonaws.com/j3.jpg" className={classes.imageScroll__image}/>
-                            <img src="https://cactus-jacketshop.s3.us-east-2.amazonaws.com/j4.jpg" className={classes.imageScroll__image}/>
-                        </div>
-                        <div className={classes.imageMain}>
-                            <img src="https://cactus-jacketshop.s3.us-east-2.amazonaws.com/j1.jpg" width="100%" /> 
-                        </div>
-                    </div>
+                    <ImageScroll images={this.state.data.photos} />
                     <div className={classes.infoContainer}>
                         <Profile />{/*TO DO Dynamic Name*/}
                         <TitleProductWrapper classes={{ title: classes.title }}>

@@ -26,10 +26,6 @@ const styles = theme => ({
 });
 
 class ImageScroll extends Component {
-    state = {
-        size: ''
-    }
-
     displayImage = (image) => {
         console.log('url', image.URL);
         return(

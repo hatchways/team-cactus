@@ -4,11 +4,12 @@ import Typography from '@material-ui/core/Typography';
 
 const styles = theme => ({
     title:{
-        margin: '6px 0 20px 0',
         fontWeight: 600,
         letterSpacing: '1px',
         textDecoration: 'none',
-        fontSize: '19px'
+        fontSize: '28px',
+        width: '100%',
+        lineHeight: '34px'
     }
 });
 

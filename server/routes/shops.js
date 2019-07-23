@@ -44,7 +44,7 @@ router.get('/', passport.authenticate('jwt', { session: false }), async function
             return res.status(400).send({ errors: { message: "There is no shop associated with this user."}});
 		}
 	} catch (err) {
-		return res.status(500).send({ errors: { message: "Something went wrong :(" }});
+		return res.status(503).send({ errors: { message: "Something went wrong :(" }});
     }
 });
 
@@ -106,7 +106,7 @@ router.put('/', passport.authenticate('jwt', { session: false }), async function
 			return res.status(400).send({ errors: { message: "There is no shop associated with this user."}});
         } 
     } catch (err) {
-		return res.status(500).send({ errors: { message: "Something went wrong :(" }});
+		return res.status(503).send({ errors: { message: "Something went wrong :(" }});
     }
 });
 
@@ -124,7 +124,7 @@ router.get('/:id/products', async function(req, res, next) {
             return res.status(204).send({ message: "No products found." });
         }
     } catch (err) {
-		return res.status(500).send({ errors: { message: "Something went wrong :(" }});
+		return res.status(503).send({ errors: { message: "Something went wrong :(" }});
     }
 });
 

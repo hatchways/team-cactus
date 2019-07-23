@@ -37,7 +37,50 @@ router.post('/', passport.authenticate('jwt', { session: false }), async functio
             return res.status(400).send({ errors: { message: "There is no shop associated with this user."}});
         } 
     } catch (err) {
-        return res.status(500).send({ errors: { message: "Something went wrong :(" }});
+        return res.status(503).send({ errors: { message: "Something went wrong :(" }});
+    }
+});
+
+/* Get all products with possible filters ----------------------------------------------*/
+// TODO: make this a function that is commonly called for disovery and for listing all products for a
+// particular shop (?)
+router.get('/', async function(req, res) {
+    try { 
+        let query = {};
+        // Basic validation
+        if (req.query.size && ['xsmall', 'small', 'medium', 'large', 'xlarge', 'xxlarge'].includes(req.query.size.toLowerCase())) {
+            query[`sizes.${req.query.size}`] = {'$gt': 0};
+        }
+        if (req.query.lower_price && !isNaN(req.query.lower_price)) {
+            if (!query.price) {
+                query.price = {};
+            }
+            query.price['$gt'] = Number(req.query.lower_price);
+        }
+        if (req.query.higher_price && !isNaN(req.query.higher_price)) {
+            if (!query.price) {
+                query.price = {};
+            }
+            query.price['$lt'] = Number(req.query.higher_price);
+        } 
+        if (req.query.type && ['denim', 'vintage'].includes(req.query.type.toLowerCase())) {
+            // Check that the description contains the type keyword
+            query.description =  { $regex: `${req.query.type}`, $options: 'i' };
+        }
+        // if (req.query.gender && ['male', 'female'].includes(req.query.gender.toLowerCase())) {
+        //     query.gender = req.query.gender;
+        // }
+
+        let products = await Product.find( query );
+
+        if (!products) {
+            return res.status(204).send({ message: "No products found." });
+        } 
+
+        return res.status(200).send(products);
+
+    } catch (asyncErr) {
+        return res.status(503).send({ errors: {message: asyncErr.message}});
     }
 });
 
@@ -55,7 +98,7 @@ router.get('/:id', async function(req, res, next) {
 			return res.status(400).send({ errors: { message: "There is no product associated with this product ID."}});
         } 
     } catch (err) {
-		return res.status(500).send({ errors: { message: "Something went wrong :(" }});
+		return res.status(503).send({ errors: { message: "Something went wrong :(" }});
     }
 });
 
@@ -105,7 +148,7 @@ router.put('/:id', passport.authenticate('jwt', { session: false }), async funct
 			return res.status(400).send({ errors: { message: "There is no product associated with that product ID."}});
         } 
     } catch (err) {
-		return res.status(500).send({ errors: { message: "Something went wrong :(" }});
+		return res.status(503).send({ errors: { message: "Something went wrong :(" }});
     }
 });
 

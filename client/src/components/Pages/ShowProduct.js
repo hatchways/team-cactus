@@ -7,8 +7,6 @@ import PageWrapper from '../Wrappers/PageWrapper';
 import Profile from '../Profile';
 import SizePicker from '../SizePicker';
 import TitleProductWrapper from '../Wrappers/TitleProductWrapper';
-// import Tabs from '@material-ui/core/Tabs';
-// import Tab from '@material-ui/core/Tab';
 
 const styles = theme => ({
     button: {
@@ -26,6 +24,9 @@ const styles = theme => ({
         marginTop: '15px',
         color: '#777',
         fontSize: '16px'
+    },
+    imageScroll: {
+        width: '60%'
     },
     infoContainer: {
         width: '40%',
@@ -79,7 +80,6 @@ class ShowProduct extends Component {
 
         axios({
             method: 'get',
-            //url: `${window.location.origin}/users`,
             url: `http://localhost:3001/products/${productID}`,
         }).then(response => {
             this.setState({ data: response.data })
@@ -99,7 +99,7 @@ class ShowProduct extends Component {
         return (
             <PageWrapper>
                 <div className={classes.container}>
-                    <ImageScroll images={this.state.data.photos} />
+                    <ImageScroll images={this.state.data.photos} classes={{ container: classes.imageScroll }}/>
                     <div className={classes.infoContainer}>
                         <Profile />{/*TO DO Dynamic Name*/}
                         <TitleProductWrapper classes={{ title: classes.title }}>
@@ -124,19 +124,6 @@ class ShowProduct extends Component {
                         </div>
                     </div>
                 </div>
-                {/* <div className={classes.bottomMenu}>
-                    <Tabs
-                        value={value}
-                        onChange={handleChange}
-                        indicatorColor="primary"
-                        textColor="primary"
-                        centered
-                    >
-                        <Tab label="Item One" />
-                        <Tab label="Item Two" />
-                        <Tab label="Item Three" />
-                    </Tabs>
-                </div> */}
             </PageWrapper>
         );
     }

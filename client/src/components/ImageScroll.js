@@ -2,11 +2,14 @@ import React, { Component } from "react";
 import { withStyles } from "@material-ui/core/styles";
 
 const styles = theme => ({
-    imageContainer: {
+    container: {
         display: 'flex',
         flexDirection: 'row',
         justifyContent: 'flex-start',
-        width: '60%',
+    },
+    imageMain: {
+        width: '75%',
+        paddingRight: '80px',
     },
     imageScroll: {
         display: 'flex',
@@ -15,7 +18,13 @@ const styles = theme => ({
         paddingRight: '40px',
         width: '25%',
     },
-    imageScroll__image: {
+    imageScrollCurrent: {
+        marginBottom: '10px',
+        width: '100%',
+        opacity: 1,
+        cursor: 'pointer',
+    },
+    imageScrollOption: {
         marginBottom: '10px',
         width: '100%',
         opacity: 0.55,
@@ -23,16 +32,6 @@ const styles = theme => ({
         '&:hover': {
             opacity: 1
         }
-    },
-    imageMain: {
-        width: '75%',
-        paddingRight: '80px',
-    },
-    currentImage: {
-        marginBottom: '10px',
-        width: '100%',
-        opacity: 1,
-        cursor: 'pointer',
     }
 });
 
@@ -48,23 +47,21 @@ class ImageScroll extends Component {
 
     render() {
         const { classes, images } = this.props;
-        const printImages = [];
+        const displayImages = [];
 
         return (
-            <div className={classes.imageContainer}>
+            <div className={classes.container}>
                 <div className={classes.imageScroll}>
                     {images.forEach((image, index) => {
-                        let imageClasses = classes.imageScroll__image;
+                        let imageClass = classes.imageScrollOption;
                         if(index===this.state.currentImage) {
-                            imageClasses = classes.currentImage;
+                            imageClass = classes.imageScrollCurrent;
                         }
-                        printImages.push(<img id={index} src={image.URL} onClick={()=>this.imageClick(index)} className={imageClasses} key={image._id ? image._id : index} alt="jacket"/>);
+                        displayImages.push(<img src={image.URL} onClick={()=>this.imageClick(index)} className={imageClass} key={index} alt="jacket"/>);
                     })}
-                    {printImages}
+                    {displayImages}
                 </div>
-                <div className={classes.imageMain}>
-                    <img src={images[this.state.currentImage].URL} key={images[this.state.currentImage]._id ? images[this.state.currentImage]._id : 1} width="100%" alt="jacket" /> 
-                </div>
+                <img src={images[this.state.currentImage].URL} className={classes.imageMain} alt="jacket" /> 
             </div>
         );
     }

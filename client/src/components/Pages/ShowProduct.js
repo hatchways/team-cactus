@@ -10,7 +10,8 @@ import TitleProductWrapper from '../Wrappers/TitleProductWrapper';
 
 const styles = theme => ({
     button: {
-        marginRight: '10px'
+        marginRight: '10px',
+        marginBottom: '10px'
     },
     buttonContainer: {
         marginTop: '50px'
@@ -18,7 +19,11 @@ const styles = theme => ({
     container: {
         display: 'flex',
         flexDirection: 'row',
-        justifyContent: 'space-between'
+        justifyContent: 'space-between',
+        [theme.breakpoints.down('xs')]: {
+            flexDirection: 'column',
+            justifyContent: 'flex-start',
+        }
     },
     description: {
         marginTop: '15px',
@@ -26,11 +31,17 @@ const styles = theme => ({
         fontSize: '16px'
     },
     imageScroll: {
-        width: '60%'
+        width: '57%',
+        [theme.breakpoints.down('xs')]: {
+            width: '100%'
+        }
     },
     infoContainer: {
         width: '40%',
-        paddingRight: '30px'
+        paddingRight: '30px',
+        [theme.breakpoints.down('xs')]: {
+            width: '100%'
+        }
     },
     message: {
         fontWeight: 600,
@@ -40,9 +51,6 @@ const styles = theme => ({
         fontWeight: 600,
         fontSize: '15px',
         marginTop: '30px',
-    },
-    question: {
-        marginTop: '15px'
     },
     sizePicker: {
         marginTop: '30px',
@@ -116,7 +124,7 @@ class ShowProduct extends Component {
                         </div>
                         <div className={classes.buttonContainer}>
                             <ButtonWrapper type="black" classes={{ button: classes.button }}>Add to Cart</ButtonWrapper>
-                            <ButtonWrapper type="white">Request a Custom Design</ButtonWrapper>
+                            <ButtonWrapper type="white" classes={{ button: classes.button }}>Request a Custom Design</ButtonWrapper>
                         </div>
                         <div className={classes.question}>
                             Have a question about an item? <span className={classes.message}>Send a message.</span><br />

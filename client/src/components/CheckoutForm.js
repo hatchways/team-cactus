@@ -57,11 +57,13 @@ class CheckoutForm extends React.Component {
 		//            onChange={e => {this.setState({rememberCard: e.target.checked })}} />
 	 	return (
 				<div style={{padding: '30px'}}>
-					<label>
-	        			<Typography variant="body1"> <b> Enter your card details to pay </b> </Typography>
-	        			<CardElement style={{base: {fontSize: '18px'}}} onReady={(el) => el.focus()} />
-	      			</label>
-			        <ButtonWrapper>Confirm order</ButtonWrapper>
+					<form onSubmit={this.handleSubmit}>
+	        			<Typography style={{padding: '20px 0px'}} variant="body1"> 
+	        				<b> Enter your card details to pay: </b> 
+	        			</Typography>
+	        			<CardElement style={{base: {fontSize: '14px'}}} onReady={(el) => el.focus()} />
+	      			</form>
+			        <ButtonWrapper type="white">Pay now</ButtonWrapper>
 		        </div>
 	 	);
 	 }

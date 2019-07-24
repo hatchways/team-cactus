@@ -6,7 +6,7 @@ import ImageScroll from '../ImageScroll';
 import PageWrapper from '../Wrappers/PageWrapper';
 import Profile from '../Profile';
 import SizePicker from '../SizePicker';
-import TitleProductWrapper from '../Wrappers/TitleProductWrapper';
+import TitleWrapperLarge from '../Wrappers/TitleWrapperLarge';
 
 const styles = theme => ({
     button: {
@@ -110,9 +110,9 @@ class ShowProduct extends Component {
                     <ImageScroll images={this.state.data.photos} classes={{ container: classes.imageScroll }}/>
                     <div className={classes.infoContainer}>
                         <Profile />{/*TO DO Dynamic Name*/}
-                        <TitleProductWrapper classes={{ title: classes.title }}>
+                        <TitleWrapperLarge classes={{ title: classes.title }}>
                             {this.state.data.name}
-                        </TitleProductWrapper>
+                        </TitleWrapperLarge>
                         <div className={classes.description}>
                             {this.state.data.description}
                         </div>

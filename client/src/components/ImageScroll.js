@@ -80,21 +80,23 @@ class ImageScroll extends Component {
 
     render() {
         const { classes, images } = this.props;
+
         const displayImages = [];
+        images.forEach((image, index) => {
+            let imageClass = classes.imageScrollOption;
+            if(index===this.state.currentImage) {
+                imageClass = classes.imageScrollCurrent;
+            }
+            displayImages.push(<img src={image.URL} onClick={()=>this.imageClick(index)} className={imageClass} key={index} alt="jacket"/>);
+        });
 
         return (
             <div className={classes.container}>
-                {images.forEach((image, index) => {
-                    let imageClass = classes.imageScrollOption;
-                    if(index===this.state.currentImage) {
-                        imageClass = classes.imageScrollCurrent;
-                    }
-                    displayImages.push(<img src={image.URL} onClick={()=>this.imageClick(index)} className={imageClass} key={index} alt="jacket"/>);
-                })}
+                
                 <div className={classes.imageScrollSideContainer}>
                     {displayImages}
                 </div>
-                <div class={classes.imageMainContainer}>
+                <div className={classes.imageMainContainer}>
                     <img src={images[this.state.currentImage].URL} className={classes.imageMain} alt="jacket" /> 
                     <div className={classes.imageScrollBottomContainer}>
                         {displayImages}

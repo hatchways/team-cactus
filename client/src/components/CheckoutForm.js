@@ -1,20 +1,32 @@
 import React, { Component } from "react";
-import {injectStripe} from 'react-stripe-elements';
+import {CardElement, injectStripe} from 'react-stripe-elements';
 import axios from 'axios';
+import ButtonWrapper from './Wrappers/ButtonWrapper';
+import Checkbox from '@material-ui/core/Checkbox';
+import Typography from '@material-ui/core/Typography';
 
 class CheckoutForm extends React.Component {
-	constructor(props){
+	constructor(props) {
+		super(props);
 		this.state = {
-			rememberCard: false;
+			rememberCard: false,
+			billingInfo: {
+				name: '',
+				address: ''
+			},
+			source: ""
 		}
 	}
+
+
+	
 	handleSubmit(e) {
 		this.props.stripe.createSource({
 			type: 'card',
 			owner: {
 				name: 'Jenny Rosen',
 			},
-	    }).then(function(result) {
+	    }).then(async function(result) {
 	    	if (result.error) {
 	    		console.log("Could not create stripe source");
 	    	} else {
@@ -26,7 +38,8 @@ class CheckoutForm extends React.Component {
 	    		await axios({
 	    			method: 'put',
 	    			url: 'http://localhost:3000/cart/checkout',
-	    			data: data
+	    			data: data,
+	    			headers: {'Authorization': localStorage.token }
 	    		}).then(response => {
 	    			console.log("purchase successful!");
 	    		}).catch(error => {
@@ -38,15 +51,18 @@ class CheckoutForm extends React.Component {
 	 }
 
 	 render() {
+	 	//<form onSubmit={this.handleSubmit}>
+	 	//<Checkbox
+		//            checked={this.state.rememberCard}
+		//            onChange={e => {this.setState({rememberCard: e.target.checked })}} />
 	 	return (
-			<form onSubmit={this.handleSubmit}>
-		        <input
-		            name="rememberCard"
-		            type="checkbox"
-		            checked={this.state.rememberCard}
-		            onChange={(e) => {this.setState({rememberCard: e.target.checked })}} />
-		        <button>Confirm order</button>
-      		</form>
+				<div style={{padding: '30px'}}>
+					<label>
+	        			<Typography variant="body1"> <b> Enter your card details to pay </b> </Typography>
+	        			<CardElement style={{base: {fontSize: '18px'}}} onReady={(el) => el.focus()} />
+	      			</label>
+			        <ButtonWrapper>Confirm order</ButtonWrapper>
+		        </div>
 	 	);
 	 }
 }

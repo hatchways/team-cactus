@@ -41,7 +41,7 @@ router.post('/', passport.authenticate('jwt', { session: false }), async functio
     }
 });
 
-/* Get all products with possible filters ----------------------------------------------*/
+/* Get all products with optional filters ----------------------------------------------*/
 // TODO: make this a function that is commonly called for disovery and for listing all products for a
 // particular shop (?)
 router.get('/', async function(req, res) {

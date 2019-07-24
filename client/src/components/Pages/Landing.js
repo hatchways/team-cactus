@@ -43,6 +43,23 @@ class LandingPage extends Component {
     responseError: ''
   }
 
+  componentDidMount = async() => {
+    await axios({
+      method: 'get',
+      // url: `${window.location.origin}/users`,
+      url: `http://localhost:3001/products/`
+    }).then(response => {
+      console.log('responsemount', response);
+      this.setState({ jacketsSelected: response.data });
+    }).catch(error => {
+      if(error.response){
+        this.setState({ responseError: error.response.data.errors.message});
+      } else {
+        this.setState({ responseError: 'Something went wrong :('});
+      }
+    });
+  }
+
   handleFilterChange = async (filterSelection, newfilterSelection) => {
 
     const keys = Object.keys(newfilterSelection);
@@ -76,7 +93,7 @@ class LandingPage extends Component {
     jacketsSelected.forEach((jacket) => {
       displayJackets.push(
         <div>
-          <Link to={`/product/${jacket._id}`}><img src={jacket.photos[0].URL} /></Link>
+          {(jacket.photos[0] && jacket.photos[0].URL) ? <Link to={`/product/${jacket._id}`}><img src={jacket.photos[0].URL} /></Link> : ''}
           <div>{jacket.name}</div>
           <div>{jacket.price}</div>
         </div>

@@ -58,6 +58,7 @@ class JacketFilter extends Component {
                             value={this.state.type}
                             onChange={this.handleChange}
                         >
+                            <FormControlLabel value="" control={<Radio color="primary" />} label="All" />
                             <FormControlLabel value="denim" control={<Radio color="primary" />} label="Denim" />
                             <FormControlLabel value="vintage" control={<Radio color="primary"/>} label="Vintage" />
                         </RadioGroup>

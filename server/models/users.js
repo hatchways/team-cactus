@@ -21,6 +21,10 @@ const UserSchema = new Schema({
     isShopkeeper: {
         type: Boolean,
         required: true
+    },
+    stripeCustomerID: {
+        type: String,
+        required: false
     }
 });
 

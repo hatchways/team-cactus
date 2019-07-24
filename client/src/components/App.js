@@ -9,6 +9,7 @@ import LoginPage from "./Pages/Login";
 import RegisterPage from "./Pages/Register";
 import ShowProduct from "./Pages/ShowProduct";
 import MyStorePage from "./Pages/MyStore";
+import CheckoutPage from "./Pages/Checkout";
 
 class App extends Component {
   state = {
@@ -32,6 +33,7 @@ class App extends Component {
           <Route exact path='/login' render={(props) => <LoginPage {...props} updateUserType={this.updateUserType} />} />
           <Route exact path='/register' render={(props) => <RegisterPage {...props} updateUserType={this.updateUserType} />} />
           <Route exact path="/mystore" component={MyStorePage} />
+          <Route exact path="/checkout" component={CheckoutPage} />
           <Route path="/product" component={ShowProduct} />
         </BrowserRouter>
       </MuiThemeProvider>

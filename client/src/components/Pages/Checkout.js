@@ -3,33 +3,38 @@ import { withStyles } from "@material-ui/core/styles";
 import { Elements, StripeProvider} from 'react-stripe-elements';
 import axios from 'axios';
 import TitleWrapper from '../Wrappers/TitleWrapper';
+import PageWrapper from '../Wrappers/PageWrapper';
 import FormCardWrapper from '../Wrappers/FormCardWrapper';
 import CheckoutForm from '../CheckoutForm';
 import Paper from "@material-ui/core/Paper";
 import Typography from "@material-ui/core/Typography";
 import Divider from "@material-ui/core/Divider";
+import Grid from "@material-ui/core/Grid";
 
 const STRIPE_PK = "pk_test_gwivf5Iq9bKkDQjzqDs7lFdj00SezimkV7";
 
 const styles = theme => ({
-	container: {
-		display: 'flex',
-		flexDirection: 'row',
-		alignItems: 'left',
-		width: '100%',
-		padding: '30px',
-  	},
+	// container: {
+	// 	display: 'flex',
+	// 	flexDirection: 'row',
+	// 	alignItems: 'left',
+	// 	width: '100%',
+	// 	padding: '30px',
+ //  	},
+ 	container: {
+ 		width: '100%',
+ 		padding: '60px'
+ 	},
   	form: {
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'left',
+        // display: 'flex',
+        // flexDirection: 'column',
+        // alignItems: 'left',
         justifyContent: 'center',
-        marginTop: '60px',
-        width: '65%',
-        padding: '30px',
+        // width: '65%',
+        // padding: '30px',
   	},
   	title: {
-        margin: '6px 0 20px 0',
+        margin: '20px 40px',
         fontWeight: 600,
         letterSpacing: '1px',
         textDecoration: 'none',
@@ -40,12 +45,12 @@ const styles = theme => ({
   	},
   	summary: {
   		borderTop: '7px solid black',
-  		width: '35%',
-  		margin: '60px 30px',
-  		display: "flex",
-	    flexDirection: "column",
+  		// width: '100%',
+  		// display: "flex",
+	    // flexDirection: "column",
 	    justifyContent: "center",
-	    flexShrink: 2
+	    // flexShrink: 2
+	    alignItems: 'flex-start'
   	}
 });
 
@@ -57,34 +62,42 @@ class CheckoutPage extends React.Component {
 		let currency = "CAD";
 
 		return (
-			<div className={classes.container}>
-				<Paper className={classes.form} square={true} >
-					<div className={classes.checkoutTopBar}>
-						<Typography className={classes.title}> Checkout </Typography>
-						<Divider/>
-					</div>
-					<StripeProvider apiKey={STRIPE_PK}>
-						<Elements>
-							<CheckoutForm />
-						</Elements>
-					</StripeProvider>
-				</Paper>
+			<PageWrapper>
+				<Grid container direction="row" alignItems="flex-start" justify="center" spacing={3}>
+					<Grid item md={8}>
+						<Paper className={classes.form} square={true} >
+							<div className={classes.checkoutTopBar}>
+								<Typography className={classes.title}> Checkout </Typography>
+							</div>
+							<Divider/>
+							<StripeProvider apiKey={STRIPE_PK}>
+								<Elements>
+									<CheckoutForm />
+								</Elements>
+							</StripeProvider>
+						</Paper>
+					</Grid>
 
-				<Paper className={classes.summary} square={true}>
-					<div style={{height: '70%'}}>
-						<Typography className={classes.title} align="center"> Your Order: </Typography>
-						<Typography variant="subtitle1" align="center">  </Typography>
-						<Typography variant="subtitle2" align="center">  </Typography>
-					</div>
-					<Divider />
-					<div style={{display: 'inline-block', textAlign: 'center', margin: '10px'}}>
-						<Typography className={classes.title} component="span" align="center">
-							Total: 
-						</Typography> 
-						<Typography variant="subtitle2" component="span" align="center"><b> {currency} {total} </b></Typography>
-					</div>
-				</Paper>
-			</div>
+					<Grid item md={4}>
+						<Paper className={classes.summary} square={true}>
+							<div style={{height: '70%', margin: '0px 0px 40px 0px'}}>
+								<Typography className={classes.title} align="center"> Your Order: </Typography>
+								<Typography variant="subtitle1" align="center"> <b>{currency} {total.toFixed(2)}</b> </Typography>
+								<Typography variant="subtitle2" align="center"> Fast shipping: {currency} 15.00 </Typography>
+							</div>
+							<Divider />
+							<div style={{display: 'inline-block', textAlign: 'center', margin: '10px'}}>
+								<Typography className={classes.title} component="span" align="center">
+									Total:
+								</Typography> 
+								<Typography variant="subtitle2" component="span" align="left">
+									<b> {currency} {total.toFixed(2)} </b>
+								</Typography>
+							</div>
+						</Paper>
+					</Grid>
+				</Grid>
+			</PageWrapper>
 		);
 	}
 	

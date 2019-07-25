@@ -1,14 +1,28 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
+const Float = require('mongoose-float').loadType(mongoose, 2);
 
 const TransactionSchema = new Schema({
-	purchaserID: {
+	purchaserUserID: {
 		type: String,
 		required: true
 	},
-	productIDs: [String], // ids from Products collection for all purchases in this transaction
-	stripeID: {
+	products: [{
+		productID: {
+			type: String,
+			required: true
+		},
+		amount: {
+			type: Float,
+			required: true
+		}
+	}],
+	stripeChargeID: {
 		type: String,
+		required: true
+	},
+	total: {
+		type: Number,
 		required: true
 	}
 });

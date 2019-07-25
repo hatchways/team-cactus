@@ -1,8 +1,7 @@
 import React, { Component } from "react";
 import { withStyles } from "@material-ui/core/styles";
-import {CardNumberElement, CardExpiryElement, CardCvcElement, PaymentRequestButtonElement, injectStripe} from 'react-stripe-elements';
+import {CardNumberElement, CardExpiryElement, CardCvcElement, injectStripe} from 'react-stripe-elements';
 import axios from 'axios';
-import ButtonWrapper from './Wrappers/ButtonWrapper';
 import Checkbox from '@material-ui/core/Checkbox';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
@@ -17,13 +16,6 @@ const styles = theme => ({
     	margin: '60px 0px',
     	width: '30%',
     },
-    form: {
-        // display: 'flex',
-        // flexDirection: 'column',
-        // alignItems: 'center',
-        // justifyContent: 'center',
-        // width: '100%',
-    }
 });
 
 class CheckoutForm extends React.Component {
@@ -31,53 +23,71 @@ class CheckoutForm extends React.Component {
 		super(props);
 		this.state = {
 			rememberCard: false,
-			billingInfo: {
-				name: '',
-				address: ''
-			},
-			source: ""
+			source: "",
+			hasStoredCard: false,
+			useStoredCard: false,
+			// chargeData: {}
 		}
+
+		this.handleSubmit = this.handleSubmit.bind(this);
+		this.handleUseStoredCard = this.handleUseStoredCard.bind(this);
 	}
 
+	async createCharge(data) {
+		await axios({
+			method: 'put',
+			url: 'http://localhost:3000/cart/checkout',
+			data: data,
+			headers: {'Authorization': localStorage.token }
+		}).then(response => {
+			console.log("purchase successful!");
+		}).catch(error => {
+			console.log("purchase failure: " + error);
+		});
+	}
 
 	
-	handleSubmit(e) {
-		console.log("submit!");
+	async handleSubmit(e) {
+		e.preventDefault();
 		this.props.stripe.createSource({
 			type: 'card',
 			owner: {
-				name: 'Jenny Rosen',
+				email: this.props.email,
 			},
 	    }).then(async function(result) {
 	    	if (result.error) {
-	    		console.log("Could not create stripe source");
+	    		console.log("Could not create stripe source", result.error);
 	    	} else {
-	    		// Create and capture the charge
-	    		let data = {
+	    		// Create and capture charge
+	    		let chargeData = {
 	    			source: result.source,
-
 	    		};
-	    		await axios({
-	    			method: 'put',
-	    			url: 'http://localhost:3000/cart/checkout',
-	    			data: data,
-	    			headers: {'Authorization': localStorage.token }
-	    		}).then(response => {
-	    			console.log("purchase successful!");
-	    		}).catch(error => {
-	    			console.log("purchase failure: " + error);
-	    		})
-
+	    		// this.setState({chargeData: chargeData});
+	    		await this.createCharge(chargeData);
+	    		this.props.handlePayment();
 	    	}
 	    });
+	 }
+
+	 componentDidMount() {
+
+	 }
+
+	 handleUseStoredCard(e) {
+	 	this.setState({
+	 		hasStoredCard: e.target.checked,
+	 		useStoredCard: e.target.checked
+	 	});
 	 }
 
 	 render() {
 	 	const { classes } = this.props;
 
+	 	if (!this.state.hasStoredCard) console.log("no card");
+
 	 	return (
 			<div style={{padding: '30px'}}>
-				<form onSubmit={this.handleSubmit} className={classes.form}>
+				<form onSubmit={this.handleSubmit}>
         			<Typography style={{padding: '20px 0px'}} variant="body1"> 
         				<b> Enter your card details to pay: </b> 
         			</Typography>
@@ -95,6 +105,18 @@ class CheckoutForm extends React.Component {
 				        	/>
         				}
         				label="Remember card"
+      				/>
+
+        			<FormControlLabel
+        				control={
+          					<Checkbox
+					            checked={this.state.useStoredCard}
+					            onChange={this.handleUseStoredCard}
+					            color="primary"
+                  				disabled={!this.state.hasStoredCard}
+				        	/>
+        				}
+        				label="Used stored payment"
       				/>
       		
 					<br/> <br/>

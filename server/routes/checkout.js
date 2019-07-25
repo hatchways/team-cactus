@@ -1,5 +1,6 @@
 const stripe = require("stripe")(process.env.STRIPE_PUBLIC_TEST);
 const router = require('express').Router();
+const passport = require("passport");
 const { Transaction } = require('../models/transactions');
 const { User } = require('../models/users');
 
@@ -15,28 +16,63 @@ router.put('/checkout', passport.authenticate('jwt', { session: false }), async 
 		}
 
 		let stripeCustomerID = user.stripeCustomerID ? user.stripeCustomerID : null;
-		let amount = req.body.amount;
-		let billingInfo = req.body.billingInfo;
+		let total = req.body.total;
 		let rememberCard = req.body.rememberCard;
+		let useStoredCard=  req.body.useStoredCard
+		let productsPurchased = req.body.productsPurchased; // [{ productID: _, amount: _}]
 
 		if (rememberCard && !stripeCustomerID) {
+			// Save customer information for next time
 			stripeCustomerID = await stripe.customers.create({
 				email: email,
 				source: req.body.source,
 			});
 		}
 
-		let charge = await stripe.charges.create({
-			amount: amount,
+		let chargeParameters = {
+			amount: total,
 			currency: "cad",
-			source: req.body.source,
 			description: `Purchase for user ${email}`,
-			customer: stripeCustomerID
-		});
+			receipt_email: email,
+		}
 
-		return res.status(201).send(charge);
+		// Configure the source of the funds for the transaction based on whether the user
+		// has a card saved to their account, or if they provided it
+		if (useStoredCard) {
+			if (!stripeCustomerID) {
+				return res.status(400).send({error: {message: "There is no card saved in your account"}});
+			}
+			chargeParameters["customer"] = stripeCustomerID;
+		} else {
+			chargeParameters["source"] = req.body.source;
+		}
+
+		// Create and capture the charge
+		let charge = await stripe.charges.create(chargeParameters);
+
+		// Save the charge information in our database
+		let tx = new Transaction({
+			purchaserUserID: req.user._id,
+			products: productsPurchased,
+			total: total,
+			stripeChargeID: charge.id
+		})
+
+		await tx.save();
+
+		// Store stripeCustomerID in user document if transaction successfully saved
+		if (rememberCard) {
+			let user = await User.findOne({ email: req.body.email });
+			user.stripeCustomerID = stripeCustomerID;
+			await user.save();
+		}
+
+		// Send back transaction document just created
+		return res.status(201).send(tx);
 	} 
 	catch (asyncErr) {
 		res.status(503);
 	}
 });
+
+module.exports = router;

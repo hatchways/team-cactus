@@ -1,11 +1,10 @@
 import React, { Component } from "react";
 import { withStyles } from "@material-ui/core/styles";
 import { Elements, StripeProvider} from 'react-stripe-elements';
-import axios from 'axios';
-import TitleWrapper from '../Wrappers/TitleWrapper';
+// import axios from 'axios';
 import PageWrapper from '../Wrappers/PageWrapper';
-import FormCardWrapper from '../Wrappers/FormCardWrapper';
-import CheckoutForm from '../CheckoutForm';
+import CheckoutForm from './PageComponents/CheckoutForm';
+import ShippingForm from './PageComponents/ShippingForm';
 import Paper from "@material-ui/core/Paper";
 import Typography from "@material-ui/core/Typography";
 import Divider from "@material-ui/core/Divider";
@@ -14,25 +13,10 @@ import Grid from "@material-ui/core/Grid";
 const STRIPE_PK = "pk_test_gwivf5Iq9bKkDQjzqDs7lFdj00SezimkV7";
 
 const styles = theme => ({
-	// container: {
-	// 	display: 'flex',
-	// 	flexDirection: 'row',
-	// 	alignItems: 'left',
-	// 	width: '100%',
-	// 	padding: '30px',
- //  	},
  	container: {
  		width: '100%',
  		padding: '60px'
  	},
-  	form: {
-        // display: 'flex',
-        // flexDirection: 'column',
-        // alignItems: 'left',
-        justifyContent: 'center',
-        // width: '65%',
-        // padding: '30px',
-  	},
   	title: {
         margin: '20px 40px',
         fontWeight: 600,
@@ -41,40 +25,61 @@ const styles = theme => ({
         fontSize: '25px',
   	},
   	checkoutTopBar: {
-		display: 'inline-block'
+		display: 'inline-block',
+		margin: '30px',
+		width: '100%'
   	},
   	summary: {
   		borderTop: '7px solid black',
-  		// width: '100%',
-  		// display: "flex",
-	    // flexDirection: "column",
 	    justifyContent: "center",
-	    // flexShrink: 2
 	    alignItems: 'flex-start'
-  	}
+  	},
 });
 
 class CheckoutPage extends React.Component {
+	constructor(props) {
+		super(props);
+
+		this.state = {
+			page: "shipping", // "info", "shipping", "payment", "success",
+			email: ""
+		}
+	}
 
 	render() {
 		const { classes } = this.props;
 		let total = 500;
 		let currency = "CAD";
+		let activeTab;
+
+		switch(this.state.page) {
+			case "info":
+				activeTab = <CartTab />
+				break;
+			case "shipping":
+				activeTab = <ShippingTab setEmail={(email) => {this.setState({email: email})}}/>
+				break;
+			case "payment":
+				activeTab = <PaymentTab email={this.state.email}/>
+				break;
+			case "success":
+				activeTab = <SuccessTab />
+				break;
+			default:
+				break;
+		}
 
 		return (
 			<PageWrapper>
 				<Grid container direction="row" alignItems="flex-start" justify="center" spacing={3}>
 					<Grid item md={8}>
-						<Paper className={classes.form} square={true} >
+						<Paper square={true} >
 							<div className={classes.checkoutTopBar}>
-								<Typography className={classes.title}> Checkout </Typography>
+								<Typography component="span" className={classes.title}> Checkout </Typography>
+								<span style={{textAlign: 'right'}}> Information Billing Shipment </span>
 							</div>
 							<Divider/>
-							<StripeProvider apiKey={STRIPE_PK}>
-								<Elements>
-									<CheckoutForm />
-								</Elements>
-							</StripeProvider>
+							{activeTab}
 						</Paper>
 					</Grid>
 
@@ -100,7 +105,47 @@ class CheckoutPage extends React.Component {
 			</PageWrapper>
 		);
 	}
-	
+}
+
+class PaymentTab extends Component {
+	render() {
+		return (
+			<StripeProvider apiKey={STRIPE_PK}>
+				<Elements>
+					<CheckoutForm email={this.props.email} handlePayment={() => {this.setState({page: "success"})}}/>
+				</Elements>
+			</StripeProvider>
+		);
+	}
+}
+
+class ShippingTab extends Component {
+
+	handleSubmit(e) {
+		e.preventDefault();
+	}
+
+	render() {
+		return (
+			<ShippingForm />
+		);
+	}
+}
+
+class CartTab extends Component {
+	render() {
+		return (
+			<p> </p>
+		);
+	}
+}
+
+class SuccessTab extends Component {
+	render() {
+		return (
+			<p> </p>
+		);
+	}
 }
 
 export default withStyles(styles)(CheckoutPage);

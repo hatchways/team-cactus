@@ -29,7 +29,6 @@ class JacketFilter extends Component {
 
     handleChange = (event) => {
         event.preventDefault();
-        event.persist();
 
         this.setState({ [event.target.name]: event.target.value });
         this.props.update(this.state, { [event.target.name]: event.target.value });
@@ -75,10 +74,21 @@ class JacketFilter extends Component {
                     <Typography className={classes.heading}>Size</Typography>
                     </ExpansionPanelSummary>
                     <ExpansionPanelDetails>
-                    <Typography>
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse malesuada lacus ex,
-                        sit amet blandit leo lobortis eget.
-                    </Typography>
+                    <div className={classes.root}>
+                        <FormControl component="fieldset" className={classes.formControl}>
+                        <RadioGroup
+                            aria-label="JacketType"
+                            name="size"
+                            className={classes.group}
+                            value={this.state.size}
+                            onChange={this.handleChange}
+                        >
+                            <FormControlLabel value="xsmall" control={<Radio color="primary" />} label="XSmall" />
+                            <FormControlLabel value="small" control={<Radio color="primary" />} label="Small" />
+                            <FormControlLabel value="medium" control={<Radio color="primary"/>} label="Medium" />
+                        </RadioGroup>
+                        </FormControl>
+                    </div>
                     </ExpansionPanelDetails>
                 </ExpansionPanel>
                 <ExpansionPanel>

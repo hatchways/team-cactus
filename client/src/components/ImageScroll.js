@@ -65,6 +65,10 @@ const styles = theme => ({
         '&:hover': {
             opacity: 1
         }
+    },
+    imagePlaceholder: {
+        width: '100%',
+        backgroundColor: 'grey'
     }
 });
 
@@ -80,26 +84,31 @@ class ImageScroll extends Component {
 
     render() {
         const { classes, images } = this.props;
-
         const displayImages = [];
-        images.forEach((image, index) => {
-            let imageClass = classes.imageScrollOption;
-            if(index===this.state.currentImage) {
-                imageClass = classes.imageScrollCurrent;
-            }
-            displayImages.push(<img src={image.URL} onClick={()=>this.imageClick(index)} className={imageClass} key={index} alt="jacket"/>);
-        });
 
+        if(images && images.length){
+            images.forEach((image, index) => {
+                let imageClass = classes.imageScrollOption;
+                if(index===this.state.currentImage) {
+                    imageClass = classes.imageScrollCurrent;
+                }
+                displayImages.push(<img src={image.URL} onClick={()=>this.imageClick(index)} className={imageClass} key={index} alt="jacket"/>);
+            });
+        }
+        
         return (
-            <div className={classes.container}>
-                
+            <div className={classes.container}> 
+                {images && images.length? 
                 <div className={classes.imageScrollSideContainer}>
                     {displayImages}
-                </div>
+                </div> : '' }
                 <div className={classes.imageMainContainer}>
-                    <img src={images[this.state.currentImage].URL} className={classes.imageMain} alt="jacket" /> 
+                    {images && images.length ? <img src={images[this.state.currentImage].URL} className={classes.imageMain} alt="jacket" /> : <img src="https://cactus-jacketshop.s3.us-east-2.amazonaws.com/ProductImagePlaceholder.png" alt="placeholder jacket image" /> }
                     <div className={classes.imageScrollBottomContainer}>
-                        {displayImages}
+                        {images && images.length ? 
+                        <div className={classes.imageScrollSideContainer}>
+                            {displayImages}
+                        </div> : '' }
                     </div>
                 </div>
             </div>

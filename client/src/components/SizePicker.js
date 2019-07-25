@@ -44,7 +44,7 @@ class SizePicker extends Component {
 
     render() {
         const { classes, sizesAvailable } = this.props;
-
+        
         return (
 
             <div className={classes.toggleContainer}>

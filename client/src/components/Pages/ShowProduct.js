@@ -123,8 +123,8 @@ class ShowProduct extends Component {
                             <SizePicker sizesAvailable={this.state.data.sizes} />
                         </div>
                         <div className={classes.buttonContainer}>
-                            <ButtonWrapper type="black" classes={{ button: classes.button }}>Add to Cart</ButtonWrapper>
-                            <ButtonWrapper type="white" classes={{ button: classes.button }}>Request a Custom Design</ButtonWrapper>
+                            <ButtonWrapper version="black" type="submit" classes={{ button: classes.button }}>Add to Cart</ButtonWrapper>
+                            <ButtonWrapper version="white" type="submit" classes={{ button: classes.button }}>Request a Custom Design</ButtonWrapper>
                         </div>
                         <div className={classes.question}>
                             Have a question about an item? <span className={classes.message}>Send a message.</span><br />

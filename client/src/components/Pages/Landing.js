@@ -19,16 +19,48 @@ const styles = theme => ({
   filter: {
     width: '20%',
   },
+  jacketContainer: {
+    width: '100%',
+    textAlign: 'center',
+    '& a':{
+      textDecoration: 'none',
+      color: '#000'
+    },
+    webkitBoxShadow: '1px 1px 4px 1px #eeefff',  /* Safari 3-4, iOS 4.0.2 - 4.2, Android 2.3+ */
+    mozBoxShadow: '1px 1px 4px 1px #eeefff',  /* Firefox 3.5 - 3.6 */
+    boxShadow: '1px 1px 4px 1px #eeefff',
+    '&:hover': {
+      filter: 'brightness(95%)'
+    }
+  },
   jackets: {
     display: 'grid',
-    gridTemplateColumns: '100px 50px 100px',
-    gridTemplateRows: '80px auto 80px', 
-    gridColumnGap: '10px',
-    gridRowGap: '15px',
     width: '80%',
-    backgroundColor: 'yellow'
+    display: 'grid',
+    gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))',
+    gridGap: '1.5rem',
+    justifyItems: 'center',
+    padding: '0 30px',
   },
-
+  jacketName: {
+    color: '#000',
+    fontWeight: '600'
+  },
+  jacketPrice: {
+    color: '#000'
+  },
+  jacketPhoto: {
+    width: '100%',
+    objectFit: 'cover',
+    objectPosition: '0 0',
+    height: '200px'
+  },
+  jacketPhotoPlaceholder: {
+    width: '100%',
+    objectFit: 'cover',
+    objectPosition: '50 50',
+    height: '200px' 
+  }
 });
 
 class LandingPage extends Component {
@@ -88,14 +120,16 @@ class LandingPage extends Component {
   render() {
     const { classes } = this.props;
     const jacketsSelected = this.state.jacketsSelected;
-
     const displayJackets = [];
+    
     jacketsSelected.forEach((jacket) => {
       displayJackets.push(
-        <div>
-          {(jacket.photos[0] && jacket.photos[0].URL) ? <Link to={`/product/${jacket._id}`}><img src={jacket.photos[0].URL} /></Link> : ''}
-          <div>{jacket.name}</div>
-          <div>{jacket.price}</div>
+        <div className={classes.jacketContainer}>
+          <Link to={`/product/${jacket._id}`}>
+            {(jacket.photos[0] && jacket.photos[0].URL) ? <img src={jacket.photos[0].URL} className={classes.jacketPhoto} alt="jacket"/> : <img src="https://cactus-jacketshop.s3.us-east-2.amazonaws.com/ProductImagePlaceholder.png" className={classes.jacketPhotoPlaceholder} alt="placeholder jacket image" />}
+            <div className={classes.jacketName}>{jacket.name}</div>
+            <div className={classes.jacketPrice}>${jacket.price}</div>
+          </Link>
         </div>
       );
     });

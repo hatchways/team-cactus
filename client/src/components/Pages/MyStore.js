@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-// import { Redirect } from "react-router";
+import { Redirect } from "react-router";
 import axios from 'axios';
 import { withStyles } from "@material-ui/core/styles";
 import Paper from '@material-ui/core/Paper';
@@ -8,10 +8,11 @@ import CardActionArea from '@material-ui/core/CardActionArea';
 import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import ImageOverlayWrapper from '../Wrappers/ImageOverlayWrapper';
+import UploadCardWrapper from '../Wrappers/UploadCardWrapper';
+import DropzoneWrapper from '../Wrappers/DropzoneWrapper';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
-import Dropzone from 'react-dropzone';
 import TextField from '@material-ui/core/TextField';
 
 
@@ -23,12 +24,12 @@ const styles = theme => ({
     },
     storeBanner: {
         alignItems: 'center',
-        justify: 'center',
+        justify: 'flex-start',
         textAlign: 'center',
-        display: 'inline-flex'
+        // display: 'inline-flex'
     },
     coverPhoto: {
-        height: '450px',
+        maxHeight: '450px',
         overflow: 'hidden',
         objectFit: 'contain',
     },
@@ -37,28 +38,35 @@ const styles = theme => ({
         alignItems: 'center',
         justifyContent: 'center',
         borderRadius: 0,
-        width: '200px',
-        height: '300px'
+        // width: '200px',
+        // height: '300px',
+        width: '100%',
+        height: '100%'
     },
     cardContent: {
         backgroundColor: "black",
         color: "white",
         textAlign: 'center',
-        justify: 'flex-end'
+    },
+    cardContainer: {
+        width: '250px',
+        // height: '300px',
     },
     paper: {
         padding: "80px",
         justify: "center"
     },
-    table: {
-        // alignItems: 'center',
-        // justify: 'center',
-        // textAlign: 'center',
-        // // display: 'inline-flex'
+    cardImg: {
+        height: '80%'
+    },
+    jacketTable: {
+        // display: 'flex',
+        width: '100vw',
     }
 });
 
 class MyStorePage extends Component {
+
     constructor(props) {
         super(props);
         this.state = {
@@ -189,12 +197,12 @@ class MyStorePage extends Component {
     }
 
     render() {
-		const { classes } = this.props;
+	    const { classes } = this.props;
         this.ensureLoggedIn();
 
 		return (
 			<div>
-                <Grid container justify="center" direction="column">
+                <Grid container direction="column">
                     {/* The top of the store representing the store banner */}
                     <div className={classes.storeBanner}>
         				<Grid container item direction="row" justify="center" alignItems="center">
@@ -225,7 +233,12 @@ class MyStorePage extends Component {
                     </div>
 
                     {/* The bottom of the store representing the jackets for sale */}
-                    <JacketTable {...this.props}/>
+                    <div>
+                        {/*<Grid item className={classes.jacketTable} alignItems="center" justify="space-evenly">
+                            <JacketTable {...this.props}/>
+                        </Grid>*/}
+                        <JacketTable {...this.props} />
+                    </div>
                 </Grid>
 		  	</div>
 		);
@@ -322,101 +335,127 @@ class JacketTable extends Component {
 
     render() {
         // Three rows and three columns of jackets per page
-        const { classes } = this.props;
-
         return (
-            <div className={classes.table}>
-                <Paper elevation={0} square={true} spacing={5} className={classes.paper}>
-                <Grid container justify="center" item direction="column" spacing={5}>
-                    <JacketRow classes={classes} row={this.state.jackets[0]} />
-                    <JacketRow classes={classes} row={this.state.jackets[1]} />
-                </Grid>
-                </Paper>
-            </div>
+            <Paper elevation={0} square={true}>
+              <Grid container item spacing={4} justify="center" style={{padding: '30px'}}>
+                <JacketRow row={this.state.jackets[0]} />
+                <JacketRow row={this.state.jackets[1]} />
+              </Grid>
+            </Paper>
         );
     }
 }
 
 class JacketRow extends Component {
     render() {
+        let jackets = this.props.row; // three jackets, possibly null
         return (
-            <Grid container item direction="row" justify="center" spacing={5} alignItems="center">
-                <Grid item md={4}>
-                    <JacketCard {...this.props.classes} jacket={this.props.row[0]} />
-                </Grid>
-                <Grid item md={4}>
-                    <JacketCard {...this.props.classes} jacket={this.props.row[1]} />
-                </Grid>
-                <Grid item md={4}>
-                    <JacketCard {...this.props.classes} jacket={this.props.row[2]} />
-                </Grid>
+            <Grid container item direction="row" spacing={3} justify="center" style={{padding: '20px'}}>
+                <Grid item> <StyledJacketCard jacket={jackets[0]} /> </Grid>
+                <Grid item> <StyledJacketCard jacket={jackets[1]} /> </Grid>
+                <Grid item> <StyledJacketCard jacket={jackets[2]} /> </Grid>
             </Grid>
-        );  
+        );
     }     
 }
 
 class JacketCard extends Component {
-    // constructor(props) {
-    //     super(props);
-    //     this.state = {
-    //         redirect: false
-    //     }
-    //     this.handleClick = this.handleClick.bind(this);
-    // }
+    constructor(props) {
+        super(props);
+        this.state = {
+            redirect: false
+        }
+        this.handleClick = this.handleClick.bind(this);
+    }
 
-    // handleClick(e){
-    //     this.setState({redirect: true});
-    // }
+    handleClick(e){
+        this.setState({redirect: true});
+    }
 
     render() {
-        let defaultImg = "https://cactus-jacketshop.s3.us-east-2.amazonaws.com/j1.jpg";
+        const { classes } = this.props;
+
         if (!this.props.jacket) {
-            // if (this.state.redirect) {
-            //     return <Redirect push to="/mystore/upload" />;
-            // }
+            if (this.state.redirect) {
+                return <Redirect push to="/mystore/upload" />;
+            }
 
             return (
-                <Card className={this.props.card} elevation={2} square={true}>
-                    <CardActionArea>
-                        <CardMedia 
-                            src={defaultImg}
-                            component="img"
-                            alt=""
-                            //onClick={this.handleClick}
-                        />
-                    </CardActionArea>
-                    <CardContent className={this.props.cardContent}>
-                        <Typography variant="subtitle1"> Upload a jacket here </Typography>
+                <Card className={classes.card} elevation={2} square={true}>
+                    <UploadCardWrapper onClick={this.handleClick} />
+                    <CardContent className={classes.cardContent}>
+                        <Typography gutterBottom variant="subtitle1" component="h2" align="center">
+                            Upload a jacket here
+                        </Typography>
                     </CardContent>
                 </Card>
             );
-        } 
+        }
 
-        else {
-            // if (this.state.redirect) {
-            //     return <Redirect push to="/mystore/edit" />;
-            // }
-
-            // console.log(this.props.jacket);
+        else { // There is a jacket
+            // TODO: change to an icon for uploading image (takes to edit product)
+            let image = 'https://cactus-jacketshop.s3.us-east-2.amazonaws.com/j4.jpg';
+            if (this.props.jacket.photos.length > 0) {
+                image = this.props.jacket.photos[0].url;
+            }
             return (
-                <Card className={this.props.card} elevation={2} square={true}>
-                    <CardActionArea>
-                        <CardMedia 
-                            src={this.props.jacket.photos.length > 0 ? this.props.jacket.photos[0].url : defaultImg}
-                            component="img"
-                            alt=""
-                        />
-                        </CardActionArea>
-                    <CardContent className={this.props.cardContent}>
-                        <Typography variant="subtitle1"> {this.props.jacket.name} </Typography>
-                        <Typography variant="subtitle2"> ${this.props.jacket.price} </Typography>
-                    </CardContent>
-                </Card>
+                <Grid item key={this.props.jacket._id}>
+                    <div className={classes.cardContainer}>
+                        <Card className={classes.card} elevation={2} square={true}>
+                            <CardActionArea>
+                                <CardMedia
+                                  component="img"
+                                  alt={this.props.jacket.name}
+                                  image={image}
+                                  style={{width: '100%'}}
+                                  title={this.props.jacket.name}
+                                />
+                                <CardContent className={classes.cardContent}>
+                                    <Typography gutterBottom variant="subtitle1" component="h2" align="center">
+                                        <b>{this.props.jacket.name}</b>
+                                    </Typography>
+                                    <Typography component="p" variant="caption" align="center">{this.props.jacket.description}</Typography>
+                                </CardContent>
+                              </CardActionArea>
+                        </Card>
+                    </div>
+                </Grid>
             );
         }
     }
 }
 
+
+class CoverPhoto extends Component {    
+
+    render() {
+        let image = <div> <img src={this.props.imgSrc} alt="background" style={{ maxHeight: '100%', maxWidth: '100%' }} /> </div>
+
+        if (this.props.isEditMode) {
+            image = <ImageUpload uploadedImg={this.props.imgSrc} handleUpdate={this.props.handlePhotoUpdate} />
+        }
+
+        return (
+            <div> {image} </div>
+        );
+    }
+}
+
+class ImageUpload extends Component {
+
+    render() {
+        // const { coverPhotoSrc } = this.state;
+        const image = <img src={ this.props.uploadedImg } alt="" style={{ height: '100%', width:'100%' }}/>;
+        
+        return (   
+            <ImageOverlayWrapper> 
+                <DropzoneWrapper handleUpdate={this.props.handleUpdate}>
+                    {image}
+                </DropzoneWrapper>
+            </ImageOverlayWrapper>
+        )
+    }
+}
 
 class EditableText extends Component {
     constructor(props){
@@ -468,61 +507,6 @@ class EditableText extends Component {
     }
 }
 
-
-class CoverPhoto extends Component {    
-
-    render() {
-        let image = <div> <img src={this.props.imgSrc} alt="background" style={{ maxHeight: '100%', maxWidth: '100%' }} /> </div>
-
-        if (this.props.isEditMode) {
-            image =  
-                <ImageOverlayWrapper>
-                    <ImageUpload uploadedImg={this.props.imgSrc} handleUpdate={this.props.handlePhotoUpdate} 
-                                style={{ position: 'relative' }}/>
-                </ImageOverlayWrapper>
-        }
-
-        return (
-            <div> {image} </div>
-        );
-    }
-
-
-}
-
-class ImageUpload extends Component {
-    constructor(props) {
-        super(props);
-        this.handleDrop = this.handleDrop.bind(this)
-    }
-
-  
-    handleDrop(uploadedFiles) {
-        if (uploadedFiles.length > 0) {
-            this.props.handleUpdate(uploadedFiles[0]);
-        }
-    }
-
-    render() {
-        // const { coverPhotoSrc } = this.state;
-        const image = <img src={ this.props.uploadedImg } alt="" style={{ height: '100%', width:'100%' }}/>;
-        
-        return (    
-            <section>
-                <Dropzone onDrop={ this.handleDrop } accept="image/jpeg,image/jpg,image/tiff,image/gif" multiple={ false }>
-                    {({getRootProps, getInputProps, isDragActive, isDragReject}) => (
-                        <section>
-                            <div {...getRootProps()}>
-                                <input {...getInputProps()} />
-                                {image}
-                            </div>
-                        </section>
-                    )}
-                </Dropzone>
-            </section>
-        )
-    }
-
-}
+const StyledJacketCard = withStyles(styles)(JacketCard);
 
 export default withStyles(styles)(MyStorePage);

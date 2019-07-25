@@ -19,8 +19,8 @@ class UploadCardWrapper extends Component {
 
 		return (
 			<div className={classes.uploadArea}>
-				<IconButton>
-	                <AddIcon fontSize="large" className={classes.icon} onClick={handleClick}/>
+				<IconButton onClick={handleClick}>
+	                <AddIcon fontSize="large" className={classes.icon}/>
 				</IconButton>
 			</div>
 		);

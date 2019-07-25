@@ -31,7 +31,7 @@ const styles = theme => ({
     coverPhoto: {
         maxHeight: '450px',
         overflow: 'hidden',
-        objectFit: 'contain',
+        // objectFit: 'contain',
     },
     card: {
         // flexDirection: 'column',
@@ -375,48 +375,66 @@ class JacketCard extends Component {
     render() {
         const { classes } = this.props;
 
-        if (!this.props.jacket) {
+        if (!this.props.jacket) { // we were passed null for non-existent jacket
             if (this.state.redirect) {
+                // Show upload card slot for a jacket
                 return <Redirect push to="/mystore/upload" />;
             }
 
+            // Upload new jacket card
             return (
-                <Card className={classes.card} elevation={2} square={true}>
-                    <UploadCardWrapper onClick={this.handleClick} />
-                    <CardContent className={classes.cardContent}>
-                        <Typography gutterBottom variant="subtitle1" component="h2" align="center">
-                            Upload a jacket here
-                        </Typography>
-                    </CardContent>
-                </Card>
+                <Grid item>
+                    <div className={classes.cardContainer}>
+                        <Card className={classes.card} elevation={2} square={true}>
+                            <UploadCardWrapper handleClick={this.handleClick} />
+                            <CardContent className={classes.cardContent}>
+                                <Typography gutterBottom variant="subtitle1" component="h2" align="center">
+                                    <b> Upload a jacket here </b>
+                                </Typography>
+                            </CardContent>
+                        </Card>
+                    </div>
+                </Grid>
             );
         }
 
         else { // There is a jacket
-            // TODO: change to an icon for uploading image (takes to edit product)
-            let image = 'https://cactus-jacketshop.s3.us-east-2.amazonaws.com/j4.jpg';
-            if (this.props.jacket.photos.length > 0) {
-                image = this.props.jacket.photos[0].url;
+            if (this.state.redirect) {
+                // The card for this jacket was clicked, so take to edit page
+                return <Redirect push to={`/product/${this.props.jacket._id}/edit`} />;
             }
+
+            // Default: make the image an upload slot
+            let image = <UploadCardWrapper handleClick={this.handleClick} />;
+
+            if (this.props.jacket.photos.length > 0) {
+                // If jacket photo: display available image for jacket card
+                image = 
+                    <div onClick={this.handleClick}>
+                        <CardActionArea>
+                            <CardMedia
+                                component="img"
+                                alt={this.props.jacket.name}
+                                image={this.props.jacket.photos[0].url}
+                                style={{width: '100%', height: '300px', objectFit:'cover'}}
+                                title={this.props.jacket.name}
+                            />
+                        </CardActionArea>
+                    </div>
+            }
+
+            // Display jacket card
             return (
                 <Grid item key={this.props.jacket._id}>
                     <div className={classes.cardContainer}>
                         <Card className={classes.card} elevation={2} square={true}>
-                            <CardActionArea>
-                                <CardMedia
-                                  component="img"
-                                  alt={this.props.jacket.name}
-                                  image={image}
-                                  style={{width: '100%'}}
-                                  title={this.props.jacket.name}
-                                />
-                                <CardContent className={classes.cardContent}>
-                                    <Typography gutterBottom variant="subtitle1" component="h2" align="center">
-                                        <b>{this.props.jacket.name}</b>
-                                    </Typography>
-                                    <Typography component="p" variant="caption" align="center">{this.props.jacket.description}</Typography>
-                                </CardContent>
-                              </CardActionArea>
+                            {image}
+                            <CardContent className={classes.cardContent}>
+                                <Typography gutterBottom variant="subtitle1" component="h2" align="center">
+                                    <b>{this.props.jacket.name}</b>
+                                </Typography>
+                                <Typography component="p" variant="caption" align="center">{this.props.jacket.description}</Typography>
+                            </CardContent>
                         </Card>
                     </div>
                 </Grid>
@@ -429,10 +447,12 @@ class JacketCard extends Component {
 class CoverPhoto extends Component {    
 
     render() {
-        let image = <div> <img src={this.props.imgSrc} alt="background" style={{ maxHeight: '100%', maxWidth: '100%' }} /> </div>
+        let image = <div> <img src={this.props.imgSrc} alt="background" 
+                            style={{ maxHeight: '100%', maxWidth: '100%' }} /> 
+                    </div>
 
         if (this.props.isEditMode) {
-            image = <ImageUpload uploadedImg={this.props.imgSrc} handleUpdate={this.props.handlePhotoUpdate} />
+            image = <ImageUpload style={{maxWidth: '100%'}} uploadedImg={this.props.imgSrc} handleUpdate={this.props.handlePhotoUpdate} />
         }
 
         return (

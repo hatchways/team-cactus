@@ -5,7 +5,9 @@ import AddIcon from '@material-ui/icons/Add';
 
 const styles = theme => ({
 	uploadArea: {
-        textAlign: 'center',
+        alignItems: 'center',
+        display: 'flex',
+        justifyContent: 'center'
 	},
 	icon: {
 		fontSize: '100px',
@@ -15,10 +17,10 @@ const styles = theme => ({
 class UploadCardWrapper extends Component {
 
 	render() {
-		const { classes, handleClick } = this.props;
+		const { classes, handleClick, height } = this.props;
 
 		return (
-			<div className={classes.uploadArea}>
+			<div className={classes.uploadArea} style={{height: height}}>
 				<IconButton onClick={handleClick}>
 	                <AddIcon fontSize="large" className={classes.icon}/>
 				</IconButton>

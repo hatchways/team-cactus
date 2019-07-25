@@ -234,10 +234,7 @@ class MyStorePage extends Component {
 
                     {/* The bottom of the store representing the jackets for sale */}
                     <div>
-                        {/*<Grid item className={classes.jacketTable} alignItems="center" justify="space-evenly">
-                            <JacketTable {...this.props}/>
-                        </Grid>*/}
-                        <JacketTable {...this.props} />
+                        <JacketTable/>
                     </div>
                 </Grid>
 		  	</div>
@@ -337,7 +334,7 @@ class JacketTable extends Component {
         // Three rows and three columns of jackets per page
         return (
             <Paper elevation={0} square={true}>
-              <Grid container item spacing={4} justify="center" style={{padding: '30px'}}>
+              <Grid container item justify="center" style={{padding: '30px 0px'}}>
                 <JacketRow row={this.state.jackets[0]} />
                 <JacketRow row={this.state.jackets[1]} />
               </Grid>
@@ -350,10 +347,10 @@ class JacketRow extends Component {
     render() {
         let jackets = this.props.row; // three jackets, possibly null
         return (
-            <Grid container item direction="row" spacing={3} justify="center" style={{padding: '20px'}}>
-                <Grid item> <StyledJacketCard jacket={jackets[0]} /> </Grid>
-                <Grid item> <StyledJacketCard jacket={jackets[1]} /> </Grid>
-                <Grid item> <StyledJacketCard jacket={jackets[2]} /> </Grid>
+            <Grid container item direction="row" justify="center">
+                <Grid item style={{padding:'40px'}}> <StyledJacketCard jacket={jackets[0]} /> </Grid>
+                <Grid item style={{padding:'40px'}}> <StyledJacketCard jacket={jackets[1]} /> </Grid>
+                <Grid item style={{padding:'40px'}}> <StyledJacketCard jacket={jackets[2]} /> </Grid>
             </Grid>
         );
     }     
@@ -374,6 +371,7 @@ class JacketCard extends Component {
 
     render() {
         const { classes } = this.props;
+        const cardHeight = "300px";
 
         if (!this.props.jacket) { // we were passed null for non-existent jacket
             if (this.state.redirect) {
@@ -386,7 +384,7 @@ class JacketCard extends Component {
                 <Grid item>
                     <div className={classes.cardContainer}>
                         <Card className={classes.card} elevation={2} square={true}>
-                            <UploadCardWrapper handleClick={this.handleClick} />
+                            <UploadCardWrapper height={cardHeight} handleClick={this.handleClick} />
                             <CardContent className={classes.cardContent}>
                                 <Typography gutterBottom variant="subtitle1" component="h2" align="center">
                                     <b> Upload a jacket here </b>
@@ -405,7 +403,7 @@ class JacketCard extends Component {
             }
 
             // Default: make the image an upload slot
-            let image = <UploadCardWrapper handleClick={this.handleClick} />;
+            let image = <UploadCardWrapper height={cardHeight} handleClick={this.handleClick} />;
 
             if (this.props.jacket.photos.length > 0) {
                 // If jacket photo: display available image for jacket card
@@ -416,7 +414,7 @@ class JacketCard extends Component {
                                 component="img"
                                 alt={this.props.jacket.name}
                                 image={this.props.jacket.photos[0].url}
-                                style={{width: '100%', height: '300px', objectFit:'cover'}}
+                                style={{width: '100%', height: cardHeight, objectFit:'cover'}}
                                 title={this.props.jacket.name}
                             />
                         </CardActionArea>
@@ -433,7 +431,9 @@ class JacketCard extends Component {
                                 <Typography gutterBottom variant="subtitle1" component="h2" align="center">
                                     <b>{this.props.jacket.name}</b>
                                 </Typography>
-                                <Typography component="p" variant="caption" align="center">{this.props.jacket.description}</Typography>
+                                <Typography component="p" variant="subtitle2" align="center">
+                                    ${this.props.jacket.price.toFixed(2)}
+                                </Typography>
                             </CardContent>
                         </Card>
                     </div>

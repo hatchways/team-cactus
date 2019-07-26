@@ -5,7 +5,7 @@ import ButtonWrapper from '../Wrappers/ButtonWrapper';
 import ErrorWrapper from '../Wrappers/ErrorWrapper';
 import FormCardWrapper from '../Wrappers/FormCardWrapper';
 import FormTextFieldWrapper from '../Wrappers/FormTextFieldWrapper';
-import TitleWrapper from '../Wrappers/TitleWrapper';
+import TitleWrapperSmall from '../Wrappers/TitleWrapperSmall';
 
 const styles = theme => ({
     button: {
@@ -137,9 +137,9 @@ class RegisterPage extends Component {
         return (
             <div className={classes.container}>
                 <FormCardWrapper>
-                    <TitleWrapper>
+                    <TitleWrapperSmall>
                         Create Shop
-                    </TitleWrapper>
+                    </TitleWrapperSmall>
                     <form onSubmit={this.handleSubmit} className={classes.form} noValidate>
                         <FormTextFieldWrapper 
                             error={this.state.touched.name ? (errors.name ? true : false) : false}

@@ -5,12 +5,20 @@ import { withStyles } from "@material-ui/core/styles";
 import JacketFilter from './../JacketFilter';
 import PageWrapper from '../Wrappers/PageWrapper';
 import TitleWrapperSmall from '../Wrappers/TitleWrapperSmall';
+import ToggleButton from '@material-ui/lab/ToggleButton';
+import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
 
 const styles = theme => ({
   container: {
     display: 'flex',
     flexDirection: 'row',
     marginTop: '50px'
+  },
+  content: {
+    display: 'flex',
+    flexDirection: 'column',
+    width: '83%',
+    padding: '0 30px',
   },
   expansionPanelContainer: {
     width: '25%'
@@ -34,12 +42,12 @@ const styles = theme => ({
   },
   jackets: {
     display: 'grid',
-    width: '83%',
+    width: '100%',
     gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))',
     gridTemplateRows: 'repeat(auto-fill, minmax(auto, 270px))',
     gridGap: '1.5rem',
     justifyItems: 'center',
-    padding: '0 30px',
+
   },
   jacketName: {
     color: '#000',
@@ -59,6 +67,12 @@ const styles = theme => ({
     objectFit: 'cover',
     objectPosition: '50 50',
     height: '200px' 
+  },
+  toggleContainer: {
+    marginBottom: '30px'
+  },
+  secondToggleGroup: {
+    marginLeft: '20px'
   }
 });
 
@@ -77,6 +91,8 @@ class LandingPage extends Component {
       lower_price: 0,
       higher_price: 500
     },
+    toggleBy: 'dateToggle',
+    order: 'descendingToggle',
     responseError: ''
   }
 
@@ -96,8 +112,21 @@ class LandingPage extends Component {
     });
   }
 
+  handleToggleChange = (event, newToggle) => {
+    if(newToggle){
+      this.handleFilterChange(newToggle);
+    }
+  }
+
   handleFilterChange = async (newFilterSelection) => {
 
+    if((newFilterSelection === "priceToggle") || (newFilterSelection === "dateToggle")) {
+      this.setState({ toggleBy: newFilterSelection });
+    } else if((newFilterSelection === "ascendingToggle") || (newFilterSelection === "descendingToggle")){
+      this.setState({ order: newFilterSelection });
+    }
+
+    console.log('newfilter', newFilterSelection);
     const filterState = this.state.filterState; 
     const keys = Object.keys(newFilterSelection);
     
@@ -128,7 +157,7 @@ class LandingPage extends Component {
     const { classes } = this.props;
     const jacketsSelected = this.state.jacketsSelected;
     const displayJackets = [];
-    
+
     jacketsSelected.forEach((jacket, index) => {
       displayJackets.push(
         <div className={classes.jacketContainer} key={index}>
@@ -151,9 +180,30 @@ class LandingPage extends Component {
             <div className={classes.filter}>
               <JacketFilter updateFilterState={this.handleFilterChange} filterState={this.state.filterState} />
             </div>
-            <div className={classes.jackets}>
-              {displayJackets.length ? displayJackets : 'No Jackets matched the criteria.'}
+            <div className={classes.content}>
+              <div className={classes.toggleContainer}>
+                <ToggleButtonGroup value={this.state.toggleBy} exclusive onChange={this.handleToggleChange}>
+                  <ToggleButton value="dateToggle">
+                      Date Added
+                    </ToggleButton>
+                  <ToggleButton value="priceToggle">
+                    Price
+                  </ToggleButton>
+                </ToggleButtonGroup>
+                <ToggleButtonGroup value={this.state.order} exclusive onChange={this.handleToggleChange} className={classes.secondToggleGroup}>
+                  <ToggleButton value="descendingToggle">
+                    Descending
+                  </ToggleButton>
+                  <ToggleButton value="ascendingToggle">
+                    Ascending
+                  </ToggleButton>
+                </ToggleButtonGroup>
+              </div>
+              <div className={classes.jackets}>
+                {displayJackets.length ? displayJackets : 'No Jackets matched the criteria.'}
+              </div>
             </div>
+            
           </div>
         </PageWrapper>
       </div>

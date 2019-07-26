@@ -68,7 +68,38 @@ router.get('/:id', async function(req, res, next) {
     }
 });
 
-/* Edit shop data ----------------------------------------------------------------*/
+/* Edit shop cover photo --------------------------------------------------------------------------*/
+// router.put('/coverPhoto', passport.authenticate('jwt', { session: false }), async function(req, res) {
+//     try {
+//         const email = req.user.email;
+//         let shop = await Shop.findOne({userEmail: email});
+
+//         if (!shop) {
+//             return res.status(400).send("There is no store associated with this account");
+//         }
+
+//         result = uploadPhoto(req, res);
+//         console.log(result);
+//         if (!result || !result.imageUrl) { // could not upload
+//             return res.status(422).send("boo");
+//         }
+
+//         shop.coverImage.URL = result.imageUrl;
+//         shop.coverImage.ID = result.imageID;
+//         shop.save();
+
+//         res.status(200).send(result);
+
+//         // TODO: what to do if photo uploaded but not saved to document?
+
+//     } catch (asyncErr) {
+//         console.log(asyncErr);
+//         // res.status(503).send({ errors: { message: "Could not upload image" } });
+//         res.status(503).send({ errors: { message: asyncErr.message } });
+//     }
+// });
+
+/* Edit shop data -----------------------------------------------------------------------------*/
 router.put('/', passport.authenticate('jwt', { session: false }), async function(req, res, next) {
     
     try {
@@ -117,7 +148,6 @@ router.get('/:id/products', async function(req, res, next) {
 
         // Find products
         let products = await Product.find({ shopID: shopID });
-
         if(products) {
             return res.status(200).send(products);
         } else {
@@ -127,6 +157,58 @@ router.get('/:id/products', async function(req, res, next) {
 		return res.status(503).send({ errors: { message: "Something went wrong :(" }});
     }
 });
+
+async function editName(req, res) {
+  try {
+    if (!validateName(req.body).isValid) {
+      return res.status(400);
+    }
+    let shop = await Shop.findOne({userEmail: req.body.userEmail});
+    if (shop) {
+      shop.name = req.body.name;
+      shop.save();
+    } else {
+      return res.status(400).json({ errors: { email: "There is no shop associated with this account"}});
+    }
+  } catch (err) {
+    return res.status(503);
+  }
+ }
+
+ async function editDescription(req, res) {
+  try {
+    if (!validateDescription(req.body).isValid) {
+      return res.status(400);
+    }
+    let shop = await Shop.findOne({userEmail: req.body.userEmail});
+    if (shop) {
+      shop.description = req.body.description;
+      shop.save();
+    } else {
+      return res.status(400).json({ errors: { email: "There is no shop associated with this account"}});
+    }
+  } catch (err) {
+    return res.status(503);
+  }
+ }
+
+ //  async function editCoverPhoto(req, res) {
+ //  try {
+ //    if (!validateCoverURL(req.body).isValid) {
+ //      return res.status(400);
+ //    }
+ //    let shop = await Shop.findOne({userEmail: req.body.userEmail});
+ //    if (shop) {
+ //      shop.coverPhoto = req.body.coverURL;
+ //      shop.save();
+ //      return res.status(200).send(shop);
+ //    } else {
+ //      return res.status(400).json({ errors: { email: "There is no shop associated with this account"}});
+ //    }
+ //  } catch (err) {
+ //    return res.status(503);
+ //  }
+ // }
 
 module.exports.createShop = createShop;
 module.exports.routes = router;

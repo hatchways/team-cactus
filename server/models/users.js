@@ -25,10 +25,12 @@ const UserSchema = new Schema({
 });
 
 //-----------------------------------------------------------------
-UserSchema.pre('save', async function() {
+UserSchema.pre('save', async function() {     
+    // Before adding a new user document to the collection, also create a new store for them iff they
+    // have signed up as a shopowner
     if (this.isShopkeeper) {
         data = { userEmail: this.email };
-        
+        //     data = { userEmail: this.email, name: "My Store" };
         let shop = await createShop(data);
         if (!shop || shop.errors) {
             throw new Error(shop.errors ? shop.errors : {errors: { shop: "Could not create shop"} });
@@ -44,7 +46,6 @@ function validateRegisterFields(data) {
     data.email = !isEmpty(data.email) ? data.email : "";
     data.password = !isEmpty(data.password) ? data.password : "";
     data.name = !isEmpty(data.name) ? data.name : "";
-    data.isShopkeeper = !isEmpty(data.isShopkeeper) ? data.isShopkeeper : "";
 
     // Email checks
     if (Validator.isEmpty(data.email)) {
@@ -59,11 +60,6 @@ function validateRegisterFields(data) {
     // Name check
     if (Validator.isEmpty(data.name)) {
         errors.name = "Name field is required.";
-    }
-
-    // isShopkeeper check
-    if (Validator.isEmpty(data.isShopkeeper)) {
-        errors.isShopkeeper = "isShopkeeper field is required.";
     }
 
     return {
@@ -108,34 +104,6 @@ UserSchema.methods.validatePassword = async function(plaintextPassword) {
     return await argon2.verify(this.password, plaintextPassword);
 };
 
-//-----------------------------------------------------------------
-// UserSchema.methods.generateJWT = async function(payload) {
-//     const today = new Date();
-//     const expirationDate = new Date(today);
-//     expirationDate.setDate(today.getDate() + 60);
-
-//     return await jwt.sign(
-//         payload,
-//         secretOrKey,
-//         { expiresIn: 31556926 }, // 1 year in seconds
-//         // Append token to a Bearer string since we chose bearer scheme in config
-//         (err, token) => {
-//             res.status(200).json({
-//                 success: true,
-//                 token: "Bearer " + token,
-//             });
-//         }
-//     );
-
-// }
-
-// UserSchema.methods.toAuthJSON = function() {
-//   return {
-//     _id: this._id,
-//     email: this.email,
-//     token: this.generateJWT()
-//   };
-// };
 
 module.exports = {
     User: mongoose.model("users", UserSchema),

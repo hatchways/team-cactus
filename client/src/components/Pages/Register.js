@@ -69,7 +69,7 @@ class RegisterPage extends Component {
                 name: this.state.name,
                 email: this.state.email,
                 password: this.state.password1,
-                isShopOwner: true 
+                isShopkeeper: true 
             }
  
             axios({
@@ -80,11 +80,13 @@ class RegisterPage extends Component {
             }).then(response => {
                 localStorage.setItem('token', response.data.token);
 
-                this.props.updateUserType('shopkeeper');  //must change this to be dynamic
-                // Redirect to shop
+                this.props.updateUserType(response.data.isShopkeeper ? 'shopkeeper' : 'shopper');
                 this.props.history.push(`/mystore`);
+                console.log(response);
+
             }).catch(error => {
                 if(error.response){
+                    console.log(error.response);
                     this.setState({ responseError: error.response.data.errors.message});
                 } else {
                     this.setState({ responseError: 'Something went wrong :('});

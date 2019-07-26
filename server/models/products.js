@@ -48,8 +48,14 @@ const ProductSchema = new Schema({
         },
     }, 
     photos: [{
-        url: String,
-        id: String
+        URL: {
+			type: String,
+			required: false
+		},
+		ID: {
+			type: String,
+			required: false
+		}
     }]
 });
 

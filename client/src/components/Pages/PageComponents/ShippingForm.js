@@ -53,18 +53,20 @@ class ShippingForm extends Component {
 		const { classes } = this.props;
 
 		return (
-        	<div style={{margin: "60px"}}>
+        	<div>
 				<form onSubmit={this.handleSubmit}>
 					<Typography className={classes.sectionHeader} variant="body1"> 
 	    				<b> Shipping information </b> 
 		        	</Typography>
 		        	<Divider/>
 
-			        	<span>
-		        			<label className={classes.formLabel}> Contact: </label>
-		        			<Typography component="span"> {this.state.email} </Typography>
-			        		<Button variant="outlined" color="inherit" className={classes.button}>Change</Button>
-			        	</span>
+		        	<div style={{margin: '30px'}}>
+		        	<span>
+	        			<label className={classes.formLabel}> Contact: </label>
+	        			<Typography component="span"> {this.state.email} </Typography>
+		        		<Button variant="outlined" color="inherit" className={classes.button}>Change</Button>
+		        	</span>
+		        	</div>
 		        </form>
 	        </div>
 		);

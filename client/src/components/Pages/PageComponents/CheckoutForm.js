@@ -9,13 +9,13 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormHelperText from '@material-ui/core/FormHelperText';
 
 const styles = theme => ({
-	button: {
-    	boxShadow: 'none',
-    	borderRadius: 0,
-    	padding: '15px 20px',
-    	margin: '60px 0px',
-    	width: '30%',
-    },
+	// button: {
+ //    	boxShadow: 'none',
+ //    	borderRadius: 0,
+ //    	padding: '15px 20px',
+ //    	margin: '60px 0px',
+ //    	width: '30%',
+ //    },
 });
 
 class CheckoutForm extends React.Component {
@@ -52,7 +52,7 @@ class CheckoutForm extends React.Component {
 		this.props.stripe.createSource({
 			type: 'card',
 			owner: {
-				email: this.props.email,
+				email: "dina@dina.com",
 			},
 	    }).then(async function(result) {
 	    	if (result.error) {
@@ -86,7 +86,7 @@ class CheckoutForm extends React.Component {
 	 	if (!this.state.hasStoredCard) console.log("no card");
 
 	 	return (
-			<div style={{padding: '30px'}}>
+			<div>
 				<form onSubmit={this.handleSubmit}>
         			<Typography style={{padding: '20px 0px'}} variant="body1"> 
         				<b> Enter your card details to pay: </b> 
@@ -121,11 +121,6 @@ class CheckoutForm extends React.Component {
       		
 					<br/> <br/>
 
-					<div style={{textAlign: 'center'}}>
-						<Button variant="outlined" color="inherit" type="submit" className={classes.button}> 
-							<Typography variant="button" display="block" gutterBottom> <b> Pay now </b> </Typography>
-						</Button>
-					</div>
 		        </form>
 	        </div>
 	 	);

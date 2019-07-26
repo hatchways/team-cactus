@@ -1,12 +1,10 @@
 import React, { Component } from "react";
 import { Link } from 'react-router-dom';
-import { withStyles } from "@material-ui/core/styles";
-import PageWrapper from '../Wrappers/PageWrapper';
-import TitleWrapperLarge from '../Wrappers/TitleWrapperLarge';
-import TitleWrapperSmall from '../Wrappers/TitleWrapperSmall';
-import JacketFilter from './../JacketFilter';
 import axios from 'axios';
-
+import { withStyles } from "@material-ui/core/styles";
+import JacketFilter from './../JacketFilter';
+import PageWrapper from '../Wrappers/PageWrapper';
+import TitleWrapperSmall from '../Wrappers/TitleWrapperSmall';
 
 const styles = theme => ({
   container: {
@@ -18,7 +16,7 @@ const styles = theme => ({
     width: '25%'
   },
   filter: {
-    width: '20%',
+    width: '17%',
   },
   jacketContainer: {
     width: '100%',
@@ -36,9 +34,9 @@ const styles = theme => ({
   },
   jackets: {
     display: 'grid',
-    width: '80%',
-    display: 'grid',
+    width: '83%',
     gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))',
+    gridTemplateRows: 'repeat(auto-fill, minmax(auto, 260px))',
     gridGap: '1.5rem',
     justifyItems: 'center',
     padding: '0 30px',
@@ -76,7 +74,8 @@ class LandingPage extends Component {
     filterState: {
       type: '',
       size: '',
-      price: '',
+      lower_price: 0,
+      higher_price: 500
     },
     responseError: ''
   }
@@ -87,7 +86,6 @@ class LandingPage extends Component {
       // url: `${window.location.origin}/users`,
       url: `http://localhost:3001/products/`
     }).then(response => {
-      console.log('responsemount', response);
       this.setState({ jacketsSelected: response.data });
     }).catch(error => {
       if(error.response){
@@ -98,13 +96,13 @@ class LandingPage extends Component {
     });
   }
 
-  handleFilterChange = async (newfilterSelection) => {
+  handleFilterChange = async (newFilterSelection) => {
 
     const filterState = this.state.filterState; 
-    const keys = Object.keys(newfilterSelection);
+    const keys = Object.keys(newFilterSelection);
     
     keys.forEach((key) => {
-      filterState[key] = newfilterSelection[key];
+      filterState[key] = newFilterSelection[key];
     });
 
     await axios({
@@ -131,11 +129,11 @@ class LandingPage extends Component {
     const jacketsSelected = this.state.jacketsSelected;
     const displayJackets = [];
     
-    jacketsSelected.forEach((jacket) => {
+    jacketsSelected.forEach((jacket, index) => {
       displayJackets.push(
-        <div className={classes.jacketContainer}>
+        <div className={classes.jacketContainer} key={index}>
           <Link to={`/product/${jacket._id}`}>
-            {(jacket.photos[0] && jacket.photos[0].URL) ? <img src={jacket.photos[0].URL} className={classes.jacketPhoto} alt="jacket"/> : <img src="https://cactus-jacketshop.s3.us-east-2.amazonaws.com/ProductImagePlaceholder.png" className={classes.jacketPhotoPlaceholder} alt="placeholder jacket image" />}
+            {(jacket.photos[0] && jacket.photos[0].URL) ? <img src={jacket.photos[0].URL} className={classes.jacketPhoto} alt="jacket"/> : <img src="https://cactus-jacketshop.s3.us-east-2.amazonaws.com/ProductImagePlaceholder.png" className={classes.jacketPhotoPlaceholder} alt="placeholder jacket" />}
             <div className={classes.jacketName}>{jacket.name}</div>
             <div className={classes.jacketPrice}>${jacket.price}</div>
           </Link>
@@ -154,7 +152,7 @@ class LandingPage extends Component {
               <JacketFilter updateFilterState={this.handleFilterChange} filterState={this.state.filterState} />
             </div>
             <div className={classes.jackets}>
-              {displayJackets}
+              {displayJackets.length ? displayJackets : 'No Jackets matched the criteria.'}
             </div>
           </div>
         </PageWrapper>

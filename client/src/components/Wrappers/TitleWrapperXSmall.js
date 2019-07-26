@@ -12,7 +12,7 @@ const styles = theme => ({
     }
 });
 
-class TitleWrapper extends Component {
+class TitleWrapperXSmall extends Component {
 
     render() {
         const { classes, children } = this.props;
@@ -25,4 +25,4 @@ class TitleWrapper extends Component {
     }
 }
 
-export default withStyles(styles)(TitleWrapper);
+export default withStyles(styles)(TitleWrapperXSmall);

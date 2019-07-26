@@ -15,7 +15,7 @@ const styles = theme => ({
         display: 'flex',
         flexDirection: 'column',
         // paddingRight: '80px',
-        width: '75%',
+        width: '70%',
         [theme.breakpoints.down('sm')]: {
             width: '100%',
             // paddingRight: '50px',
@@ -103,7 +103,7 @@ class ImageScroll extends Component {
                     {displayImages}
                 </div> : '' }
                 <div className={classes.imageMainContainer}>
-                    {images && images.length ? <img src={images[this.state.currentImage].URL} className={classes.imageMain} alt="jacket" /> : <img src="https://cactus-jacketshop.s3.us-east-2.amazonaws.com/ProductImagePlaceholder.png" alt="placeholder jacket image" /> }
+                    {images && images.length ? <img src={images[this.state.currentImage].URL} className={classes.imageMain} alt="jacket" /> : <img src="https://cactus-jacketshop.s3.us-east-2.amazonaws.com/ProductImagePlaceholder.png" alt="placeholder jacket" /> }
                     <div className={classes.imageScrollBottomContainer}>
                         {images && images.length ? 
                         <div className={classes.imageScrollSideContainer}>

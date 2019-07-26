@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { withStyles } from "@material-ui/core/styles";
+import TitleWrapperXSmall from './Wrappers/TitleWrapperXSmall';
 
 import ExpansionPanel from '@material-ui/core/ExpansionPanel';
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
@@ -20,25 +21,20 @@ const styles = theme => ({
 
 class JacketFilter extends Component {
 
-    state = {
-        type: '',
-        size: '',
-        price: '',
-        responseError: ''
-    }
 
     handleChange = (event) => {
         event.preventDefault();
 
-        this.setState({ [event.target.name]: event.target.value });
-        this.props.update(this.state, { [event.target.name]: event.target.value });
+        // this.setState({ [event.target.name]: event.target.value });
+        this.props.updateFilterState({ [event.target.name]: event.target.value });
     }
 
     render() {
-        const { classes } = this.props;
+        const { classes, filterState } = this.props;
 
         return (
             <div className={classes.expansionPanelContainer}>
+                <TitleWrapperXSmall>FILTERS</TitleWrapperXSmall>
                 <ExpansionPanel>
                     <ExpansionPanelSummary
                     expandIcon={<ExpandMoreIcon />}
@@ -54,7 +50,7 @@ class JacketFilter extends Component {
                             aria-label="JacketType"
                             name="type"
                             className={classes.group}
-                            value={this.state.type}
+                            value={this.props.filterState.type}
                             onChange={this.handleChange}
                         >
                             <FormControlLabel value="" control={<Radio color="primary" />} label="All" />
@@ -80,7 +76,7 @@ class JacketFilter extends Component {
                             aria-label="JacketType"
                             name="size"
                             className={classes.group}
-                            value={this.state.size}
+                            value={this.props.filterState.size}
                             onChange={this.handleChange}
                         >
                             <FormControlLabel value="xsmall" control={<Radio color="primary" />} label="XSmall" />

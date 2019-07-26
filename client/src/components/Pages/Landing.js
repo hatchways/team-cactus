@@ -11,7 +11,8 @@ import axios from 'axios';
 const styles = theme => ({
   container: {
     display: 'flex',
-    flexDirection: 'row'
+    flexDirection: 'row',
+    marginTop: '50px'
   },
   expansionPanelContainer: {
     width: '25%'
@@ -31,7 +32,7 @@ const styles = theme => ({
     boxShadow: '1px 1px 4px 1px #eeefff',
     '&:hover': {
       filter: 'brightness(95%)'
-    }
+    },
   },
   jackets: {
     display: 'grid',
@@ -72,6 +73,11 @@ class LandingPage extends Component {
         ID: ''
       }]
     }],
+    filterState: {
+      type: '',
+      size: '',
+      price: '',
+    },
     responseError: ''
   }
 
@@ -92,19 +98,20 @@ class LandingPage extends Component {
     });
   }
 
-  handleFilterChange = async (filterSelection, newfilterSelection) => {
+  handleFilterChange = async (newfilterSelection) => {
 
+    const filterState = this.state.filterState; 
     const keys = Object.keys(newfilterSelection);
-
+    
     keys.forEach((key) => {
-      filterSelection[key] = newfilterSelection[key];
+      filterState[key] = newfilterSelection[key];
     });
 
     await axios({
         method: 'get',
         // url: `${window.location.origin}/users`,
         url: `http://localhost:3001/products/`,
-        params: newfilterSelection
+        params: filterState
     }).then(response => {
         console.log('response', response);
         this.setState({ jacketsSelected: response.data });
@@ -115,6 +122,8 @@ class LandingPage extends Component {
           this.setState({ responseError: 'Something went wrong :('});
         }
     });
+
+    this.setState({ filterState: filterState });
   }
 
   render() {
@@ -142,7 +151,7 @@ class LandingPage extends Component {
           </TitleWrapperSmall>
           <div className={classes.container}>
             <div className={classes.filter}>
-              <JacketFilter update={this.handleFilterChange} />
+              <JacketFilter updateFilterState={this.handleFilterChange} filterState={this.state.filterState} />
             </div>
             <div className={classes.jackets}>
               {displayJackets}

@@ -3,6 +3,7 @@ import { withStyles } from "@material-ui/core/styles";
 import ToggleButton from '@material-ui/lab/ToggleButton';
 import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
 
+//TO DO: apply styles to material ui togglebutton properly
 const styles = theme => ({
     toggleContainer: {
         display: 'flex',
@@ -11,17 +12,20 @@ const styles = theme => ({
         fontWeight: '600'
     },
     toggleButton: {
-        margin: '0 10px',
+        margin: '5px !important',
         border: '1px solid rgba(0, 0, 0, .6) !important',
         borderRadius: '0 !important',
-        color: '#000'
+        color: '#000',
+        width: '40px'
     }, 
     toggleButtonDisabled: {
         border: '1px solid rgba(0, 0, 0, .2) !important',
         color: 'rgba(0, 0, 0, .2) !important'
     },
     toggleButtonGroup: {
+        marginLeft: '5px',
         backgroundColor: 'transparent',
+        flexWrap: 'wrap'
     },
     toggleButtonSelected: {
         backgroundColor: 'rgba(0, 0, 0, .83) !important',
@@ -40,7 +44,7 @@ class SizePicker extends Component {
 
     render() {
         const { classes, sizesAvailable } = this.props;
-
+        
         return (
 
             <div className={classes.toggleContainer}>

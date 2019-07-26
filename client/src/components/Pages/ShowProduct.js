@@ -6,13 +6,12 @@ import ImageScroll from '../ImageScroll';
 import PageWrapper from '../Wrappers/PageWrapper';
 import Profile from '../Profile';
 import SizePicker from '../SizePicker';
-import TitleProductWrapper from '../Wrappers/TitleProductWrapper';
-// import Tabs from '@material-ui/core/Tabs';
-// import Tab from '@material-ui/core/Tab';
+import TitleWrapperLarge from '../Wrappers/TitleWrapperLarge';
 
 const styles = theme => ({
     button: {
-        marginRight: '10px'
+        marginRight: '10px',
+        marginBottom: '10px'
     },
     buttonContainer: {
         marginTop: '50px'
@@ -20,16 +19,29 @@ const styles = theme => ({
     container: {
         display: 'flex',
         flexDirection: 'row',
-        justifyContent: 'space-between'
+        justifyContent: 'space-between',
+        [theme.breakpoints.down('xs')]: {
+            flexDirection: 'column',
+            justifyContent: 'flex-start',
+        }
     },
     description: {
         marginTop: '15px',
         color: '#777',
         fontSize: '16px'
     },
+    imageScroll: {
+        width: '57%',
+        [theme.breakpoints.down('xs')]: {
+            width: '100%'
+        }
+    },
     infoContainer: {
         width: '40%',
-        paddingRight: '30px'
+        paddingRight: '30px',
+        [theme.breakpoints.down('xs')]: {
+            width: '100%'
+        }
     },
     message: {
         fontWeight: 600,
@@ -39,9 +51,6 @@ const styles = theme => ({
         fontWeight: 600,
         fontSize: '15px',
         marginTop: '30px',
-    },
-    question: {
-        marginTop: '15px'
     },
     sizePicker: {
         marginTop: '30px',
@@ -79,7 +88,6 @@ class ShowProduct extends Component {
 
         axios({
             method: 'get',
-            //url: `${window.location.origin}/users`,
             url: `http://localhost:3001/products/${productID}`,
         }).then(response => {
             this.setState({ data: response.data })
@@ -99,12 +107,12 @@ class ShowProduct extends Component {
         return (
             <PageWrapper>
                 <div className={classes.container}>
-                    <ImageScroll images={this.state.data.photos} />
+                    <ImageScroll images={this.state.data.photos} classes={{ container: classes.imageScroll }}/>
                     <div className={classes.infoContainer}>
                         <Profile />{/*TO DO Dynamic Name*/}
-                        <TitleProductWrapper classes={{ title: classes.title }}>
+                        <TitleWrapperLarge classes={{ title: classes.title }}>
                             {this.state.data.name}
-                        </TitleProductWrapper>
+                        </TitleWrapperLarge>
                         <div className={classes.description}>
                             {this.state.data.description}
                         </div>
@@ -115,8 +123,8 @@ class ShowProduct extends Component {
                             <SizePicker sizesAvailable={this.state.data.sizes} />
                         </div>
                         <div className={classes.buttonContainer}>
-                            <ButtonWrapper type="black" classes={{ button: classes.button }}>Add to Cart</ButtonWrapper>
-                            <ButtonWrapper type="white">Request a Custom Design</ButtonWrapper>
+                            <ButtonWrapper version="black" type="submit" classes={{ button: classes.button }}>Add to Cart</ButtonWrapper>
+                            <ButtonWrapper version="white" type="submit" classes={{ button: classes.button }}>Request a Custom Design</ButtonWrapper>
                         </div>
                         <div className={classes.question}>
                             Have a question about an item? <span className={classes.message}>Send a message.</span><br />
@@ -124,19 +132,6 @@ class ShowProduct extends Component {
                         </div>
                     </div>
                 </div>
-                {/* <div className={classes.bottomMenu}>
-                    <Tabs
-                        value={value}
-                        onChange={handleChange}
-                        indicatorColor="primary"
-                        textColor="primary"
-                        centered
-                    >
-                        <Tab label="Item One" />
-                        <Tab label="Item Two" />
-                        <Tab label="Item Three" />
-                    </Tabs>
-                </div> */}
             </PageWrapper>
         );
     }

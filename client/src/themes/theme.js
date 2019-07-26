@@ -32,6 +32,11 @@ export const theme = createMuiTheme({
         }
       }
     },
+    MuiPaper: { 
+      elevation1: {
+        boxShadow: 'none'
+      },
+    },
     MuiOutlinedInput: {
       root: {
           '& $notchedOutline': {
@@ -47,6 +52,11 @@ export const theme = createMuiTheme({
         zIndex: 99,
       }
     },
+  },
+  MuiSwitch: {
+    root: {
+      padding: '5px 9px'
+    }
   },
   typography: {
     fontFamily: 'Roboto'

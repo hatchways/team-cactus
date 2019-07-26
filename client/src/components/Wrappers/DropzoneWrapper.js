@@ -20,8 +20,7 @@ class DropzoneWrapper extends Component {
     }
 
     render() {
-        const { classes, children, handleUpdate } = this.props;
-        {/*let image = <img src={imgSrc} alt="" style={{ maxHeight: '100%', maxWidth: '100%' }} />*/}
+        const { children } = this.props;
     
         return (    
             <section>

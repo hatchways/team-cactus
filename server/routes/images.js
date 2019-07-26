@@ -11,8 +11,8 @@ router.post('/single', passport.authenticate('jwt', { session: false }), functio
     if (err) {
       return res.status(422).send({errors: [{ message: 'Image Upload Error', detail: err.message }]});
     }
-    
-    res.status(200).send({'imageUrl': req.file.location, 'imageID': req.file.key });
+
+	    res.status(200).send({'imageUrl': req.file.location, 'imageID': req.file.key });
   	});
 });
 

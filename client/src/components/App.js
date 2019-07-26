@@ -33,7 +33,7 @@ class App extends Component {
           <Route exact path='/register' render={(props) => <RegisterPage {...props} updateUserType={this.updateUserType} />} />
           <Route exact path="/mystore" component={MyStorePage} />
           <Route exact path="/checkout" component={CheckoutPage} />
-          <Route path="/product" component={ShowProduct} />
+          <Route exact path="/product/:id([0-9a-f]+)" component={ShowProduct} />
         </BrowserRouter>
       </MuiThemeProvider>
     );

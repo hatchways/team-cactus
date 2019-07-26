@@ -36,7 +36,7 @@ const styles = theme => ({
     display: 'grid',
     width: '83%',
     gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))',
-    gridTemplateRows: 'repeat(auto-fill, minmax(auto, 260px))',
+    gridTemplateRows: 'repeat(auto-fill, minmax(auto, 270px))',
     gridGap: '1.5rem',
     justifyItems: 'center',
     padding: '0 30px',

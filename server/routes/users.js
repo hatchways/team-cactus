@@ -1,6 +1,8 @@
 var express = require('express');
 var router = express.Router();
+const passport = require("passport");
 const jwt = require("jsonwebtoken");
+const stripe = require("stripe")(process.env.STRIPE_PUBLIC_TEST);
 const { User, validateRegister, validateLogin } = require('../models/users');
 const secretOrKey = process.env.SECRETORKEY;
 
@@ -98,6 +100,22 @@ router.post('/login', async function(req, res, next) {
 		// console.error(err.message);
 		res.status(503).send({ errors: {message: "Could not sign in." } });
     }
+});
+
+/* Get user data -------------------------------------------------------------------- */
+router.get('/', passport.authenticate('jwt', { session: false }), async function(req, res) {
+    let user = req.user;
+    
+    // Also find the customer's address from Stripe's API
+    if (req.user.stripeCustomerID) {
+        let customer = await stripe.customers.retrieve(req.user.stripeCustomerID);
+        if (customer.address) {
+            user["address"] = customer.address;
+        }
+    }
+
+    return res.status(200).send(user);
+
 });
 
 module.exports = router;

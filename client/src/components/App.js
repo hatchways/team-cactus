@@ -18,7 +18,6 @@ class App extends Component {
   }
 
   updateUserType = (userType) => {
-    console.log('userType', userType);
     this.setState({ userType: userType });
   }
 

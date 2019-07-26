@@ -13,11 +13,6 @@ class ButtonWrapper extends Component {
 
     render() {
 
-//         const { classes, children, type, onClick } = this.props;
-
-//         return (
-//             <Button type={type} variant="contained" color="primary" size="medium" classes={{ contained: classes.button }} onClick={onClick}>
-
         const { classes, children, type } = this.props;
         const variant = (type === "white" ? 'outlined' : 'contained');
         const color = (type === "white" ? 'inherit' : 'primary');

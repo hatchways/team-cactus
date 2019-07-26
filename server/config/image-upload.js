@@ -3,6 +3,7 @@ const multer = require('multer');
 const multerS3 = require('multer-s3');
 const IAM_USER_KEY = process.env.IAM_USER_KEY;
 const IAM_USER_SECRET = process.env.IAM_USER_SECRET;
+const BUCKET_NAME = process.env.BUCKET_NAME;
 
 aws.config.update({
   secretAccessKey: IAM_USER_SECRET,
@@ -25,11 +26,14 @@ const upload = multer({
   storage: multerS3({
     acl: 'public-read',
     s3,
-    bucket: 'cactus-jacketshop',
+    bucket: BUCKET_NAME,
     key: function (req, file, cb) {
       cb(null, Date.now().toString())
     }
   })
 });
 
-module.exports = upload;
+module.exports = { 
+  upload: upload,
+  s3: s3
+}

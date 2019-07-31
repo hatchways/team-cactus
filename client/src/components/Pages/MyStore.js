@@ -18,7 +18,6 @@ import TextField from '@material-ui/core/TextField';
 
 const styles = theme => ({
     button: {
-        // marginTop: '25px',
         borderRadius: 0,
         boxShadow: 'none',
     },
@@ -26,7 +25,6 @@ const styles = theme => ({
         alignItems: 'center',
         justify: 'flex-start',
         textAlign: 'center',
-        // display: 'inline-flex'
     },
     coverPhoto: {
         maxHeight: '450px',
@@ -34,12 +32,9 @@ const styles = theme => ({
         // objectFit: 'contain',
     },
     card: {
-        // flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'center',
         borderRadius: 0,
-        // width: '200px',
-        // height: '300px',
         width: '100%',
         height: '100%'
     },
@@ -49,19 +44,13 @@ const styles = theme => ({
         textAlign: 'center',
     },
     cardContainer: {
-        width: '250px',
+        // width: '250px',
         // height: '300px',
+        padding: '30px'
     },
     paper: {
         padding: "80px",
         justify: "center"
-    },
-    cardImg: {
-        height: '80%'
-    },
-    jacketTable: {
-        // display: 'flex',
-        width: '100vw',
     }
 });
 
@@ -77,14 +66,6 @@ class MyStorePage extends Component {
             shopID: "",
             isEditMode: false
         }
-
-        this.handleEditStoreClick = this.handleEditStoreClick.bind(this);
-        this.handleSaveStoreClick = this.handleSaveStoreClick.bind(this);
-        this.handlePhotoUpdate = this.handlePhotoUpdate.bind(this);
-        this.handleNameUpdate = this.handleNameUpdate.bind(this);
-        this.handleDescUpdate = this.handleDescUpdate.bind(this);
-        this.uploadPhoto = this.uploadPhoto.bind(this);
-        this.updateDB = this.updateDB.bind(this);
     }
     
     ensureLoggedIn() {
@@ -118,7 +99,7 @@ class MyStorePage extends Component {
         await this.fetchStoreData();
     }
 
-    async updateDB() {
+    updateDB = async () => {
         try {
             await axios({
                 method: 'put',
@@ -140,8 +121,8 @@ class MyStorePage extends Component {
         catch (asyncErr) {}
     }
 
-    async uploadPhoto(file) {
 
+    uploadPhoto = async (file) =>  {
         try {
             let data = new FormData();
             data.append( 'image', file );
@@ -164,7 +145,7 @@ class MyStorePage extends Component {
         catch (asyncErr) {}
     }
 
-    async handleEditStoreClick(e) {
+    handleEditStoreClick = (e) => {
         try {
             e.preventDefault();
             this.setState({isEditMode: true});
@@ -174,7 +155,7 @@ class MyStorePage extends Component {
         }
     }
 
-    async handleSaveStoreClick(e) {
+    handleSaveStoreClick = async (e) => {
         try {
             e.preventDefault();
             this.updateDB();
@@ -184,28 +165,28 @@ class MyStorePage extends Component {
         }
     }
 
-    async handlePhotoUpdate(newCoverFile) {
+    handlePhotoUpdate = async (newCoverFile) => {
         await this.uploadPhoto(newCoverFile); // this sets state of uploadedImg
     }
 
-    handleNameUpdate(newName) {
+    handleNameUpdate = (newName) => {
         this.setState({storeName: newName});
     }
 
-    handleDescUpdate(newDesc) {
+    handleDescUpdate = (newDesc) => {
         this.setState({storeDesc: newDesc});
     }
 
     render() {
-	    const { classes } = this.props;
+        const { classes } = this.props;
         this.ensureLoggedIn();
 
-		return (
-			<div>
+        return (
+            <div>
                 <Grid container direction="column">
                     {/* The top of the store representing the store banner */}
                     <div className={classes.storeBanner}>
-        				<Grid container item direction="row" justify="center" alignItems="center">
+                        <Grid container item direction="row" justify="center" alignItems="center">
                             <Grid item md={5}>
                                 <EditableText isEditMode={this.state.isEditMode} handleUpdate={this.handleNameUpdate} 
                                                 value={this.state.storeName} label="Store name"/>
@@ -237,8 +218,8 @@ class MyStorePage extends Component {
                         <JacketTable/>
                     </div>
                 </Grid>
-		  	</div>
-		);
+            </div>
+        );
     }
 }
 
@@ -246,16 +227,12 @@ class JacketTable extends Component {
     constructor(props) {
         super(props);
         this.state = { 
-            jackets : [[null, null, null], [null, null, null]],
+            jackets : [],
             haveShopID: false
         };
-
-        this.loadJackets = this.loadJackets.bind(this);
-        this.getShopID = this.getShopID.bind(this);
-        // console.log("shop id: " + this.props.shopid);
     }
 
-    async getShopID() {
+    getShopID = async () => {
         await axios({
             method: 'get',
             url: `http://localhost:3001/shops`,
@@ -267,40 +244,7 @@ class JacketTable extends Component {
         });
     }
 
-    constructJacketsArray(desiredNumRows, jacketsPerRow, jacketsArray) {
-        /* Construct an array of all jackets belonging to this store, separated into
-         subarrays of 3 jackets each (to be interpreted as rows for the UI)
-         */
-        let allJackets = [];
-        let row = []; // current row we're constructing
-        let rowCount = 0; // number of jackets in current row
-        for (var i = 0; i < jacketsArray.length; i++) {
-            if (rowCount < jacketsPerRow) {
-                row.push(jacketsArray[i]);
-                rowCount++;
-            } else {
-                // add and begin a new row
-                allJackets.push(row);
-                rowCount = 0;
-                row = [];
-            }
-        }
-        // Fill the last row with nulls if no more jackets, to ensure that there are jacketsPerRow items per row
-        while (rowCount < jacketsPerRow) {
-            row.push(null);
-            rowCount++;
-        }
-        allJackets.push(row);
-
-        // Ensure that there are desiredNumRows rows
-        while (allJackets.length < desiredNumRows) {
-            allJackets.push([null, null, null]);
-        }
-
-        return allJackets;
-    }
-
-    async loadJackets() {
+    loadJackets = async () => {
         if (!this.state.haveShopID) {
             return;
         }
@@ -311,12 +255,10 @@ class JacketTable extends Component {
                 url: `http://localhost:3001/shops/${this.state.shopID}/products`
             })
             .then(response => {
-                let tabularJacketList = this.constructJacketsArray(2, 3, response.data);
-                this.setState({jackets: tabularJacketList});
-                // console.log(this.state.jackets);
+                this.setState({jackets: response.data});
             })
             .catch(error => {
-                console.log("load jacket error");
+                // this.setState({error: error.message});
             });
         } 
         catch (asyncErr) {
@@ -327,33 +269,27 @@ class JacketTable extends Component {
     async componentDidMount() {
         await this.getShopID();
         await this.loadJackets();
-        // console.log(this.state.jackets);
     }
 
     render() {
-        // Three rows and three columns of jackets per page
+
+        // Load only the first 6 jackets (for now)
+        const jackets = this.state.jackets.slice(0, 7);
+
         return (
             <Paper elevation={0} square={true}>
-              <Grid container item justify="center" style={{padding: '30px 0px'}}>
-                <JacketRow row={this.state.jackets[0]} />
-                <JacketRow row={this.state.jackets[1]} />
-              </Grid>
+                <Grid container justify="center">
+                    <Grid container item xs={12} sm={10} justify="flex-start" style={{padding: '30px 0px'}}>
+                        {jackets.map(jacket => 
+                            <Grid item xs={12} sm={6} md={4} key={jacket._id}>
+                                <StyledJacketCard jacket={jacket} /> 
+                            </Grid>
+                        )}
+                    </Grid>
+                </Grid>
             </Paper>
         );
     }
-}
-
-class JacketRow extends Component {
-    render() {
-        let jackets = this.props.row; // three jackets, possibly null
-        return (
-            <Grid container item direction="row" justify="center">
-                <Grid item style={{padding:'40px'}}> <StyledJacketCard jacket={jackets[0]} /> </Grid>
-                <Grid item style={{padding:'40px'}}> <StyledJacketCard jacket={jackets[1]} /> </Grid>
-                <Grid item style={{padding:'40px'}}> <StyledJacketCard jacket={jackets[2]} /> </Grid>
-            </Grid>
-        );
-    }     
 }
 
 class JacketCard extends Component {
@@ -362,10 +298,9 @@ class JacketCard extends Component {
         this.state = {
             redirect: false
         }
-        this.handleClick = this.handleClick.bind(this);
     }
 
-    handleClick(e){
+    handleClick = (e) => {
         this.setState({redirect: true});
     }
 

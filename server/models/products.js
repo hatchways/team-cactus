@@ -56,7 +56,11 @@ const ProductSchema = new Schema({
 			type: String,
 			required: false
 		}
-    }]
+    }],
+    date: {
+        type: String,
+		required: true
+    }
 });
 
 //-----------------------------------------------------------------

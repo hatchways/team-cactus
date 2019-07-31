@@ -27,7 +27,8 @@ router.post('/', passport.authenticate('jwt', { session: false }), async functio
                 description: data.description ? data.description : "",
                 price: data.price,
                 sizes: data.sizes ? data.sizes : { xsmall: 0, small: 0, medium: 0, large: 0, xlarge: 0, xxlarge: 0 },
-                photos: data.photos ? data.photos : [] //array of objects {url: __, id: __}
+                photos: data.photos ? data.photos : [], //array of objects {url: __, id: __}
+                date: Date.now().toString()
             })
 
             // Save shop in db
@@ -70,8 +71,13 @@ router.get('/', async function(req, res) {
         // if (req.query.gender && ['male', 'female'].includes(req.query.gender.toLowerCase())) {
         //     query.gender = req.query.gender;
         // }
+    
+        (req.query.toggleBy==='price' ? toggleBy = 'price' : toggleBy = 'date' );
+        (req.query.orderBy==='asc' ? order = 1 : order = -1 );
+        let sortBy = {};
+        sortBy[toggleBy] = order;
 
-        let products = await Product.find( query );
+        let products = await Product.find( query ).sort(sortBy);
 
         if (!products) {
             return res.status(204).send({ message: "No products found." });

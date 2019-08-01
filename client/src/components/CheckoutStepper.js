@@ -3,12 +3,13 @@ import { withStyles } from "@material-ui/core/styles";
 import Stepper from '@material-ui/core/Stepper';
 import Step from '@material-ui/core/Step';
 import StepLabel from '@material-ui/core/StepLabel';
-import Button from '@material-ui/core/Button';
-import Typography from "@material-ui/core/Typography";
+// import Button from '@material-ui/core/Button';
+// import Typography from "@material-ui/core/Typography";
 import CheckoutForm from './Pages/PageComponents/CheckoutForm';
 import ShippingForm from './Pages/PageComponents/ShippingForm';
+import InformationForm from './Pages/PageComponents/CustomerInfoForm';
 import Divider from "@material-ui/core/Divider";
-import { Elements, StripeProvider} from 'react-stripe-elements';
+import { Elements, StripeProvider } from 'react-stripe-elements';
 
 
 const STRIPE_PK = "pk_test_gwivf5Iq9bKkDQjzqDs7lFdj00SezimkV7";
@@ -32,18 +33,43 @@ class CheckoutStepper extends Component {
 
 		this.state = {
 			steps: ['Information', 'Shipping', 'Payment'],
-			activeStep: 0,
+			activeStep: 2,
 		}
 	}
 
 	getActiveTab = () => {
 		switch (this.state.activeStep) {
 		    case 0:
-		    	return <InfoTab/>;
+		    	return (
+		    		<InformationForm 
+	    				setEmail={ (email) => {this.setState( {email: email} )} }
+						handleNext={this.handleNext}
+		    		/>
+		    	);
+
 		    case 1:
-		    	return <ShippingTab setEmail={(email) => {this.setState({email: email})}} />;
+		    	return (
+		    		<ShippingForm 
+		    			email={this.state.email} 
+		    			handleBack={this.handleBack}
+		    			handleNext={this.handleNext}
+					/>
+				);
+
 		    case 2:
-		    	return <PaymentTab email={this.state.email} />;
+		    	return (	
+		    		<StripeProvider apiKey={STRIPE_PK}>
+						<Elements>
+							<CheckoutForm 
+								email={this.state.email} 
+				    			handleBack={this.handleBack} 
+								handlePayment={() => {}}
+								purchaseData={this.props.purchaseData}
+							/>
+						</Elements>
+					</StripeProvider>
+				);
+
 		    default:
 		    	return 'Unknown step';
 		}
@@ -51,62 +77,15 @@ class CheckoutStepper extends Component {
 
 	handleNext = () => {
 		let newStep = this.state.activeStep + 1;
-		this.setState({activeStep: newStep})
-		// this.props.setActiveStep(newStep);
+		if (newStep < this.state.steps.length) {
+			this.setState({activeStep: newStep})
+		}
 	}
 
 	handleBack = () => {
 		let newStep = this.state.activeStep - 1;
-		this.setState({activeStep: newStep})
-		// this.props.setActiveStep(newStep);
-	}
-
-	getButtonArea = () => {
-		const { classes } = this.props;
-
-		if (this.state.activeStep === this.state.steps.length - 1) {
-			return (				
-				<div style={{textAlign: 'center'}}>
-					<Button 
-						variant="outlined"
-						color="inherit"
-						disabled={this.state.activeStep === 0} 
-						onClick={this.handleBack}
-						className={classes.button}
-					>
-						Back
-					</Button>
-
-					<Button variant="outlined" color="inherit" type="submit" className={classes.button}> 
-						<Typography variant="button" display="block" gutterBottom> <b> Pay now </b> </Typography>
-					</Button>
-				</div>
-			);
-		} 
-		else {
-			return (
-				<div style={{textAlign: 'center'}}>
-					<Button 
-						variant="outlined"
-						color="inherit"
-						disabled={this.state.activeStep === 0} 
-						onClick={this.handleBack}
-						className={classes.button}
-					>
-						Back
-					</Button>
-
-					<Button
-						variant="outlined"
-						color="inherit"
-						onClick={this.handleNext}
-						disabled={this.state.activeStep === this.state.steps.length - 1}
-						className={classes.button}
-					>
-						Next
-					</Button>
-				</div>
-			);
+		if (newStep >= 0) {
+			this.setState({activeStep: newStep})
 		}
 	}
 
@@ -130,57 +109,10 @@ class CheckoutStepper extends Component {
 				<div className={classes.formContainer}>
 					{this.getActiveTab()}
 				</div>
-				
-				<div>
-					{this.getButtonArea()}
-				</div>
 			</div>
 	    );
 	}
 }
 
-class PaymentTab extends Component {
-	render() {
-		return (
-			<StripeProvider apiKey={STRIPE_PK}>
-				<Elements>
-					<CheckoutForm 
-						email={this.props.email} 
-						handlePayment={() => {this.setState({page: "success"})}}
-					/>
-				</Elements>
-			</StripeProvider>
-		);
-	}
-}
-
-class ShippingTab extends Component {
-
-	handleSubmit(e) {
-		e.preventDefault();
-	}
-
-	render() {
-		return (
-			<ShippingForm />
-		);
-	}
-}
-
-class InfoTab extends Component {
-	render() {
-		return (
-			<p></p>
-		);
-	}
-}
-
-class SuccessTab extends Component {
-	render() {
-		return (
-			<p></p>
-		);
-	}
-}
 
 export default withStyles(styles)(CheckoutStepper);

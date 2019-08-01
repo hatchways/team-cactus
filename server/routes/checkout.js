@@ -1,4 +1,4 @@
-const stripe = require("stripe")(process.env.STRIPE_PUBLIC_TEST);
+const stripe = require("stripe")(process.env.STRIPE_SECRET_TEST);
 const router = require('express').Router();
 const passport = require("passport");
 const { Transaction } = require('../models/transactions');
@@ -7,8 +7,7 @@ const { User } = require('../models/users');
 /* Create a charge ---------------------------------------------------------------------- */
 router.put('/checkout', passport.authenticate('jwt', { session: false }), async function(req, res) {
 	try {
-		const email = req.user.email;
-		let user = await User.findOne( {email: email} );
+		let user = await User.findOne( {email: req.user.email} );
 
 		if (!user) {
 			// TODO: allow unsigned in users to also checkout
@@ -16,7 +15,8 @@ router.put('/checkout', passport.authenticate('jwt', { session: false }), async 
 		}
 
 		let stripeCustomerID = user.stripeCustomerID ? user.stripeCustomerID : null;
-		let total = req.body.total;
+		let total = req.body.purchaseData.total;
+		let currency = req.body.purchaseData.currency;
 		let rememberCard = req.body.rememberCard;
 		let useStoredCard=  req.body.useStoredCard
 		let productsPurchased = req.body.productsPurchased; // [{ productID: _, amount: _}]
@@ -24,16 +24,16 @@ router.put('/checkout', passport.authenticate('jwt', { session: false }), async 
 		if (rememberCard && !stripeCustomerID) {
 			// Save customer information for next time
 			stripeCustomerID = await stripe.customers.create({
-				email: email,
+				description: `Customer for user ${req.user.email}`,
 				source: req.body.source,
 			});
 		}
 
 		let chargeParameters = {
 			amount: total,
-			currency: "cad",
-			description: `Purchase for user ${email}`,
-			receipt_email: email,
+			currency: currency,
+			description: `Purchase for user ${req.user.email}`,
+			receipt_email: req.user.email,
 		}
 
 		// Configure the source of the funds for the transaction based on whether the user
@@ -44,7 +44,7 @@ router.put('/checkout', passport.authenticate('jwt', { session: false }), async 
 			}
 			chargeParameters["customer"] = stripeCustomerID;
 		} else {
-			chargeParameters["source"] = req.body.source;
+			chargeParameters["source"] = req.body.source.id;
 		}
 
 		// Create and capture the charge
@@ -62,7 +62,6 @@ router.put('/checkout', passport.authenticate('jwt', { session: false }), async 
 
 		// Store stripeCustomerID in user document if transaction successfully saved
 		if (rememberCard) {
-			let user = await User.findOne({ email: req.body.email });
 			user.stripeCustomerID = stripeCustomerID;
 			await user.save();
 		}
@@ -71,7 +70,8 @@ router.put('/checkout', passport.authenticate('jwt', { session: false }), async 
 		return res.status(201).send(tx);
 	} 
 	catch (asyncErr) {
-		res.status(503);
+		console.log("error: " + asyncErr.message);
+		res.status(503).send({error: asyncErr.message});
 	}
 });
 

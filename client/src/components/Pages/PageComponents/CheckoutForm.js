@@ -9,13 +9,13 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormHelperText from '@material-ui/core/FormHelperText';
 
 const styles = theme => ({
-	// button: {
- //    	boxShadow: 'none',
- //    	borderRadius: 0,
- //    	padding: '15px 20px',
- //    	margin: '60px 0px',
- //    	width: '30%',
- //    },
+	button: {
+    	boxShadow: 'none',
+    	borderRadius: 0,
+    	padding: '15px 20px',
+    	margin: '60px 0px',
+    	width: '30%',
+    },
 });
 
 class CheckoutForm extends React.Component {
@@ -26,45 +26,51 @@ class CheckoutForm extends React.Component {
 			source: "",
 			hasStoredCard: false,
 			useStoredCard: false,
-			// chargeData: {}
 		}
-
-		this.handleSubmit = this.handleSubmit.bind(this);
-		this.handleUseStoredCard = this.handleUseStoredCard.bind(this);
 	}
 
-	async createCharge(data) {
-		await axios({
-			method: 'put',
-			url: 'http://localhost:3000/cart/checkout',
-			data: data,
-			headers: {'Authorization': localStorage.token }
-		}).then(response => {
-			console.log("purchase successful!");
-		}).catch(error => {
-			console.log("purchase failure: " + error);
-		});
+	async createCharge (data) {
+		try {
+			let result = await axios({
+				method: 'put',
+				url: 'http://localhost:3000/cart/checkout',
+				data: data,
+				headers: {'Authorization': localStorage.token }
+			});
+			if (result) { // got back transaction document
+				console.log("Transaction saved:");
+				console.log(result.data);
+			}
+		} catch (error) {
+			console.log("Purchase failure: " + error);
+		}
 	}
 
 	
-	async handleSubmit(e) {
+	handleSubmit = async (e) => {
 		e.preventDefault();
+
 		this.props.stripe.createSource({
 			type: 'card',
 			owner: {
-				email: "dina@dina.com",
+				// TODO: take from form
+				email: "dina400@hotmail.ca",
 			},
-	    }).then(async function(result) {
+	    }).then(async (result) => {
 	    	if (result.error) {
 	    		console.log("Could not create stripe source", result.error);
 	    	} else {
 	    		// Create and capture charge
 	    		let chargeData = {
 	    			source: result.source,
+	    			purchaseData: this.props.purchaseData // {total: x, currency: y}
 	    		};
-	    		// this.setState({chargeData: chargeData});
-	    		await this.createCharge(chargeData);
-	    		this.props.handlePayment();
+	    		try {
+					await this.createCharge(chargeData);
+				} catch (asyncErr) {
+					console.log("create charge error: " + asyncErr.message)
+				}
+				this.props.handlePayment();
 	    	}
 	    });
 	 }
@@ -73,7 +79,7 @@ class CheckoutForm extends React.Component {
 
 	 }
 
-	 handleUseStoredCard(e) {
+	 handleUseStoredCard = (e) => {
 	 	this.setState({
 	 		hasStoredCard: e.target.checked,
 	 		useStoredCard: e.target.checked
@@ -82,8 +88,6 @@ class CheckoutForm extends React.Component {
 
 	 render() {
 	 	const { classes } = this.props;
-
-	 	if (!this.state.hasStoredCard) console.log("no card");
 
 	 	return (
 			<div>
@@ -120,6 +124,26 @@ class CheckoutForm extends React.Component {
       				/>
       		
 					<br/> <br/>
+
+					<div style={{textAlign: 'center'}}>
+						<Button 
+							variant="outlined"
+							color="inherit"
+							onClick={this.props.handleBack}
+							className={classes.button}
+						>
+							Back
+						</Button>
+
+						<Button 
+							variant="outlined" 
+							color="inherit" 
+							type="submit" 
+							className={classes.button}
+						> 
+							Pay now
+						</Button>
+					</div>
 
 		        </form>
 	        </div>

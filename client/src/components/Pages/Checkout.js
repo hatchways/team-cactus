@@ -4,7 +4,7 @@ import { withStyles } from "@material-ui/core/styles";
 import PageWrapper from '../Wrappers/PageWrapper';
 import CheckoutStepper from '../CheckoutStepper';
 import Paper from "@material-ui/core/Paper";
-import Button from "@material-ui/core/Button";
+// import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
 import Divider from "@material-ui/core/Divider";
 import Grid from "@material-ui/core/Grid";
@@ -22,9 +22,9 @@ const styles = theme => ({
         textDecoration: 'none',
         fontSize: '25px',
   	},
-  	checkoutTopBar: {
+  	checkout: {
 		// display: 'inline-block',
-		// margin: '40px',
+		padding: '40px 0px',
   	},
   	summary: {
   		borderTop: '7px solid black',
@@ -40,7 +40,7 @@ const styles = theme => ({
    //  },
 });
 
-class CheckoutPage extends React.Component {
+class CheckoutPage extends Component {
 
 	constructor(props) {
 		super(props);
@@ -53,17 +53,19 @@ class CheckoutPage extends React.Component {
 
 	render() {
 		const { classes } = this.props;
-		let total = 500;
-		let currency = "CAD";
+		let purchaseData = {
+			total: 500,
+			currency: "CAD"
+		}
 
 		return (
 			<PageWrapper>
 				<Grid container direction="row" alignItems="flex-start" justify="center" spacing={3}>
 					<Grid item md={8}>
 						<Paper square={true} >
-							<div className={classes.checkoutTopBar}>
+							<div className={classes.checkout}>
 								<Typography component="span" className={classes.title}> Checkout </Typography>
-								<CheckoutStepper />
+								<CheckoutStepper purchaseData={purchaseData} />
 							</div>
 						</Paper>
 					</Grid>
@@ -72,8 +74,12 @@ class CheckoutPage extends React.Component {
 						<Paper className={classes.summary} square={true}>
 							<div style={{height: '70%', margin: '0px 0px 40px 0px'}}>
 								<Typography className={classes.title} align="center"> Your Order: </Typography>
-								<Typography variant="subtitle1" align="center"> <b>{currency} {total.toFixed(2)}</b> </Typography>
-								<Typography variant="subtitle2" align="center"> Fast shipping: {currency} 15.00 </Typography>
+								<Typography variant="subtitle1" align="center"> 
+									<b>{purchaseData.currency} {purchaseData.total.toFixed(2)}</b> 
+								</Typography>
+								<Typography variant="subtitle2" align="center"> 
+									Fast shipping: {purchaseData.currency} 15.00 
+								</Typography>
 							</div>
 							<Divider />
 							<div style={{display: 'inline-block', textAlign: 'center', margin: '10px'}}>
@@ -81,7 +87,7 @@ class CheckoutPage extends React.Component {
 									Total:
 								</Typography> 
 								<Typography variant="subtitle2" component="span" align="left">
-									<b> {currency} {total.toFixed(2)} </b>
+									<b> {purchaseData.currency} {purchaseData.total.toFixed(2)} </b>
 								</Typography>
 							</div>
 						</Paper>

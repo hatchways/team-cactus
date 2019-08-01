@@ -16,8 +16,11 @@ const styles = theme => ({
         textDecoration: 'none',
   	},
   	button: {
-        borderRadius: 0,
-        boxShadow: 'none'
+    	boxShadow: 'none',
+    	borderRadius: 0,
+    	padding: '15px 20px',
+    	margin: '60px 0px',
+    	width: '30%',
     },
 });
 
@@ -26,7 +29,6 @@ class ShippingForm extends Component {
 		super(props);
 
 		this.state = {
-			email: "",
 			address: ""
 		}
 	}
@@ -61,13 +63,33 @@ class ShippingForm extends Component {
 		        	<Divider/>
 
 		        	<div style={{margin: '30px'}}>
-		        	<span>
-	        			<label className={classes.formLabel}> Contact: </label>
-	        			<Typography component="span"> {this.state.email} </Typography>
-		        		<Button variant="outlined" color="inherit" className={classes.button}>Change</Button>
-		        	</span>
+			        	<span>
+		        			<label className={classes.formLabel}> Contact: </label>
+		        			<Typography component="span"> {this.props.email} </Typography>
+			        		<Button variant="outlined" color="inherit" className={classes.button}>Change</Button>
+			        	</span>
 		        	</div>
 		        </form>
+
+				<div style={{textAlign: 'center'}}>
+					<Button 
+						variant="outlined"
+						color="inherit"
+						onClick={this.props.handleBack}
+						className={classes.button}
+					>
+						Back
+					</Button>
+
+					<Button
+						variant="outlined"
+						color="inherit"
+						onClick={this.props.handleNext}
+						className={classes.button}
+					>
+						Next
+					</Button>
+				</div>
 	        </div>
 		);
 	}

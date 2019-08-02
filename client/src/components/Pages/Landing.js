@@ -68,6 +68,14 @@ const styles = theme => ({
     objectPosition: '50 50',
     height: '200px' 
   },
+  toggleButton: {
+    height: 'auto',
+    borderRadius: '0 !important',
+    '& selected': {
+      backgroundColor: '#000 !important',
+      color: '#fff'
+    }
+  },
   toggleContainer: {
     marginBottom: '30px'
   },
@@ -89,10 +97,10 @@ class LandingPage extends Component {
       type: '',
       size: '',
       lower_price: 0,
-      higher_price: 500
+      higher_price: 500,
+      toggleBy: 'date',
+      orderBy: 'desc',
     },
-    toggleBy: 'dateToggle',
-    order: 'descendingToggle',
     responseError: ''
   }
 
@@ -113,20 +121,18 @@ class LandingPage extends Component {
   }
 
   handleToggleChange = (event, newToggle) => {
-    if(newToggle){
-      this.handleFilterChange(newToggle);
+    let newFilterSelection;
+    if((newToggle === "price") || (newToggle === "date")) {
+      newFilterSelection = { toggleBy: newToggle };
+    } else if((newToggle === "asc") || (newToggle === "desc")){
+      newFilterSelection = { orderBy: newToggle };
+    }
+    if(newToggle) {
+      this.handleFilterChange(newFilterSelection);
     }
   }
 
   handleFilterChange = async (newFilterSelection) => {
-
-    if((newFilterSelection === "priceToggle") || (newFilterSelection === "dateToggle")) {
-      this.setState({ toggleBy: newFilterSelection });
-    } else if((newFilterSelection === "ascendingToggle") || (newFilterSelection === "descendingToggle")){
-      this.setState({ order: newFilterSelection });
-    }
-
-    console.log('newfilter', newFilterSelection);
     const filterState = this.state.filterState; 
     const keys = Object.keys(newFilterSelection);
     
@@ -140,7 +146,6 @@ class LandingPage extends Component {
         url: `http://localhost:3001/products/`,
         params: filterState
     }).then(response => {
-        console.log('response', response);
         this.setState({ jacketsSelected: response.data });
     }).catch(error => {
         if(error.response){
@@ -182,19 +187,19 @@ class LandingPage extends Component {
             </div>
             <div className={classes.content}>
               <div className={classes.toggleContainer}>
-                <ToggleButtonGroup value={this.state.toggleBy} exclusive onChange={this.handleToggleChange}>
-                  <ToggleButton value="dateToggle">
+                <ToggleButtonGroup value={this.state.filterState.toggleBy} exclusive onChange={this.handleToggleChange}>
+                  <ToggleButton value="date" classes={{ root: classes.toggleButton }}>
                       Date Added
                     </ToggleButton>
-                  <ToggleButton value="priceToggle">
+                  <ToggleButton value="price" classes={{ root: classes.toggleButton }}>
                     Price
                   </ToggleButton>
                 </ToggleButtonGroup>
-                <ToggleButtonGroup value={this.state.order} exclusive onChange={this.handleToggleChange} className={classes.secondToggleGroup}>
-                  <ToggleButton value="descendingToggle">
+                <ToggleButtonGroup value={this.state.filterState.orderBy} exclusive onChange={this.handleToggleChange} className={classes.secondToggleGroup}>
+                  <ToggleButton value="desc" classes={{ root: classes.toggleButton }}>
                     Descending
                   </ToggleButton>
-                  <ToggleButton value="ascendingToggle">
+                  <ToggleButton value="asc" classes={{ root: classes.toggleButton }}>
                     Ascending
                   </ToggleButton>
                 </ToggleButtonGroup>

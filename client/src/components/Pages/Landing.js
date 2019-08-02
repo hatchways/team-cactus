@@ -33,9 +33,7 @@ const styles = theme => ({
       textDecoration: 'none',
       color: '#000'
     },
-    webkitBoxShadow: '1px 1px 4px 1px #eeefff',  /* Safari 3-4, iOS 4.0.2 - 4.2, Android 2.3+ */
-    mozBoxShadow: '1px 1px 4px 1px #eeefff',  /* Firefox 3.5 - 3.6 */
-    boxShadow: '1px 1px 4px 1px #eeefff',
+    border: '1px solid rgba(0, 0, 0, 0.12)',
     '&:hover': {
       filter: 'brightness(95%)'
     },
@@ -47,7 +45,6 @@ const styles = theme => ({
     gridTemplateRows: 'repeat(auto-fill, minmax(auto, 270px))',
     gridGap: '1.5rem',
     justifyItems: 'center',
-
   },
   jacketName: {
     color: '#000',

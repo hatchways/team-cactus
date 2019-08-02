@@ -101,9 +101,47 @@ class ShowProduct extends Component {
         });
     }
 
+    getItem = (key) => {
+        const cart = new Promise(function(resolve, reject) {
+            setTimeout(function() {
+                resolve(localStorage.getItem(key));
+            }, 300);
+        });
+        return cart;
+    };
+
+    setItem = (key, value) => {
+        const cart = new Promise(function(resolve, reject) {
+            setTimeout(function() {
+                resolve(localStorage.setItem(key, value));
+            }, 300);
+        });
+        return cart;
+    };
+
+    handleSubmit = async (event) => {
+        event.preventDefault();
+    
+        const pathName = window.location.pathname;
+        const productID = pathName.replace('/product/','');
+        
+        let cart = await this.getItem('cart');
+
+        if(!cart){
+            const newCart = [{ productID: productID, size: 'medium'}];
+            await this.setItem('cart', JSON.stringify(newCart));
+        } else {
+            const addItem = { productID: productID, size: 'large'};
+            let newCart = JSON.parse(cart);
+
+            newCart.push(addItem);
+            await this.setItem('cart', JSON.stringify(newCart));
+        }
+    };
+
     render() {
         const { classes } = this.props;
-
+    
         return (
             <PageWrapper>
                 <div className={classes.container}>
@@ -113,23 +151,25 @@ class ShowProduct extends Component {
                         <TitleWrapperLarge classes={{ title: classes.title }}>
                             {this.state.data.name}
                         </TitleWrapperLarge>
-                        <div className={classes.description}>
-                            {this.state.data.description}
-                        </div>
-                        <div className={classes.price}>
-                            CAD ${this.state.data.price}
-                        </div>
-                        <div className={classes.sizePicker}>
-                            <SizePicker sizesAvailable={this.state.data.sizes} />
-                        </div>
-                        <div className={classes.buttonContainer}>
-                            <ButtonWrapper version="black" type="submit" classes={{ button: classes.button }}>Add to Cart</ButtonWrapper>
-                            <ButtonWrapper version="white" type="submit" classes={{ button: classes.button }}>Request a Custom Design</ButtonWrapper>
-                        </div>
-                        <div className={classes.question}>
-                            Have a question about an item? <span className={classes.message}>Send a message.</span><br />
-                            The seller usually responds in a few hours.
-                        </div>
+                        <form onSubmit={this.handleSubmit} className={classes.form} noValidate>
+                            <div className={classes.description}>
+                                {this.state.data.description}
+                            </div>
+                            <div className={classes.price}>
+                                CAD ${this.state.data.price}
+                            </div>
+                            <div className={classes.sizePicker}>
+                                <SizePicker sizesAvailable={this.state.data.sizes} />
+                            </div>
+                            <div className={classes.buttonContainer}>
+                                <ButtonWrapper version="black" type="submit" classes={{ button: classes.button }}>Add to Cart</ButtonWrapper>
+                                <ButtonWrapper version="white" classes={{ button: classes.button }}>Request a Custom Design</ButtonWrapper>
+                            </div>
+                            <div className={classes.question}>
+                                Have a question about an item? <span className={classes.message}>Send a message.</span><br />
+                                The seller usually responds in a few hours.
+                            </div>
+                        </form>
                     </div>
                 </div>
             </PageWrapper>

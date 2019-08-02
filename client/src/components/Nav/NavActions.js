@@ -54,7 +54,7 @@ class NavActions extends Component {
                     </ListItem>
                 ))}
                 <ListItem>
-                    <IconButton classes={{ root: classes.iconButton }} component={Link} to="/placeholder" edge="start"  color="secondary" aria-label="Menu">
+                    <IconButton classes={{ root: classes.iconButton }} component={Link} to="/mycart" edge="start"  color="secondary" aria-label="Menu">
                         <ShoppingCartIcon fontSize="small"/>
                     </IconButton>
                 </ListItem>

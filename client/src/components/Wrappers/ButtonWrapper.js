@@ -12,12 +12,12 @@ const styles = theme => ({
 class ButtonWrapper extends Component {
 
     render() {
-        const { classes, children, version, type } = this.props;
+        const { classes, children, component, version, to, type } = this.props;
         const variant = (version === "white" ? 'outlined' : 'contained');
         const color = (version === "white" ? 'inherit' : 'primary');
 
         return (
-            <Button variant={variant} size="medium" type={type} version={version} color={color} classes={{ contained: classes.button, outlined: classes.button }}>
+            <Button variant={variant} size="medium" type={type} version={version} component={component} to={to} color={color} classes={{ contained: classes.button, outlined: classes.button }}>
                 { children }
             </Button>         
         );

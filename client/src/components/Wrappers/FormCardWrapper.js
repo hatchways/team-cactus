@@ -9,6 +9,7 @@ const styles = theme => ({
         alignItems: 'center',
         justifyContent: 'center',
         marginTop: '60px',
+        border: '1px solid rgba(0, 0, 0, 0.12)',
         [theme.breakpoints.up('md')]: {
             width: '370px',
             padding: '30px 50px'
